@@ -12,6 +12,8 @@ CORS(app=app)
 
 app.config.from_object(obj=Config)
 
+print('app.config: ', app.config)
+
 # DB Initialisation
 Mongodb = MongoDB(
     url = app.config['MONGO_URL'],
@@ -22,10 +24,11 @@ Mongodb = MongoDB(
 # Resources Path
 from APP.Resources import Version
 from APP.Resources.search import Search
+from APP.Resources.search_num_employees import SearchNumEmployees
 from APP.Resources.popular import Popular
 from APP.Resources.autocomplete import AutoComplete
 from APP.Resources.others import State, Cities, CountryGroups, Keywords, ListGroups, Country ,Category,JobTitle
-
+from APP.Resources.searchNew import SearchNew
 # Routing
 api.add_resource(Version, '/')
 api.add_resource(State, '/states')
@@ -39,3 +42,5 @@ api.add_resource(JobTitle, '/jobtitle')
 api.add_resource(CountryGroups, '/group')
 api.add_resource(ListGroups, '/listgroups')
 api.add_resource(AutoComplete, '/autocomplete')
+api.add_resource(SearchNumEmployees, '/search_num_employees')
+api.add_resource(SearchNew, '/searchnew')

@@ -4,6 +4,7 @@ from flask_restful import Resource, reqparse
 from APP import Mongodb
 from APP.Resources import projection
 
+
 class Search(Resource):
 
     # Argument Parser
@@ -43,17 +44,17 @@ class Search(Resource):
             page = args.get('page')
             pipeline = [
                 {'$match': {'$or': filters}},
-                {'$skip': rows*(page-1) if page > 0 else 0},
+                {'$skip': rows * (page - 1) if page > 0 else 0},
                 {'$limit': args.get('limit', 20)},
                 {'$project': projection}
             ]
             # Update Keyword Collection for every Search
             response = Mongodb.Aggregation(
-                pipeline = pipeline
+                pipeline=pipeline
             )
             output = list(response)
             result = dict()
-            result['status'] = 'sucess'
+            result['status'] = 'success'
             result['data'] = output
             result['count'] = len(output)
             return result, 200
