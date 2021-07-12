@@ -1,5 +1,5 @@
 from flask_restful import reqparse, Resource
-
+import re
 # User-defined Modules
 from APP import Mongodb
 from APP.Resources import projection
@@ -20,6 +20,9 @@ class Popular(Resource):
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument(name='search_type', location='args', type=str, required=True)
         parser.add_argument(name='keyword', location='args', type=str, required=True)
+        parser.add_argument(name='Country', location='args', type=str, required=True)
+        parser.add_argument(name='Industry', location='args', type=str, required=True)
+        parser.add_argument(name='JobTitle', location='args', type=str, required=True)
         args = parser.parse_args(strict=True)
         try:
             path = ['JobTitle', 'AssetName', 'CampaignName', 'CompanyName', 'Industry']
@@ -29,9 +32,21 @@ class Popular(Resource):
                 'index': 'Text_Search_Index',
                 'text': {'path': path, 'query': args.get('keyword')}
             }
+            query2 = {
+
+                "Industry": {"$eq": args.get('Industry')}
+            }
+            query3 = {
+
+                "Country": {"$eq": args.get('Country')}
+            }
+            pattern = r'[^A-Za-z ]'
+            regex = re.compile(pattern)
+            result1 = regex.sub('', args.get('JobTitle')).split(' ')
+            print(result1)
             addon_score = self._scorecalculator(filters=query, score=args.get('score', 100))
             pipeline = [
-                {'$search': query},
+                {'$search': query},{'$match': query2},{'$match': query3},
                 {'$project': projection},
                 {'$skip': 0},
                 {'$limit': args.get('limit', 20)}
@@ -42,7 +57,12 @@ class Popular(Resource):
             output = list()
             for i in response:
                 i['score'] = int(i['score'] + addon_score)
-                output.append(i)
+                print(i['job_title'])
+                print(args.get('JobTitle'))
+                if any(ele in i['job_title'] for ele in result1):
+                    print(any(ele in i['job_title'] for ele in result1))
+                    output.append(i)
+                    print(output)
             result = dict()
             result['status'] = 'sucess'
             result['data'] = output
