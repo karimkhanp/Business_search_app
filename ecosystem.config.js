@@ -5,9 +5,10 @@ module.exports = {
       name: 'testingFE1',
       cwd: '/home/ubuntu/Test-dir/Business_search_app/FrontEnd',
       script: './node_modules/nuxt/bin/nuxt.js',
-      port: 3030,
+      host: '0.0.0.0',
+      port: 9000,
       instances: 'max',
-      args: 'start'
+      args: 'stremotart'
     },
 
   ]
