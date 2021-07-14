@@ -1,15 +1,13 @@
 <template>
   <b-navbar toggleable="lg" type="dark" class="pr-4">
     <b-navbar-brand class="text-white" href="#">Logipsum</b-navbar-brand>
-
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
     <b-collapse id="nav-collapse" is-nav>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto py-2">
-        <b-nav-item href="#">How it works</b-nav-item>
-        <b-nav-item href="#">Solutions</b-nav-item>
-        <b-nav-item href="#">Contact</b-nav-item>
+        <b-nav-item href="#"><NuxtLink to='howitworks'>How it works</NuxtLink></b-nav-item>
+        <b-nav-item href="#"><NuxtLink to='solutions'>Solutions</NuxtLink></b-nav-item>
+        <b-nav-item href="#"><NuxtLink to='contactss'>Contacts</NuxtLink></b-nav-item>
       </b-navbar-nav >
     </b-collapse>
   </b-navbar>
@@ -29,12 +27,12 @@
     line-height: 38px;
     text-align: left;
   }
-  .nav-item a{
+  .nav-item a {
     font-size: 16px;
     font-weight: 600;
     line-height: 20px;
     text-align: left;
-    color: #fff !important;
+    color: white;
   }
   .nav-item:nth-child(2){
     margin-left: 44px;
@@ -57,7 +55,6 @@
 
   @media only screen and (max-width: 1000px) {
  .nav-item:nth-child(2){
-    
     margin-right: 0px;
   }
 }
