@@ -14,10 +14,10 @@ export const getters = {
 }
   
 export const mutations = {
-    setCategories(state, categories) {
+    'set-categories'(state, categories) {
       state.categories = categories;
     },
-    setCountryGroups(state, countryGroups) {
+    'set-country-groups'(state, countryGroups) {
         state.countryGroups = countryGroups;
     }
 
@@ -27,12 +27,12 @@ export const actions = {
     'load-categories'({commit}) {
         console.log(commit);
         return this.$axios.$get("/category").then((response)=> {
-            commit('setCategories', response.Categories);
+            commit('set-categories', response.Categories);
         });
     },
     'load-countrygroups'({commit}) {
         return this.$axios.$get("/listgroups").then((response)=> {
-            commit('setCountryGroups', response.data);
+            commit('set-country-groups', response.data);
         })
     },
 }
