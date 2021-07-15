@@ -66,7 +66,10 @@ export default {
         //baseURL: "http://127.0.0.1:5000",
         
         // baseURL: "http://18.218.36.147/db",
-        baseURL: "http://18.218.36.147/testingBE1",
+
+        // http://18.218.36.147:5008/
+        //baseURL: "http://18.218.36.147/testingBE1",
+        baseURL: "http://18.218.36.147:5008"
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
