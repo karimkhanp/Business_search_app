@@ -374,8 +374,8 @@
     layout: 'default',
     computed: {
       ...mapGetters({
-        getCategories: 'default-module/categories',
-        getCountryGroups: 'default-module/country-groups',
+        getCategories: 'index-module/categories',
+        getCountryGroups: 'index-module/country-groups',
       })
     },
     components: {
@@ -545,12 +545,12 @@
       },
 
       loadCountryGroups(){
-        this.$store.dispatch('default-module/load-countrygroups').then(()=> {
+        this.$store.dispatch('index-module/load-countrygroups').then(()=> {
             this.country_groups = this.getCountryGroups;
         });
       },
       loadCategories() {
-        this.$store.dispatch('default-module/load-categories').then(()=> {
+        this.$store.dispatch('index-module/load-categories').then(()=> {
             let categories = this.getCategories;
             this.categories =  categories.filter((category)=> category!=null && (/[a-zA-Z]/).test(category.charAt(0)));
             this.const_cat = categories;
