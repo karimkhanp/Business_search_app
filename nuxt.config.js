@@ -74,6 +74,7 @@ export default {
     ],
     },
     server: {
+        host: '0.0.0.0',
         port: 2000 // default: 3000
     },
     router: {
