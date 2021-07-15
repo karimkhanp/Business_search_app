@@ -5,8 +5,11 @@ export const state = () => ({
 });
 
 export const getters = {
-    categories: (state)=> {
+    categories: (state) => {
         return state.categories;
+    },
+    'country-groups': (state)=> {
+        return state.countryGroups;
     }
 }
   
@@ -21,15 +24,15 @@ export const mutations = {
 }
 
 export const actions = {
-    'load-categories'() {
-        return this.$axios.$get("/category").then((categories)=> {
-            commit('setCategories', categories);
+    'load-categories'({commit}) {
+        console.log(commit);
+        return this.$axios.$get("/category").then((response)=> {
+            commit('setCategories', response.Categories);
         });
     },
-    'load-countrygroups'() {
-        return this.$axios.$get("/listgroups").then((countryGroups)=> {
-            commit('setCountryGroups', countryGroups);
+    'load-countrygroups'({commit}) {
+        return this.$axios.$get("/listgroups").then((response)=> {
+            commit('setCountryGroups', response.data);
         })
     },
-    
 }

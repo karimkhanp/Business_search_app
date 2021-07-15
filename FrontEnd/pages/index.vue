@@ -364,6 +364,7 @@
   import Homeslider from '../components/homeSlider'
   import Filtersection from '../components/Filtersection'
   import Filtercards from '../components/Filtercards'
+  import { mapGetters } from "vuex";
   // import FilteredSearch from '../components/filteredSearch.vue'
   import constants from "../api/constants"
   import Multiselect from 'vue-multiselect'
@@ -538,13 +539,14 @@
       },
 
       loadCountryGroups(){
-        this.$store.dispatch('default-module/load-countrygroups').then((countryGroups)=> {
-            this.country_groups = countryGroups;
+        this.$store.dispatch('default-module/load-countrygroups').then(()=> {
+            this.country_groups = this.$store.getters['default-module/country-groups'];
         });
       },
       loadCategories() {
-        this.$store.dispatch('default-module/load-categories').then((categories)=> {
-          this.categories =   categories.filter((category)=> category!=null && (/[a-zA-Z]/).test(job.charAt(0)));
+        this.$store.dispatch('default-module/load-categories').then(()=> {
+            let categories = this.$store.getters['default-module/categories'];
+            this.categories =  categories.filter((category)=> category!=null && (/[a-zA-Z]/).test(category.charAt(0)));
             this.const_cat = categories;
         });
       },
