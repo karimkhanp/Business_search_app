@@ -76,6 +76,9 @@ export default {
     ],
     },
     server: {
-        port: 2000 // default: 3000
+        port: 3030 // default: 3000
     },
+    router : {
+        base: '/testingFE1/'
+    }
 };
