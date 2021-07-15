@@ -372,6 +372,12 @@
   var VueScrollTo = require("vue-scrollto");
   export default {
     layout: 'default',
+    computed: {
+      ...mapGetters({
+        getCategories: 'default-module/categories',
+        getCountryGroups: 'default-module/country-groups',
+      })
+    },
     components: {
       Homeslider,
       Filtersection,
@@ -540,12 +546,12 @@
 
       loadCountryGroups(){
         this.$store.dispatch('default-module/load-countrygroups').then(()=> {
-            this.country_groups = this.$store.getters['default-module/country-groups'];
+            this.country_groups = this.getCountryGroups;
         });
       },
       loadCategories() {
         this.$store.dispatch('default-module/load-categories').then(()=> {
-            let categories = this.$store.getters['default-module/categories'];
+            let categories = this.getCategories;
             this.categories =  categories.filter((category)=> category!=null && (/[a-zA-Z]/).test(category.charAt(0)));
             this.const_cat = categories;
         });
