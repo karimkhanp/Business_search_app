@@ -7,7 +7,7 @@ module.exports = {
       script: './FrontEnd/node_modules/nuxt/bin/nuxt.js',
       ref  : "origin/business_search_app1",
       repo: "https://github.com/karimkhanp/Business_search_app.git",
-      port: 3030,
+      port: 2000,
       instances: 'max',
       args: 'start'
     },

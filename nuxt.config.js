@@ -74,7 +74,7 @@ export default {
     ],
     },
     server: {
-        port: 3003 // default: 3000
+        port: 2000 // default: 3000
     },
     router: {
         base: '/TestDir/FrontEnd/'
