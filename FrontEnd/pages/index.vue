@@ -16,10 +16,8 @@
               </p>
             </div>
             <div class="col-md-5 my-2">
-
               <div class="search-card">
                 <h3 class="card-title mb-4">Search Organisations</h3>
-
                 <!--Product being promoted  -->
                 <div class="input-group custom-input-group mb-3">
                  <multiselect v-model="product" :options="products"
@@ -37,7 +35,7 @@
                     </template>
                     <template slot="option" slot-scope="props">
                       <div class="option__desc">
-                        <span v-if="countries_value.includes(props.option)">
+                        <span v-if="countryValues.includes(props.option)">
                           <input type="checkbox" value="" checked>
                         </span>
                         <span v-else> <input type="checkbox" value=""></span>
@@ -121,7 +119,7 @@
                     :taggable="false"
                     placeholder="Any Country"
                     :preserve-search="true"
-                    @search-change="asyncFind" >
+                    @search-change="asyncFind">
                     <template slot="selection" slot-scope="{ values }">
                       <span class="multiselect__single" v-if="values.length">{{values[0]}}</span>
                     </template>
@@ -129,7 +127,7 @@
                       slot="option"
                       slot-scope="props">
                       <div class="option__desc">
-                        <span v-if="countries_value.includes(props.option)">
+                        <span v-if="countryValues.includes(props.option)">
                           <input type="checkbox" value="" checked>
                         </span>
                         <span v-else>
@@ -146,16 +144,16 @@
 
                 <!--  Country  -->
                 <div class="country-buttons text-left my-4" >
-                  <a class="card-tab-btn" v-on:click="showCountry(selectedCountry)" :class="selectedCountryGroup == selectedCountry ? 'active' : ''" :key="index" v-for="selectedCountry, index in country_groups">{{selectedCountry}}</a>
+                  <a class="card-tab-btn" v-on:click="showCountry(selectedCountry)" :class="selectedCountryGroup == selectedCountry ? 'active' : ''" :key="index" v-for="selectedCountry, index in countryGroups">{{selectedCountry}}</a>
                   <!-- <a class="card-tab-btn active">APAC</a> -->
                  <div id="show-city" class="show-city mt-3" v-if="isHidden == true">
                       <div class="close-city">
                           <a class="btn-dark " v-on:click="isHidden = false">x</a>
                       </div>
                       <div class="city-list">
-                          <a class="card-tab-btn " @click="removeCountry(city)" :key="index" v-for="city, index in countrylist">
+                          <a class="card-tab-btn " @click="removeCountry(city)" :key="index" v-for="city, index in countryList">
                             {{city}} 
-                            <span v-if="!country_selected.includes(city)" class="mdi mdi-check-bold ml-2"></span>
+                            <span v-if="!countrySelected.includes(city)" class="mdi mdi-check-bold ml-2"></span>
                           </a>
                       </div>
                 </div>
@@ -261,7 +259,7 @@
                 <label class="typo__label">Company Size</label>
                 <multiselect
                   v-model="employee"
-                  :options="company_size"
+                  :options="companySizes"
                   :multiple="true"
                   :preselect-first="true"
                   placeholder="Any"
@@ -276,7 +274,7 @@
                   </template>
                   <template slot="option" slot-scope="props">
                     <div class="option__desc">
-                      <span v-if="comapny_value.includes(props.option)">
+                      <span v-if="companyValues.includes(props.option)">
                         <input type="checkbox" value="" checked>
                       </span>
                       <span v-else>
@@ -302,7 +300,7 @@
                 </select> -->
                 <multiselect
                   v-model="rpp"
-                  :options="record_options"
+                  :options="recordOptions"
                   :multiple="false"
                   :preselect-first="true"
                   placeholder="Any"
@@ -365,11 +363,10 @@
   import Filtersection from '../components/Filtersection'
   import Filtercards from '../components/Filtercards'
   import { mapGetters } from "vuex";
-  // import FilteredSearch from '../components/filteredSearch.vue'
   import constants from "../api/constants"
   import Multiselect from 'vue-multiselect'
-  
   var VueScrollTo = require("vue-scrollto");
+
   export default {
     layout: 'default',
     computed: {
@@ -388,17 +385,16 @@
       return {
         category : '',
         categories : [],
-        const_cat:[],
+        constCategories:[],
         jobtitle: '',
         jobtitles: [],
-        const_JT:[],
+        constJobTitles:[],
         jobSearchSlotText: 'Loading please Wait . . .',
-
         showModal: false,
         isSearching: false,
-        countrylist: [],
-        country_groups:[],
-        country_selected: [],
+        countryList: [],
+        countryGroups:[],
+        countrySelected: [],
         selectedCountryGroup: [],
         isHidden: false,
         page:1,
@@ -412,10 +408,9 @@
         hasEqualSize: false,
         isSubscribed: false,
         isStateSelected: false,
-
         countries: constants.COUNTRIES,
-        states: [""],
-        cities: [""],
+        states: [],
+        cities: [],
         emps: ["any"],
         companies: [],
         products:constants.PRODUCTS,
@@ -424,7 +419,6 @@
         flips: [],
         popflips: [],
         last_id: null,
-
         type: "keyword",
         rpp:15,
         country: [],
@@ -432,17 +426,16 @@
         new_countryl:[],
         state: "All",
         city: "All",
-        keyword: "",
+        keyword: constants.EMPTY_STRING,
         employee: "Any",
-        countries_value:[],
-        comapny_value:[],
-        company_size: [
+        countryValues:[],
+        companyValues:[],
+        companySizes: [
           'Any', '1-99', '100-249', '250-499', '500-999', '1000-4999', '5000-9999', '10000+'
         ],
-        record_options: [
+        recordOptions: [
           '15', '50', '80', '100'
         ]
-
       };
     },
     created() {
@@ -470,62 +463,34 @@
       updateScroll() {
         this.scrollPosition = window.scrollY;
       },
-      async asyncFindCategories(query){
-        var filter= []
-        if(query!=""){
-          await this.const_cat.forEach(industry=>{
-            if(industry!=null && industry!=""){
-              if(industry.toLowerCase().startsWith(query.toLowerCase())){
-                filter.push(industry)
-              }
-            }
-          })
-          this.categories=filter
+      notEmptyAndNull(item) {
+         return item!=null && item!= constants.EMPTY_STRING;
+      },
+      async asyncFindCategories(query) {
+        if(query!=constants.EMPTY_STRING) {
+          this.categories = this.constCategories.filter(industry=> this.notEmptyAndNull(industry) && industry.toLowerCase().startsWith(query.toLowerCase()));
         }
-        
       },
-      async asyncFindJobTitles(query){
-        var filter= []
-        // console.log(query.toLowerCase())
-        await this.const_JT.forEach(job=>{
-          if(job.toLowerCase().startsWith(query.toLowerCase())){
-            filter.push(job)
-          }
-        })
-        this.jobtitles=filter
+      async asyncFindJobTitles(query) {
+        this.jobtitles = this.constJobTitles.filter(job => job.toLowerCase().startsWith(query.toLowerCase()));
       },
-      async asyncFindProducts(query){
-        var filter= []
-        await constants.PRODUCTS.forEach(product=>{
-          if(product.toLowerCase().startsWith(query.toLowerCase())){
-            filter.push(product)
-          }
-        })
-        this.products=filter
+      async asyncFindProducts(query) {
+        this.products = constants.PRODUCTS.filter((product) =>product.toLowerCase().startsWith(query.toLowerCase()));
       },
       async asyncFind(query) {
-        var filter= []
-        await constants.COUNTRIES.forEach(country=>{
-          if(country.toLowerCase().startsWith(query.toLowerCase())){
-            filter.push(country)
-          }
-        })
-        this.countries=filter
+        this.countries = constants.COUNTRIES.filter((country)=> country.toLowerCase().startsWith(query.toLowerCase()));
       },
-      async showCountry(selectedCountry){
-        if(this.selectedCountryGroup.includes(selectedCountry)){
-         var index = this.selectedCountryGroup.indexOf(selectedCountry);
-          if (index > -1) {
-              this.selectedCountryGroup.splice(index, 1);
-              this.isHidden = false;
-          }
-        }else{
+      showCountry(selectedCountry) {
+        if(this.selectedCountryGroup.includes(selectedCountry)) {
+          var index = this.selectedCountryGroup.indexOf(selectedCountry);
+          this.selectedCountryGroup.splice(index, 1);
+          this.isHidden = false;
+        }  else  {
           this.selectedCountryGroup.push(selectedCountry);
           this.isHidden = true;
-          const res = await this.$axios.$get("/group?country_group="+selectedCountry);
-          if(res.status == 'success'){
-            this.countrylist = res.Countries
-          }
+          this.$axios.$get("/group?country_group="+selectedCountry).then(()=> {
+            this.countryList = res.Countries;
+          });
         }
       },
       async getJobTitles(query){
@@ -539,35 +504,35 @@
         //   }
         // })
         // this.jobtitles= filter;
-        // this.const_JT = filter;
+        // this.constJobTitles = filter;
         this.jobtitles= res.Titles;
-        this.const_JT = res.Titles;
+        this.constJobTitles = res.Titles;
       },
 
       loadCountryGroups(){
         this.$store.dispatch('index-module/load-countrygroups').then(()=> {
-            this.country_groups = this.getCountryGroups;
+            this.countryGroups = this.getCountryGroups;
         });
       },
       loadCategories() {
         this.$store.dispatch('index-module/load-categories').then(()=> {
             let categories = this.getCategories;
             this.categories =  categories.filter((category)=> category!=null && (/[a-zA-Z]/).test(category.charAt(0)));
-            this.const_cat = categories;
+            this.constCategories = categories;
         });
       },
       removeCountry(city){
-          const index = this.country_selected.indexOf(city);
+          const index = this.countrySelected.indexOf(city);
           if (index > -1) {
-            this.country_selected.splice(index, 1);
+            this.countrySelected.splice(index, 1);
           }else{
-            this.country_selected.push(city);
+            this.countrySelected.push(city);
           }
       },
 
       removeFromSearch(){
-        this.country = this.countrylist.filter((item)=>{
-            return !this.country_selected.includes(item)
+        this.country = this.countryList.filter((item)=>{
+            return !this.countrySelected.includes(item)
         })
       },
 

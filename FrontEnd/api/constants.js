@@ -10,5 +10,6 @@ export default {
     "Webina/Event Registrations",
     "Install Base"],
     // BASE_URL: "http://127.0.0.1:5000",
-    BASE_URL: "http://18.218.36.147/db"
+    BASE_URL: "http://18.218.36.147/db",
+    EMPTY_STRING : ''
 }
