@@ -395,7 +395,7 @@
         jobtitle: '',
         jobtitles: [],
         constJobTitles:[],
-        jobSearchSlotText: 'Loading please Wait . . .',
+        jobSearchSlotText: constants.LOADING,
         showModal: false,
         isSearching: false,
         countryList: [],
@@ -417,7 +417,7 @@
         countries: constants.COUNTRIES,
         states: [],
         cities: [],
-        emps: ["any"],
+        emps: [constants.ANY_SMALLA],
         companies: [],
         products:constants.PRODUCTS,
         popular: [],
@@ -522,7 +522,7 @@
           const index = this.countrySelected.indexOf(city);
           if (index > -1) {
             this.countrySelected.splice(index, 1);
-          }else{
+          } else {
             this.countrySelected.push(city);
           }
       },
@@ -586,7 +586,7 @@
       },
 
       search() {
-        this.state = 'All'
+        this.state = constants.ALL;
         if(this.country.length > 0) {
           this.newCountryL = [...this.country];
         }
@@ -594,6 +594,13 @@
                    this.$store.dispatch("index-module/load-country-group", this.selectedCountryGroup[0]).then(()=> {
                    this.newCountryL = [...this.newCountryL, ...this.getCountryList];
                    this.performSearch();
+                   this.populatePopular();
+                   let parameters = {};
+                   if (this.country[0] !== constants.ANY_SMALLA) {
+                        parameters = { country: this.country };
+                   }
+                   this.postStates(parameters);
+                   this.postCities(parameters);
                    this.hasEqualSize = this.newCountryL.length == this.rpp ? true : false;
         });
         }
@@ -624,10 +631,8 @@
             if(this.companies.length>0) {
               this.lastId = this.companies(this.companies.length - 1);
             }
-            this.companies = this.companies.sort(this.compare);
             this.isSearching = false;
             VueScrollTo.scrollTo("#results", 200, { offset: -50 });
-            this.populatePopular();
         });
       }, 
 
@@ -642,12 +647,6 @@
         this.$store.dispatch('index-module/load-popular', params).then(()=> {
              this.popular = this.getPopular;
         });
-        let parameters = {};
-        if (this.country[0] !== "any") {
-            parameters = { country: this.country };
-        }
-        this.postStates(parameters);
-        this.postCities(parameters);
       },
 
       postStates(params) {
@@ -656,9 +655,10 @@
           });
       },
 
-      postCities(params) {
-          this.$store.dispatch("index-module/post-cities", params ).then(()=>{
+      postCities(params, all=constants.EMPTY_STRING) {
+          this.$store.dispatch("index-module/post-cities", params ).then(()=> {
             this.cities = this.getCities;
+            if(all) this.cities.push(all);
           });
       },
 
@@ -666,8 +666,8 @@
         this.isSearching = true;
         this.removeFromSearch();
         this.page = 1;
-        let url = "/search?limit="+this.rpp+"&page="+this.page
-        const res = await this.$axios.$post(url, 
+        let url = "/search?limit="+this.rpp+"&page="+this.page;
+        const res = await this.$axios.$post(url,
            {
             score: this.sliderVal,
             limit: this.rpp,
@@ -692,49 +692,13 @@
         this.isSearching = false;
       },
 
-
-
       async searchByState() {
-        console.log('asfdadsf')
-        this.isSearching = true;
-        this.page = 1;
         this.removeFromSearch();
-        let url = "/search?limit="+this.rpp+"&page="+this.page
-       
-          const res = await this.$axios.$post(url, 
-           {
-            score: this.sliderVal,
-            keyword: this.keyword,
-            search_type: this.type,
-            // country: this.country !== "any" ? this.country : "",
-            country: this.newCountryL.length !=0 ? this.newCountryL:"",
-            state:  this.state !== "All" ? this.state : "",
-            city:  this.city !== "All" ? this.city : "",
-            employee: !this.employee.includes("Any") ? this.employee : "1-10000000",
-            category: this.category,
-            jobtitle: this.jobtitle,
-          },
-        );
-
-        if (res.status == 'sucess') {
-          if (res.data.length > 0) {
-            this.lastId = res.data[res.data.length - 1].id;
-          }
-          this.companies = res.data.sort(this.compare);
-        }
-        console.log(this.newCountryL)
+        this.page = 1;
+        this.performSearch();
         let params = { state: this.state !== "any" ? this.state : "", country :this.newCountryL}
-        this.$axios.$post("/cities", params).then((response)=>{
-          this.cities = response.data;
-        })
-
-        
-        this.cities.push("All");
-
-        this.city = "All";
-
-        this.hasEqualSize = res.data.length == this.rpp ? true : false;
-        this.isSearching = false;
+        this.postCities(params, constants.ALL);   
+        this.city = constants.ALL;
       },
 
       async searchByCity() {

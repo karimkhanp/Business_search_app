@@ -51,6 +51,7 @@ export const mutations = {
         state.jobTitles = jobTitles;
     },
     'set-companies'(state, companies) {
+        companies = companies.sort(compare);
         state.companies = companies;
     },
     'set-popular'(state, popular) {
@@ -110,3 +111,5 @@ export const actions = {
     }
 
 }
+
+export const compare=(a,b)=> a.score > b.score ? -1: 1;
