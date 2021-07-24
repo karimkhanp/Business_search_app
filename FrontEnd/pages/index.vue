@@ -425,15 +425,15 @@
         flips: [],
         popflips: [],
         lastId: null,
-        type: "keyword",
+        type: constants.KEYWORD,
         rpp:15,
         country: [],
         product:[],
         newCountryL:[],
-        state: "All",
-        city: "All",
+        state: constants.ALL,
+        city: constants.ALL,
         keyword: constants.EMPTY_STRING,
-        employee: "Any",
+        employee: constants.ANY,
         countryValues:[],
         companyValues:[],
         companySizes: [
@@ -557,7 +557,7 @@
         }
       },
 
-      SearchKeyord(keyword) {
+      SearchKeyword(keyword) {
         this.keyword = keyword;
         this.search_type = constants.KEYWORD;
         this.search();
@@ -592,7 +592,7 @@
         }
         if(this.selectedCountryGroup.length > 0) {
                    this.$store.dispatch("index-module/load-country-group", this.selectedCountryGroup[0]).then(()=> {
-                   this.newCountryL = [...this.newCountryL, this.getCountryList];
+                   this.newCountryL = [...this.newCountryL, ...this.getCountryList];
                    this.performSearch();
                    this.hasEqualSize = this.newCountryL.length == this.rpp ? true : false;
         });
@@ -609,7 +609,7 @@
           country: this.newCountryL.length !=0 ? this.newCountryL:constants.EMPTY_STRING,
           state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
           city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
-          employee: !this.employee.includes("Any") ? this.employee : "1-10000000",
+          employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
           category: this.category,
           jobtitle: this.jobtitle,
         };
@@ -624,7 +624,7 @@
             if(this.companies.length>0) {
               this.lastId = this.companies(this.companies.length - 1);
             }
-            this.comanies = this.comanies.sort(this.compare);
+            this.companies = this.companies.sort(this.compare);
             this.isSearching = false;
             VueScrollTo.scrollTo("#results", 200, { offset: -50 });
             this.populatePopular();

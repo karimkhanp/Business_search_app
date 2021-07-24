@@ -99,12 +99,12 @@ export const actions = {
         });
     },
     'post-states'({commit}, params={}) {
-        return this.$axios.$post("/states", {params}).then((response)=> {
+        return this.$axios.$post("/states", params).then((response)=> {
            commit('set-states', response.data);
         });
     }, 
     'post-cities'({commit}, params={}) {
-        return this.$axios.$post("/cities", {params}).then((response)=> {
+        return this.$axios.$post("/cities", params).then((response)=> {
             commit('set-cities', response.data);
         });
     }
