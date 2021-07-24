@@ -595,10 +595,7 @@
                    this.newCountryL = [...this.newCountryL, ...this.getCountryList];
                    this.performSearch();
                    this.populatePopular();
-                   let parameters = {};
-                   if (this.country[0] !== constants.ANY_SMALLA) {
-                        parameters = { country: this.country };
-                   }
+                   const parameters = this.country[0] !== constants.ANY_SMALLA?  { country: this.country }: {};
                    this.postStates(parameters);
                    this.postCities(parameters);
                    this.hasEqualSize = this.newCountryL.length == this.rpp ? true : false;
