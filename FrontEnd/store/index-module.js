@@ -3,6 +3,7 @@ export const state = () => ({
     categories: [],
     countryGroups: [],
     countryList: [],
+    jobTitles: []
 });
 
 export const getters = {
@@ -14,6 +15,9 @@ export const getters = {
     },
     'country-list': (state)=> {
         return state.countryList;
+    },
+    'job-titles': (state)=> {
+        return state.jobTitles;
     }
 }
   
@@ -25,7 +29,10 @@ export const mutations = {
         state.countryGroups = countryGroups;
     },
     'set-country-list'(state, countryList) {
-        state.countryLIst = countryList;
+        state.countryList = countryList;
+    },
+    'set-job-titles'(state, jobTitles) {
+        state.jobTitles = jobTitles;
     }
 
 }
@@ -44,6 +51,11 @@ export const actions = {
     'load-country-group'({commit}, selectedCountry) {
         return this.$axios.$get("/group?country_group=" + selectedCountry).then((response)=> {
              commit('set-country-list', response.Countries);
+        });
+    },
+    'load-job-titles'({commit}) {
+        return this.$axios.$get("/jobtitle").then((response)=> {
+             commit('set-job-titles', response.Titles);
         });
     }
 }

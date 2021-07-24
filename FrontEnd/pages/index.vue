@@ -373,7 +373,8 @@
       ...mapGetters({
         getCategories: 'index-module/categories',
         getCountryGroups: 'index-module/country-groups',
-        getCountryList: 'index-module/country-list'
+        getCountryList: 'index-module/country-list',
+        getJobTitlesFromStore: 'index-module/job-titles'
       })
     },
     components: {
@@ -490,27 +491,18 @@
           this.selectedCountryGroup.push(selectedCountry);
           this.isHidden = true;
           this.$store.dispatch('index-module/load-country-group', selectedCountry).then(()=> {
-             this.countryList = this.getCountryList;
+              this.countryList = this.getCountryList;
           });
         }
       },
-      async getJobTitles(query){
-        let res = await this.$axios.$get("/jobtitle");
-        // let filter =[]
-        // await res.Titles.forEach(job=>{
-        //   if(job!=null){
-        //     if((/[a-zA-Z]/).test(job.charAt(0))){
-        //       filter.push(job)
-        //     }
-        //   }
-        // })
-        // this.jobtitles= filter;
-        // this.constJobTitles = filter;
-        this.jobtitles= res.Titles;
-        this.constJobTitles = res.Titles;
+      getJobTitles() {
+        this.$store.dispatch('index-module/load-job-titles').then(()=> {
+              this.jobtitles= this.getJobTitlesFromStore;
+              this.constJobTitles = this.getJobTitlesFromStore;
+        });
       },
 
-      loadCountryGroups(){
+      loadCountryGroups() {
         this.$store.dispatch('index-module/load-country-groups').then(()=> {
             this.countryGroups = this.getCountryGroups;
         });
@@ -532,9 +524,7 @@
       },
 
       removeFromSearch(){
-        this.country = this.countryList.filter((item)=>{
-            return !this.countrySelected.includes(item)
-        })
+        this.country = this.countryList.filter((item)=> !this.countrySelected.includes(item));
       },
 
       scrollToTop() {
@@ -548,9 +538,8 @@
 
       toggleFlip(i) {
         if (this.flips.includes(i)) {
-          const indx = this.flips.indexOf(i);
-          this.flips.splice(indx, 1);
-        } else {
+          this.flips.splice(this.flips.indexOf(i), 1);
+          } else {
           this.flips.push(i);
           this.addPopularity(this.companies[i].id);
         }
@@ -558,31 +547,20 @@
 
       togglePopFlip(i) {
         if (this.popflips.includes(i)) {
-          const indx = this.popflips.indexOf(i);
-          this.popflips.splice(indx, 1);
-        } else {
+          this.popflips.splice(this.popflips.indexOf(i), 1);
+          } else {
           this.popflips.push(i);
         }
       },
 
-      search_keyord(kywrd) {
-        this.keyword = kywrd;
-        this.search_type = "keyword";
+      search_keyord(keyword) {
+        this.keyword = keyword;
+        this.searchType = "keyword";
         this.search();
       },
 
       compare(a, b) {
-        // Use toUpperCase() to ignore character casing
-        const A = a.score;
-        const B = b.score;
-
-        let comparison = 0;
-        if (A > B) {
-          comparison = -1;
-        } else if (A < B) {
-          comparison = 1;
-        }
-        return comparison;
+         return a.score>b.score ? -1: 1;
       },
 
       applyFilter() {
@@ -634,7 +612,7 @@
          let params = {
           score: this.sliderVal,
           keyword: this.keyword,
-          search_type: this.type,
+          searchType: this.type,
           // country: this.country !== "any" ? this.country : "",
           country: this.new_countryl.length !=0 ? this.new_countryl:"",
           state:  this.state !== "All" ? this.state : "",
@@ -664,7 +642,7 @@
         //popularResult list will be populated with according results of the keyword being searched
          params = {
           keyword: this.keyword,
-          search_type: this.type,
+          searchType: this.type,
           Country: this.country.join(','),
           Industry: this.category,
           JobTitle: this.jobtitle
@@ -710,7 +688,7 @@
             limit: this.rpp,
             page: this.page,
             keyword: this.keyword,
-            search_type: this.type,
+            searchType: this.type,
             country: this.country !== "any" ? this.country : "",
             state:  this.state !== "All" ? this.state : "",
             city: this.city !== "All" ? this.city : "",
@@ -742,7 +720,7 @@
            {
             score: this.sliderVal,
             keyword: this.keyword,
-            search_type: this.type,
+            searchType: this.type,
             // country: this.country !== "any" ? this.country : "",
             country: this.new_countryl.length !=0 ? this.new_countryl:"",
             state:  this.state !== "All" ? this.state : "",
@@ -784,7 +762,7 @@
             limit: this.rpp,
             page:this.page,
             keyword: this.keyword,
-            search_type: this.type,
+            searchType: this.type,
             state:  this.state !== "All" ? this.state : "",
             country: this.new_countryl.length !=0 ? this.new_countryl:"",
             city:  this.city !== "All" ? this.city : "",
@@ -817,7 +795,7 @@
             score: this.sliderVal,
             limit: this.rpp,
             keyword: this.keyword,
-            search_type: this.type,
+            searchType: this.type,
             country: this.country !== "any" ? this.country : "",
             state:  this.state !== "All" ? this.state : "",
             city: this.city !== "All"  ? this.city : "",
