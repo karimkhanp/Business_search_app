@@ -17,5 +17,6 @@ export default {
     COMMA: ',',
     ANY: 'Any',
     ANY_SMALLA: 'any',
-    LOADING: 'Loading please Wait . . .'
+    LOADING: 'Loading please Wait . . .',
+    LIST: 'list'
 }

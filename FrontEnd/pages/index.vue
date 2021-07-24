@@ -389,10 +389,10 @@
     },
     data() {
       return {
-        category : '',
+        category : constants.EMPTY_STRING,
         categories : [],
         constCategories:[],
-        jobtitle: '',
+        jobtitle: constants.EMPTY_STRING,
         jobtitles: [],
         constJobTitles:[],
         jobSearchSlotText: constants.LOADING,
@@ -405,7 +405,7 @@
         isHidden: false,
         page:1,
         scrollPosition: 0,
-        view: "list",
+        view: constants.LIST,
         sliderMin: 0,
         sliderMax: 100,
         sliderVal: 80,
