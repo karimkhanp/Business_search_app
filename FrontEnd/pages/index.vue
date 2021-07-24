@@ -119,7 +119,7 @@
                     :taggable="false"
                     placeholder="Any Country"
                     :preserve-search="true"
-                    @search-change="asyncFind">
+                    @search-change="asyncFindCountries">
                     <template slot="selection" slot-scope="{ values }">
                       <span class="multiselect__single" v-if="values.length">{{values[0]}}</span>
                     </template>
@@ -473,7 +473,7 @@
       async asyncFindProducts(query) {
         this.products = constants.PRODUCTS.filter((product) =>product.toLowerCase().startsWith(query.toLowerCase()));
       },
-      async asyncFind(query) {
+      async asyncFindCountries(query) {
         this.countries = constants.COUNTRIES.filter((country)=> country.toLowerCase().startsWith(query.toLowerCase()));
       },
       showCountry(selectedCountry) {
@@ -583,6 +583,7 @@
         if(this.selectedCountryGroup.length > 0) {
                    this.$store.dispatch("index-module/load-country-group", this.selectedCountryGroup[0]).then(()=> {
                    this.newCountryL = [...this.newCountryL, ...this.getCountryList];
+                   this.page = 1;
                    this.performSearch();
                    this.populatePopular();
                    const parameters = this.country[0] !== constants.ANY_SMALLA?  { country: this.country }: {};
@@ -592,27 +593,27 @@
         });
         }
       },
-      performSearch() {
+      performSearch(params=undefined) {
+        if(!params) {
+            params = {
+                  score: this.sliderVal,
+                  keyword: this.keyword,
+                  search_type: this.type,
+                  country: this.newCountryL.length > 0 ? this.newCountryL:constants.EMPTY_STRING,
+                  state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
+                  city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
+                  employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
+                  category: this.category,
+                  jobtitle: this.jobtitle,
+              };
+        }
         this.isSearchDone = true;
-        this.isSearching = true;  
-        this.page = 1;
-         let params = {
-          score: this.sliderVal,
-          keyword: this.keyword,
-          search_type: this.type,
-          country: this.newCountryL.length !=0 ? this.newCountryL:constants.EMPTY_STRING,
-          state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
-          city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
-          employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
-          category: this.category,
-          jobtitle: this.jobtitle,
-        };
+        this.isSearching = true; 
         const searchParameters = {
           rpp: this.rpp,
           page: this.page,
           params: params
         }
-
         this.$store.dispatch('index-module/search', searchParameters).then(()=> {
             this.companies = this.getCompanies;
             if(this.companies.length>0) {
@@ -644,112 +645,62 @@
 
       postCities(params, all=constants.EMPTY_STRING) {
           this.$store.dispatch("index-module/post-cities", params ).then(()=> {
-            this.cities = this.getCities;
+            this.cities = [...this.getCities];
             if(all) this.cities.push(all);
           });
       },
 
       async searchBySize() {
-        this.isSearching = true;
         this.removeFromSearch();
         this.page = 1;
-        let url = "/search?limit="+this.rpp+"&page="+this.page;
-        const res = await this.$axios.$post(url,
-           {
-            score: this.sliderVal,
-            limit: this.rpp,
-            page: this.page,
-            keyword: this.keyword,
-            search_type: this.type,
-            country: this.country !== "any" ? this.country : "",
-            state:  this.state !== "All" ? this.state : "",
-            city: this.city !== "All" ? this.city : "",
-            employee: !this.employee.includes("Any") ? this.employee : "1-10000000",
-            category: this.category,
-            jobtitle: this.jobtitle,
-        });
-        if (res.status == 'sucess') {
-          if (res.data.length > 0) {
-            this.lastId = res.data[res.data.length - 1].id;
-          }
-          this.companies = res.data.sort(this.compare);
-        }
-
-        this.hasEqualSize = res.data.length == this.rpp ? true : false;
-        this.isSearching = false;
+        const params = {
+             score: this.sliderVal,
+             keyword: this.keyword,
+             search_type: this.type,
+             country: this.country !== constants.ANY_SMALLA ? this.country : constants.EMPTY_STRING,
+             state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
+             city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
+             employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
+             category: this.category,
+             jobtitle: this.jobtitle,
+         }
+        this.performSearch(params);
       },
 
       async searchByState() {
         this.removeFromSearch();
         this.page = 1;
         this.performSearch();
-        let params = { state: this.state !== "any" ? this.state : "", country :this.newCountryL}
-        this.postCities(params, constants.ALL);   
+        let params = { state: this.state !== constants.ANY ? this.state : constants.EMPTY_STRING, country :this.newCountryL};
+        this.postCities(params, constants.ALL); 
         this.city = constants.ALL;
       },
 
       async searchByCity() {
-        this.isSearching = true;
         this.removeFromSearch();
         this.page = 1;
-         let url = "/search?limit="+this.rpp+"&page="+this.page
-          let param = {
-            score: this.sliderVal,
-            limit: this.rpp,
-            page:this.page,
-            keyword: this.keyword,
-            search_type: this.type,
-            state:  this.state !== "All" ? this.state : "",
-            country: this.newCountryL.length !=0 ? this.newCountryL:"",
-            city:  this.city !== "All" ? this.city : "",
-            employee: !this.employee.includes("Any") ? this.employee : "1-10000000",
-            category: this.category,
-            jobtitle: this.jobtitle,
-          }
-
-        const res = await this.$axios.$post(url, param);
-
-        if (res.status == 'sucess') {
-          if (res.data.length > 0) {
-            this.lastId = res.data[res.data.length - 1].id;
-          }
-          this.companies = res.data.sort(this.compare);
-        }
-
-        this.hasEqualSize = res.data.length == this.rpp ? true : false;
-        this.isSearching = false;
+        this.performSearch();
       },
 
       async fetchMore() {
-        this.isSearching = true;
         this.removeFromSearch();
         this.page = this.page + 1;
-         let url = "/search?limit="+this.rpp+"&page="+this.page
-          let param = {
+        const params = {
             lId: this.lastId,
             score: this.sliderVal,
-            limit: this.rpp,
             keyword: this.keyword,
             search_type: this.type,
-            country: this.country !== "any" ? this.country : "",
-            state:  this.state !== "All" ? this.state : "",
-            city: this.city !== "All"  ? this.city : "",
-            employee: !this.employee.includes("Any") ? this.employee : "1-10000000",
+            country: this.country !== constants.ANY_SMALLA ? this.country : constants.EMPTY_STRING,
+            state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
+            city: this.city !== constants.ALL  ? this.city : constants.EMPTY_STRING,
+            employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
             category: this.category,
             jobtitle: this.jobtitle,
           }
-        const res = await this.$axios.$post(url, param);
-        if (res.status == 'sucess') {
-          if (res.data.length > 0) {
-            this.lastId = res.data[res.data.length - 1].id;
-            res.data.sort(this.compare).forEach((el) => this.companies.push(el));
-          }
-        }
-        this.hasEqualSize = res.data.length == this.rpp ? true : false;
-        this.isSearching = false;
+        this.performSearch(params);
       },
       getKeywords() {
-        this.$store.dispatch("index-module/keywords").then(()=> {
+        this.$store.dispatch("index-module/load-keywords").then(()=> {
             this.keywords = this.getKeywordsFromStore;
         });
       },
