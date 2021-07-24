@@ -3,7 +3,11 @@ export const state = () => ({
     categories: [],
     countryGroups: [],
     countryList: [],
-    jobTitles: []
+    jobTitles: [],
+    companies: [],
+    popular: [],
+    states: [],
+    cities: []
 });
 
 export const getters = {
@@ -18,6 +22,18 @@ export const getters = {
     },
     'job-titles': (state)=> {
         return state.jobTitles;
+    },
+    companies: (state)=> {
+        return state.companies;
+    },
+    popular: (state)=> {
+        return state.popular;
+    },
+    states: (state)=> {
+        return state.states;
+    },
+    cities: (state)=> {
+        return state.cities;
     }
 }
   
@@ -33,8 +49,19 @@ export const mutations = {
     },
     'set-job-titles'(state, jobTitles) {
         state.jobTitles = jobTitles;
+    },
+    'set-companies'(state, companies) {
+        state.companies = companies;
+    },
+    'set-popular'(state, popular) {
+        state.popular = popular;
+    },
+    'set-states'(state, states) {
+        state.states = states;
+    },
+    'set-cities'(state, cities) {
+        state.cities = cities;
     }
-
 }
 
 export const actions = {
@@ -57,5 +84,29 @@ export const actions = {
         return this.$axios.$get("/jobtitle").then((response)=> {
              commit('set-job-titles', response.Titles);
         });
+    },
+    'add-popularity'(id) {
+        return this.$axios.$post("/add_popularity", {id});
+    },
+    search({commit}, parameters) {
+        return this.$axios.$post("/search?limit="+parameters.rpp+"&page="+parameters.page, parameters.params).then((response)=> {
+            commit('set-companies', response.data);
+        });
+    },
+    'load-popular'({commit}, params) {
+        return this.$axios.$get("/popular", { params }).then((response)=> {
+            commit('set-popular', response.data);
+        });
+    },
+    'post-states'({commit}, params={}) {
+        return this.$axios.$post("/states", {params}).then((response)=> {
+           commit('set-states', response.data);
+        });
+    }, 
+    'post-cities'({commit}, params={}) {
+        return this.$axios.$post("/cities", {params}).then((response)=> {
+            commit('set-cities', response.data);
+        });
     }
+
 }

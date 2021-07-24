@@ -374,7 +374,9 @@
         getCategories: 'index-module/categories',
         getCountryGroups: 'index-module/country-groups',
         getCountryList: 'index-module/country-list',
-        getJobTitlesFromStore: 'index-module/job-titles'
+        getJobTitlesFromStore: 'index-module/job-titles',
+        getCompanies: 'index-module/companies',
+        getPopular : 'index-module/popular'
       })
     },
     components: {
@@ -425,7 +427,7 @@
         rpp:15,
         country: [],
         product:[],
-        new_countryl:[],
+        newCountryL:[],
         state: "All",
         city: "All",
         keyword: constants.EMPTY_STRING,
@@ -553,14 +555,14 @@
         }
       },
 
-      search_keyord(keyword) {
+      SearchKeyord(keyword) {
         this.keyword = keyword;
-        this.searchType = "keyword";
+        this.searchType = constants.KEYWORD;
         this.search();
       },
 
       compare(a, b) {
-         return a.score>b.score ? -1: 1;
+         return a.score > b.score ? -1: 1;
       },
 
       applyFilter() {
@@ -570,88 +572,73 @@
       },
 
       updateValues() {
-        const chngedVal = Number(
+        const changedVal = Number(
           ((this.sliderVal - this.sliderMin) * 100) /
           (this.sliderMax - this.sliderMin)
         );
-        this.sliderPos =
-          this.sliderVal == 0
-            ? `0px`
-            : `calc(${chngedVal}% + (${3 - chngedVal * 0.15}px))`;
+        this.sliderPos = this.sliderVal == 0 ? `0px` : `calc(${changedVal}% + (${3 - changedVal * 0.15}px))`;
       },
 
-      async addPopularity(id) {
-        await this.$axios.$post("/add_popularity", {
-          id,
-        });
+      addPopularity(id) {
+          this.$store.dispatch("index-module/add-popularity", {id});
       },
 
-      async search() {
-        //intial search filter to retrive the companies from the backend
-        console.log(this.selectedCountryGroup+"  "+this.selectedCountry)
+      search() {
         this.state = 'All'
-        if(this.country[0]){
-          await this.country.forEach(cont=>{
-              this.new_countryl.push(cont)
-          })
+        if(this.country.length > 0) {
+          this.newCountryL = [...this.country];
         }
-        const contrie1 = await this.$axios.$get("/group?country_group="+this.selectedCountryGroup[0]);
-        if(contrie1.status == 'success'){
-          if(this.selectedCountryGroup[0]){
-              await contrie1.Countries.forEach(cont=>{
-                this.new_countryl.push(cont)
-              })
-            }
+        if(this.selectedCountryGroup.length > 0) {
+                   this.$store.dispatch("index-module/load-country-group",this.selectedCountryGroup[0]).then(()=> {
+                   this.newCountryL = [...this.newCountryL, this.getCountryList];
+                   this.performSearch();
+        });
         }
-        // this.country = new_countryl
+      },
+      performSearch() {
         this.isSearchDone = true;
         this.isSearching = true;  
         this.page = 1;
-        //search box parameters
-        console.log(this.new_countryl.length)
          let params = {
           score: this.sliderVal,
           keyword: this.keyword,
           searchType: this.type,
-          // country: this.country !== "any" ? this.country : "",
-          country: this.new_countryl.length !=0 ? this.new_countryl:"",
-          state:  this.state !== "All" ? this.state : "",
-          city: this.city !== "All" ? this.city : "",
+          country: this.newCountryL.length !=0 ? this.newCountryL:constants.EMPTY_STRING,
+          state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
+          city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
           employee: !this.employee.includes("Any") ? this.employee : "1-10000000",
           category: this.category,
           jobtitle: this.jobtitle,
         };
-        console.log(params)
-        //post the parameters to /search api endpoint to retrive the filterd list of comapnies
-        let url = "/search?limit="+this.rpp+"&page="+this.page
-        const res = await this.$axios.$post(url,  params );
-
-        // if we get the data succefully check number of companies to update the last_id var and 
-        //comapnies list to be filled with retrived data
-        if (res.status == 'sucess') {
-          if (res.data.length > 0) {
-            this.last_id = res.data[res.data.length - 1].id;
-          }
-          this.companies = res.data.sort(this.compare);
+        const searchParameters = {
+          rpp: this.rpp,
+          page: this.page,
+          params: params
         }
 
-        //once the backend api response is recived user will be scrolled to a results
-        this.isSearching = false;
-        VueScrollTo.scrollTo("#results", 200, { offset: -50 });
+        this.$store.dispatch('index-module/search', searchParameters).then(()=> {
+            this.companies = this.getCompanies;
+            if(this.companies.length>0) {
+              this.last_id = this.companies(this.companies.length - 1);
+            }
+            this.comanies = this.comanies.sort(this.compare);
+            this.isSearching = false;
+            VueScrollTo.scrollTo("#results", 200, { offset: -50 });
+            this.populatePopular();
+        });
+      }, 
 
-        //popularResult list will be populated with according results of the keyword being searched
-         params = {
+      populatePopular() {
+        const params = {
           keyword: this.keyword,
           searchType: this.type,
-          Country: this.country.join(','),
+          Country: this.country.join(constants.COMMA),
           Industry: this.category,
           JobTitle: this.jobtitle
         };
-        const popularResult = await this.$axios.$get("/popular", { params });
-        //if successful popular list will be populated
-        if (popularResult.status == 'sucess') {
-          this.popular = popularResult.data;
-        }
+        this.$store.dispatch('index-module/load-popular', params).then(()=> {
+             this.popular = this.getPopular;
+        })
 
         //if the user input for the country is any then the subfilter of state and city will be filled with all the available cities and states
         if (this.country == "any") {
@@ -722,7 +709,7 @@
             keyword: this.keyword,
             searchType: this.type,
             // country: this.country !== "any" ? this.country : "",
-            country: this.new_countryl.length !=0 ? this.new_countryl:"",
+            country: this.newCountryL.length !=0 ? this.newCountryL:"",
             state:  this.state !== "All" ? this.state : "",
             city:  this.city !== "All" ? this.city : "",
             employee: !this.employee.includes("Any") ? this.employee : "1-10000000",
@@ -737,8 +724,8 @@
           }
           this.companies = res.data.sort(this.compare);
         }
-        console.log(this.new_countryl)
-        let params = { state: this.state !== "any" ? this.state : "", country :this.new_countryl}
+        console.log(this.newCountryL)
+        let params = { state: this.state !== "any" ? this.state : "", country :this.newCountryL}
         this.$axios.$post("/cities", params).then((response)=>{
           this.cities = response.data;
         })
@@ -764,7 +751,7 @@
             keyword: this.keyword,
             searchType: this.type,
             state:  this.state !== "All" ? this.state : "",
-            country: this.new_countryl.length !=0 ? this.new_countryl:"",
+            country: this.newCountryL.length !=0 ? this.newCountryL:"",
             city:  this.city !== "All" ? this.city : "",
             employee: !this.employee.includes("Any") ? this.employee : "1-10000000",
             category: this.category,
