@@ -287,17 +287,6 @@
               </div>
               <div class="form-group col-md-2 text-left">
                 <label for="inputPages">Records</label>
-                <!-- <select
-                  id="page_pl"
-                  class="form-control"
-                  v-model="rpp"
-                  @change="searchBySize"
-                >
-                  <option value="15">15</option>
-                  <option value="50">50</option>
-                  <option value="80">80</option>
-                  <option value="100">100</option>
-                </select> -->
                 <multiselect
                   v-model="rpp"
                   :options="recordOptions"
@@ -378,7 +367,8 @@
         getCompanies: 'index-module/companies',
         getPopular : 'index-module/popular',
         getStates: 'index-module/states',
-        getCities: 'index-module/cities'
+        getCities: 'index-module/cities',
+        getKeywordsFromStore: 'index-module/keywords'
       })
     },
     components: {
@@ -735,7 +725,6 @@
         this.removeFromSearch();
         this.page = this.page + 1;
          let url = "/search?limit="+this.rpp+"&page="+this.page
-     
           let param = {
             lId: this.lastId,
             score: this.sliderVal,
@@ -749,35 +738,23 @@
             category: this.category,
             jobtitle: this.jobtitle,
           }
-
         const res = await this.$axios.$post(url, param);
-
         if (res.status == 'sucess') {
-         
           if (res.data.length > 0) {
             this.lastId = res.data[res.data.length - 1].id;
             res.data.sort(this.compare).forEach((el) => this.companies.push(el));
           }
         }
-
         this.hasEqualSize = res.data.length == this.rpp ? true : false;
         this.isSearching = false;
       },
-
-      async getKeywords() {
-        const res = await this.$axios.$get("/keywords");
-        this.keywords = res.data;
+      getKeywords() {
+        this.$store.dispatch("index-module/keywords").then(()=> {
+            this.keywords = this.getKeywordsFromStore;
+        });
       },
-
       getClass(score){
-        if(score <=35){
-          return 'is-critical'
-        } else if(score >35 && score <= 60){
-          return 'is-good'
-        } else{
-          return ''
-        }
-
+        return score <=35?'is-critical': (score >35 && score <= 60)? 'is-good': constants.EMPTY_STRING;
       }
     },
   }
@@ -1138,12 +1115,6 @@
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   }
 
-  /* ::-webkit-scrollbar-thumb:window-inactive {
-    background: #ff3377;
-    width: 5px;
-    height: 40px;
-  } */
-
   input[type=checkbox] {
     border: 1px solid #B3365B;
     outline: 1px solid #B3365B;
@@ -1316,5 +1287,4 @@ padding: 1px 6px !important;
 .header-text-fix{
   margin-top:70px
 }
-
 </style>
