@@ -755,6 +755,7 @@
     background: #031C32;
   }
 
+  /*search css start */
   .search-card{
     background: #FFFFFF;
     border-radius: 8px;
@@ -855,12 +856,12 @@
   }
 
   .btn-search-lg:active{
-            transform: scale(0.98);
-            box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
-}
+      transform: scale(0.98);
+      box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+  }
 
   .vue-slider.vue-slider-ltr{
-    margin-top: 35px;
+      margin-top: 35px;
   }
 
   .popular-heading,
@@ -879,6 +880,9 @@
   .popular-item a{
     border-bottom: 1px solid #C6C6C6;
   }
+  /* End search css */
+
+  /* start of heder css */
   .navbar-brand{
     font-size: 32px;
     font-weight: 700;
@@ -897,11 +901,13 @@
     position: absolute;
     width: 100%;
   }
+  /* End of header css */
 
   .bottom-section{
     text-align: center;
   }
 
+  /* Filter Section */
   .main-filter-section{
     background: #B3365B;
     border-radius: 8px;
@@ -1003,6 +1009,12 @@
     height: 45px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   }
+
+  /* ::-webkit-scrollbar-thumb:window-inactive {
+    background: #ff3377;
+    width: 5px;
+    height: 40px;
+  } */
 
   input[type=checkbox] {
     border: 1px solid #B3365B;
@@ -1176,4 +1188,5 @@ padding: 1px 6px !important;
 .header-text-fix{
   margin-top:70px
 }
+
 </style>
