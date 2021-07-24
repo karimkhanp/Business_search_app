@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--  Slider Section  -->
     <div class="main-slider custom-bg">
       <div class="gradient-bg w-100">
         <div class="container header-text-fix">
@@ -18,7 +17,6 @@
             <div class="col-md-5 my-2">
               <div class="search-card">
                 <h3 class="card-title mb-4">Search Organisations</h3>
-                <!--Product being promoted  -->
                 <div class="input-group custom-input-group mb-3">
                  <multiselect v-model="product" :options="products"
                     :multiple="false"
@@ -47,8 +45,6 @@
                     </template>
                   </multiselect>
                 </div>
-
-                <!--  Search Field  -->
                 <div class="input-group custom-input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text-custom" id="basic-addon1">
@@ -57,9 +53,6 @@
                   </div>
                   <input type="text" class="form-control" placeholder="e.g Ux Designer" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
                 </div>
-
-                <!-- Category -->
-                <!-- asyncFindCategories -->
                 <div class="input-group custom-input-group mb-3 mag-icon-search">
                   <multiselect
                     v-model="category"
@@ -79,10 +72,7 @@
                     <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
                   </multiselect>
                 </div>
-                <!-- asyncFindJobTitles -->
-                <!-- Job title -->
                 <div class="input-group custom-input-group mb-3 mag-icon-search">
-                <!-- @search-change="getJobTitles" -->
                 <multiselect
                     v-model="jobtitle"
                     
@@ -106,7 +96,6 @@
                     <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
                   </multiselect>
                 </div>
-                <!-- Country Selection -->
                 <div class="country">
                  <multiselect
                     v-model="country"
@@ -142,10 +131,8 @@
                   </multiselect>
                 </div>
 
-                <!--  Country  -->
                 <div class="country-buttons text-left my-4" >
                   <a class="card-tab-btn" v-on:click="showCountry(selectedCountry)" :class="selectedCountryGroup == selectedCountry ? 'active' : ''" :key="index" v-for="selectedCountry, index in countryGroups">{{selectedCountry}}</a>
-                  <!-- <a class="card-tab-btn active">APAC</a> -->
                  <div id="show-city" class="show-city mt-3" v-if="isHidden == true">
                       <div class="close-city">
                           <a class="btn-dark " v-on:click="isHidden = false">x</a>
@@ -158,17 +145,7 @@
                       </div>
                 </div>
                 </div>
-
-                <!--  Search Button  -->
-                <!-- for disabling search if search filed is empty use :disabled="keyword.trim() == ''" -->
                 <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="search"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
-                <!--  Popular Searches  -->
-                <!-- <div class="popular-search-section text-left"   v-if="keywords.length > 0">
-                  <span class="popular-heading">Popular Searches: </span>
-                  <span class="popular-item" v-for="(keyword, i) in keywords" :key="i">
-                      <a @click="search_keyord(keyword)">{{ keyword }}</a>,
-                    </span>
-                </div> -->
               </div>
             </div>
           </div>
@@ -176,25 +153,13 @@
       </div>
     </div>
 
-    <!--  Bottom Section  -->
     <div v-if="isSearchDone" class="bottom-section">
-
-      <!--  Filter Section  -->
       <div class="filter-section mb-4">
         <div class="container">
           <div class="main-filter-section">
             <div class="form-row">
               <div class="form-group col-md-2 text-left">
                 <label class="typo__label">State</label>
-                <!-- <select
-                  v-model="state"
-                  class="text-capitalize form-control w-100"
-                  @change="searchByState"
-                >
-                  <option :value="state" v-for="state, index in states" :key="index">
-                    {{ state }}
-                  </option>
-                </select> -->
                 <multiselect
                   v-model="state"
                   :options="states"
@@ -221,16 +186,6 @@
               </div>
               <div class="form-group col-md-3 text-left">
                 <label class="typo__label">City</label>
-                <!-- <select
-                  v-model="city"
-                  class="text-capitalize form-control w-100"
-                  @change="searchByCity"
-                  :disabled="!state || state == 'any'"
-                >
-                  <option :value="city" v-for="city, index in cities" :key="index">
-                    {{ city }}
-                  </option>
-                </select> -->
                 <multiselect
                   v-model="city"
                   :options="cities"
@@ -317,28 +272,21 @@
         </div>
       </div>
 
-      <!--  Card Section  -->
       <div v-if="isSearchDone" class="filter-cards-section" >
-        <!-- <FilteredSearch :companies="companies" :size= "!this.employee.includes('Any')?this.employee.toString():'1-10000000'" /> -->
         <Filtercards  :companies="companies"/>
       </div>
 
-      <!--  Show More button  -->
       <button v-if="isSearchDone && companies && companies.length > 0 "  @click="fetchMore" class="btn-show-more text-white">Show more</button>
       
       <div class="text-center text-white" v-else>No Records found</div>
 
-      <!--  Most View Section  -->
       <div v-if="isSearchDone" class="most-viewed-organisation">
         <div class="container mt-5 mb-4">
           <p class="most-viewed-heading mb-0 text-white">Most viewed organisation for </p>
           <p class="most-viewed-term mb-0 text-white">
             {{ keyword }}
-            <!-- UX Designer -->
           </p>
         </div>
-
-        <!--   Cards   -->
         <div  v-if="isSearchDone" class="filter-cards-section">
           <Filtercards  :companies="popular"/>
         </div>
@@ -711,8 +659,7 @@
   }
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
   .main-header nav.navbar{
     position: absolute;
     width: 100%;
@@ -808,7 +755,6 @@
     background: #031C32;
   }
 
-  /*search css start */
   .search-card{
     background: #FFFFFF;
     border-radius: 8px;
@@ -910,12 +856,9 @@
 
   .btn-search-lg:active{
             transform: scale(0.98);
-            /* Scaling button to 0.98 to its original size */
             box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
-            /* Lowering the shadow */
 }
 
-  /* Range slider css */
   .vue-slider.vue-slider-ltr{
     margin-top: 35px;
   }
@@ -936,9 +879,6 @@
   .popular-item a{
     border-bottom: 1px solid #C6C6C6;
   }
-  /* End search css */
-
-  /* start of heder css */
   .navbar-brand{
     font-size: 32px;
     font-weight: 700;
@@ -957,13 +897,11 @@
     position: absolute;
     width: 100%;
   }
-  /* End of header css */
 
   .bottom-section{
     text-align: center;
   }
 
-  /* Filter Section */
   .main-filter-section{
     background: #B3365B;
     border-radius: 8px;
