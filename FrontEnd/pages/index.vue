@@ -373,6 +373,7 @@
       ...mapGetters({
         getCategories: 'index-module/categories',
         getCountryGroups: 'index-module/country-groups',
+        getCountryList: 'index-module/country-list'
       })
     },
     components: {
@@ -488,8 +489,8 @@
         }  else  {
           this.selectedCountryGroup.push(selectedCountry);
           this.isHidden = true;
-          this.$axios.$get("/group?country_group="+selectedCountry).then(()=> {
-            this.countryList = res.Countries;
+          this.$store.dispatch('index-module/load-country-group', selectedCountry).then(()=> {
+             this.countryList = this.getCountryList;
           });
         }
       },
@@ -510,7 +511,7 @@
       },
 
       loadCountryGroups(){
-        this.$store.dispatch('index-module/load-countrygroups').then(()=> {
+        this.$store.dispatch('index-module/load-country-groups').then(()=> {
             this.countryGroups = this.getCountryGroups;
         });
       },
@@ -721,7 +722,6 @@
           if (res.data.length > 0) {
             this.last_id = res.data[res.data.length - 1].id;
           }
-
           this.companies = res.data.sort(this.compare);
         }
 
