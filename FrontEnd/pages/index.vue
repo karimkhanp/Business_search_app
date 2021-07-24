@@ -376,7 +376,9 @@
         getCountryList: 'index-module/country-list',
         getJobTitlesFromStore: 'index-module/job-titles',
         getCompanies: 'index-module/companies',
-        getPopular : 'index-module/popular'
+        getPopular : 'index-module/popular',
+        getStates: 'index-module/states',
+        getCities: 'index-module/cities'
       })
     },
     components: {
@@ -422,7 +424,7 @@
         keywords: [],
         flips: [],
         popflips: [],
-        last_id: null,
+        lastId: null,
         type: "keyword",
         rpp:15,
         country: [],
@@ -557,7 +559,7 @@
 
       SearchKeyord(keyword) {
         this.keyword = keyword;
-        this.searchType = constants.KEYWORD;
+        this.search_type = constants.KEYWORD;
         this.search();
       },
 
@@ -589,9 +591,10 @@
           this.newCountryL = [...this.country];
         }
         if(this.selectedCountryGroup.length > 0) {
-                   this.$store.dispatch("index-module/load-country-group",this.selectedCountryGroup[0]).then(()=> {
+                   this.$store.dispatch("index-module/load-country-group", this.selectedCountryGroup[0]).then(()=> {
                    this.newCountryL = [...this.newCountryL, this.getCountryList];
                    this.performSearch();
+                   this.hasEqualSize = this.newCountryL.length == this.rpp ? true : false;
         });
         }
       },
@@ -602,7 +605,7 @@
          let params = {
           score: this.sliderVal,
           keyword: this.keyword,
-          searchType: this.type,
+          search_type: this.type,
           country: this.newCountryL.length !=0 ? this.newCountryL:constants.EMPTY_STRING,
           state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
           city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
@@ -619,7 +622,7 @@
         this.$store.dispatch('index-module/search', searchParameters).then(()=> {
             this.companies = this.getCompanies;
             if(this.companies.length>0) {
-              this.last_id = this.companies(this.companies.length - 1);
+              this.lastId = this.companies(this.companies.length - 1);
             }
             this.comanies = this.comanies.sort(this.compare);
             this.isSearching = false;
@@ -631,38 +634,33 @@
       populatePopular() {
         const params = {
           keyword: this.keyword,
-          searchType: this.type,
+          search_type: this.type,
           Country: this.country.join(constants.COMMA),
           Industry: this.category,
           JobTitle: this.jobtitle
         };
         this.$store.dispatch('index-module/load-popular', params).then(()=> {
              this.popular = this.getPopular;
-        })
-
-        //if the user input for the country is any then the subfilter of state and city will be filled with all the available cities and states
-        if (this.country == "any") {
-          console.log("ALL STATES AND CITIES FETCHED")
-          const states = await this.$axios.$post("/states");
-          const cities = await this.$axios.$post("/cities"); 
-          this.states = states.data;
-          this.cities = cities.data;
-        } 
-        //if user has particular country then that countries sates and cities will be populated
-        else {
-          let params = { country: this.country };
-          console.log(params)
-           this.$axios.$post("/states",  params ).then((response)=>{
-            this.states = response.data;
-          });
-          this.$axios.$post("/cities",  params ).then((response)=>{
-            this.cities = response.data;
-          })
+        });
+        let parameters = {};
+        if (this.country[0] !== "any") {
+            parameters = { country: this.country };
         }
-        this.hasEqualSize = res.data.length == this.rpp ? true : false;
+        this.postStates(parameters);
+        this.postCities(parameters);
       },
 
+      postStates(params) {
+          this.$store.dispatch("index-module/post-states",  params ).then(()=>{
+            this.states = this.getStates;
+          });
+      },
 
+      postCities(params) {
+          this.$store.dispatch("index-module/post-cities", params ).then(()=>{
+            this.cities = this.getCities;
+          });
+      },
 
       async searchBySize() {
         this.isSearching = true;
@@ -675,7 +673,7 @@
             limit: this.rpp,
             page: this.page,
             keyword: this.keyword,
-            searchType: this.type,
+            search_type: this.type,
             country: this.country !== "any" ? this.country : "",
             state:  this.state !== "All" ? this.state : "",
             city: this.city !== "All" ? this.city : "",
@@ -685,7 +683,7 @@
         });
         if (res.status == 'sucess') {
           if (res.data.length > 0) {
-            this.last_id = res.data[res.data.length - 1].id;
+            this.lastId = res.data[res.data.length - 1].id;
           }
           this.companies = res.data.sort(this.compare);
         }
@@ -707,7 +705,7 @@
            {
             score: this.sliderVal,
             keyword: this.keyword,
-            searchType: this.type,
+            search_type: this.type,
             // country: this.country !== "any" ? this.country : "",
             country: this.newCountryL.length !=0 ? this.newCountryL:"",
             state:  this.state !== "All" ? this.state : "",
@@ -720,7 +718,7 @@
 
         if (res.status == 'sucess') {
           if (res.data.length > 0) {
-            this.last_id = res.data[res.data.length - 1].id;
+            this.lastId = res.data[res.data.length - 1].id;
           }
           this.companies = res.data.sort(this.compare);
         }
@@ -749,7 +747,7 @@
             limit: this.rpp,
             page:this.page,
             keyword: this.keyword,
-            searchType: this.type,
+            search_type: this.type,
             state:  this.state !== "All" ? this.state : "",
             country: this.newCountryL.length !=0 ? this.newCountryL:"",
             city:  this.city !== "All" ? this.city : "",
@@ -762,7 +760,7 @@
 
         if (res.status == 'sucess') {
           if (res.data.length > 0) {
-            this.last_id = res.data[res.data.length - 1].id;
+            this.lastId = res.data[res.data.length - 1].id;
           }
           this.companies = res.data.sort(this.compare);
         }
@@ -778,11 +776,11 @@
          let url = "/search?limit="+this.rpp+"&page="+this.page
      
           let param = {
-            lId: this.last_id,
+            lId: this.lastId,
             score: this.sliderVal,
             limit: this.rpp,
             keyword: this.keyword,
-            searchType: this.type,
+            search_type: this.type,
             country: this.country !== "any" ? this.country : "",
             state:  this.state !== "All" ? this.state : "",
             city: this.city !== "All"  ? this.city : "",
@@ -796,7 +794,7 @@
         if (res.status == 'sucess') {
          
           if (res.data.length > 0) {
-            this.last_id = res.data[res.data.length - 1].id;
+            this.lastId = res.data[res.data.length - 1].id;
             res.data.sort(this.compare).forEach((el) => this.companies.push(el));
           }
         }
