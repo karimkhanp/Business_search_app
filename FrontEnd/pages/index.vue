@@ -311,7 +311,7 @@
   import constants from "../api/constants"
   import Multiselect from 'vue-multiselect'
   import { fas } from '@fortawesome/free-solid-svg-icons'
-  import { KeywordCards } from '../../FrontEnd/components/keyword-cards.vue';
+  import KeywordCards from '../../FrontEnd/components/keyword-cards.vue';
 
   var VueScrollTo = require("vue-scrollto");
 
@@ -337,7 +337,8 @@
       Homeslider,
       Filtersection,
       Filtercards,
-      Multiselect
+      Multiselect,
+      KeywordCards
     },
     data() {
       return {
@@ -605,7 +606,7 @@
         this.$store.dispatch('index-module/search', searchParameters).then(()=> {
             this.companies = this.getCompanies;
             if(this.companies.length>0) {
-              this.lastId = this.companies(this.companies.length - 1);
+              this.lastId = this.companies[this.companies.length - 1];
             }
             this.isSearching = false;
             VueScrollTo.scrollTo("#results", 200, { offset: -50 });
