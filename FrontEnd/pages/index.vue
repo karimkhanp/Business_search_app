@@ -266,13 +266,13 @@
       </div>
 
       <div class="container">
-        <div class="keyword-card">
-            <div v-if="category">Category: <span>{{category}}</span><a v-on:click="remove(`category`)">x</a> </div>
-            <div v-if="jobTitle">Job Title: <span>{{jobTitle}}</span><a v-on:click="remove(`jobTitle`)">x</a> </div>
-            <div v-if="country.length>0">Country: <span>{{country}}</span><a v-on:click="remove(`country`)">x</a> </div>
-            <div v-if="city">City: <span>{{city}}</span><a v-on:click="remove(`city`)">x</a> </div>
-            <div v-if="employee">Company Size: <span>{{employee}}</span><a v-on:click="remove(`employee`)">x</a></div>
-        </div>
+           <KeywordCards
+             :category="category"
+             :jobTitle="jobTitle"
+             :country="country"
+             :city="city"
+             :employee="employee"
+             v-on:remove="remove" />
       </div>
 
       <div v-if="isSearchDone" class="keep-walking-section mb-4">
@@ -311,6 +311,7 @@
   import constants from "../api/constants"
   import Multiselect from 'vue-multiselect'
   import { fas } from '@fortawesome/free-solid-svg-icons'
+  import { KeywordCards } from '../../FrontEnd/components/keyword-cards.vue';
 
   var VueScrollTo = require("vue-scrollto");
 
@@ -699,40 +700,11 @@
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
-  .keyword-card {
-    display: flex;
-    flex-wrap: wrap;
-    font-style: normal;
-  }
-
   .file-export {
      display:flex;
      align-items: center;
      justify-content: flex-end;
   }
-  
-  .keyword-card div {
-      background-color: #01579B;
-      border-radius: 10px;
-      display: inline-block;
-      color: white;
-      margin: 5px 10px;
-      padding: 2px 10px;
-  }
-
-  .keyword-card span {
-    font-weight: bold;
-  }
-
-  .keyword-card  a {
-    text-decoration: none;
-    font-size: 20px;
-    color: white;
-    font-weight: bold;
-    margin-left: 10px;
-    cursor: pointer;
-  }
-  
   .main-header nav.navbar{
     position: absolute;
     width: 100%;
