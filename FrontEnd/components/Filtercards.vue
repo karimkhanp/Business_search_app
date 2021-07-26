@@ -143,6 +143,8 @@ export default {
   width: 73%;
   max-height: 56px;
   min-height: 56px;
+  word-break: break-word;
+  overflow-y: hidden;
 }
 .filter-custom-card{
   background: #EBCACA;
