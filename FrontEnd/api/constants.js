@@ -18,5 +18,6 @@ export default {
     ANY: 'Any',
     ANY_SMALLA: 'any',
     LOADING: 'Loading please Wait . . .',
-    LIST: 'list'
+    LIST: 'list',
+    NEW_LINE : '\n'
 }

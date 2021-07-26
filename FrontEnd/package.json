@@ -21,5 +21,9 @@
     "vue-slider-component": "^3.2.11",
     "vue-scrollto": "^2.20.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@fortawesome/free-brands-svg-icons": "^5.15.3",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@nuxtjs/fontawesome": "^1.1.2"
+  }
 }

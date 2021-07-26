@@ -106,10 +106,9 @@ export const actions = {
             commit('set-popular', response.data);
         });
     },
-    'post-states'({commit}, params={}) {
-        return this.$axios.$post("/states", params).then((response)=> {
-           commit('set-states', response.data);
-        });
+    'post-states'({commit}, params=undefined) {
+        if(!params) return this.$axios.$post("/states").then((response)=> commit('set-states', response.data));
+        return this.$axios.$post("/states", params).then((response)=> commit('set-states', response.data));
     }, 
     'post-cities'({commit}, params={}) {
         return this.$axios.$post("/cities", params).then((response)=> {

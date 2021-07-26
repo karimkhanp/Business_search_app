@@ -74,10 +74,10 @@
                 </div>
                 <div class="input-group custom-input-group mb-3 mag-icon-search">
                 <multiselect
-                    v-model="jobtitle"
+                    v-model="jobTitle"
                     
                     @search-change="asyncFindJobTitles" 
-                    :options="jobtitles"
+                    :options="jobTitles"
                     :multiple="false"
                     :close-on-select="true"
                     :clear-on-select="true"
@@ -133,7 +133,7 @@
 
                 <div class="country-buttons text-left my-4" >
                   <a class="card-tab-btn" v-on:click="showCountry(selectedCountry)" :class="selectedCountryGroup == selectedCountry ? 'active' : ''" :key="index" v-for="selectedCountry, index in countryGroups">{{selectedCountry}}</a>
-                 <div id="show-city" class="show-city mt-3" v-if="isHidden == true">
+                 <div class="show-city mt-3" v-if="isHidden == true">
                       <div class="close-city">
                           <a class="btn-dark " v-on:click="isHidden = false">x</a>
                       </div>
@@ -182,7 +182,6 @@
                     </div>
                   </template>
                 </multiselect>
-                
               </div>
               <div class="form-group col-md-3 text-left">
                 <label class="typo__label">City</label>
@@ -207,7 +206,6 @@
                     </div>
                   </template>
                 </multiselect>
-
               </div>
 
               <div class="form-group col-md-3 text-left">
@@ -259,12 +257,24 @@
                   </template>
                 </multiselect>
               </div>
-            </div>
+              <div class="file-export form-groupp col-md-2 text-left">
+                  <button class="btn btn-primary" v-on:click="exportToFile"> <font-awesome-icon :icon="fas.faFileExport" /></button>
+              </div> 
+            </div> 
           </div>
         </div>
       </div>
 
-      <!--  Keep walking  -->
+      <div class="container">
+        <div class="keyword-card">
+            <div v-if="category">Category: <span>{{category}}</span><a v-on:click="remove(`category`)">x</a> </div>
+            <div v-if="jobTitle">Job Title: <span>{{jobTitle}}</span><a v-on:click="remove(`jobTitle`)">x</a> </div>
+            <div v-if="country.length>0">Country: <span>{{country}}</span><a v-on:click="remove(`country`)">x</a> </div>
+            <div v-if="city">City: <span>{{city}}</span><a v-on:click="remove(`city`)">x</a> </div>
+            <div v-if="employee">Company Size: <span>{{employee}}</span><a v-on:click="remove(`employee`)">x</a></div>
+        </div>
+      </div>
+
       <div v-if="isSearchDone" class="keep-walking-section mb-4">
         <div class="container">
           <p class="keep-walking mb-0 text-white">Keep Walking</p>
@@ -277,9 +287,7 @@
       </div>
 
       <button v-if="isSearchDone && companies && companies.length > 0 "  @click="fetchMore" class="btn-show-more text-white">Show more</button>
-      
       <div class="text-center text-white" v-else>No Records found</div>
-
       <div v-if="isSearchDone" class="most-viewed-organisation">
         <div class="container mt-5 mb-4">
           <p class="most-viewed-heading mb-0 text-white">Most viewed organisation for </p>
@@ -302,11 +310,16 @@
   import { mapGetters } from "vuex";
   import constants from "../api/constants"
   import Multiselect from 'vue-multiselect'
+  import { fas } from '@fortawesome/free-solid-svg-icons'
+
   var VueScrollTo = require("vue-scrollto");
 
   export default {
     layout: 'default',
     computed: {
+       fas () {
+         return fas
+        },
       ...mapGetters({
         getCategories: 'index-module/categories',
         getCountryGroups: 'index-module/country-groups',
@@ -330,8 +343,8 @@
         category : constants.EMPTY_STRING,
         categories : [],
         constCategories:[],
-        jobtitle: constants.EMPTY_STRING,
-        jobtitles: [],
+        jobTitle: constants.EMPTY_STRING,
+        jobTitles: [],
         constJobTitles:[],
         jobSearchSlotText: constants.LOADING,
         showModal: false,
@@ -404,6 +417,32 @@
       window.addEventListener("scroll", this.updateScroll);
     },
     methods: {
+      exportToFile() {
+         const csvContent = "data:text/csv;charset=utf-8," + this.companies.map(company => company.join(constants.COMMA)).join(constants.NEW_LINE);
+         window.open(encodeURI(csvContent));
+      },
+      remove(item) {
+           switch(item) {
+             case 'category': {
+               this.category = constants.EMPTY_STRING;
+               break;
+             }
+             case 'jobTitle': {
+               this.jobTitle = constants.EMPTY_STRING;
+               break;
+             }
+             case 'country': {
+               this.country = [];
+               break;
+             }
+             case 'city': {
+               this.city = constants.EMPTY_STRING;
+               break;
+             }
+             default: this.employee = constants.EMPTY_STRING
+           }
+           this.search();
+      },
       updateScroll() {
         this.scrollPosition = window.scrollY;
       },
@@ -416,7 +455,7 @@
         }
       },
       async asyncFindJobTitles(query) {
-        this.jobtitles = this.constJobTitles.filter(job => job.toLowerCase().startsWith(query.toLowerCase()));
+        this.jobTitles = this.constJobTitles.filter(job => job.toLowerCase().startsWith(query.toLowerCase()));
       },
       async asyncFindProducts(query) {
         this.products = constants.PRODUCTS.filter((product) =>product.toLowerCase().startsWith(query.toLowerCase()));
@@ -439,7 +478,7 @@
       },
       getJobTitles() {
         this.$store.dispatch('index-module/load-job-titles').then(()=> {
-              this.jobtitles= this.getJobTitlesFromStore;
+              this.jobTitles= this.getJobTitlesFromStore;
               this.constJobTitles = this.getJobTitlesFromStore;
         });
       },
@@ -552,7 +591,7 @@
                   city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
                   employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
                   category: this.category,
-                  jobtitle: this.jobtitle,
+                  jobtitle: this.jobTitle,
               };
         }
         this.isSearchDone = true;
@@ -578,7 +617,7 @@
           search_type: this.type,
           Country: this.country.join(constants.COMMA),
           Industry: this.category,
-          JobTitle: this.jobtitle
+          JobTitle: this.jobTitle
         };
         this.$store.dispatch('index-module/load-popular', params).then(()=> {
              this.popular = this.getPopular;
@@ -610,7 +649,7 @@
              city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
              employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
              category: this.category,
-             jobtitle: this.jobtitle,
+             jobtitle: this.jobTitle,
          }
         this.performSearch(params);
       },
@@ -643,7 +682,7 @@
             city: this.city !== constants.ALL  ? this.city : constants.EMPTY_STRING,
             employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
             category: this.category,
-            jobtitle: this.jobtitle,
+            jobtitle: this.jobTitle,
           }
         this.performSearch(params);
       },
@@ -659,7 +698,41 @@
   }
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-<style scoped>
+<style>
+  .keyword-card {
+    display: flex;
+    flex-wrap: wrap;
+    font-style: normal;
+  }
+
+  .file-export {
+     display:flex;
+     align-items: center;
+     justify-content: flex-end;
+  }
+  
+  .keyword-card div {
+      background-color: #01579B;
+      border-radius: 10px;
+      display: inline-block;
+      color: white;
+      margin: 5px 10px;
+      padding: 2px 10px;
+  }
+
+  .keyword-card span {
+    font-weight: bold;
+  }
+
+  .keyword-card  a {
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
   .main-header nav.navbar{
     position: absolute;
     width: 100%;
@@ -755,7 +828,6 @@
     background: #031C32;
   }
 
-  /*search css start */
   .search-card{
     background: #FFFFFF;
     border-radius: 8px;
@@ -880,9 +952,7 @@
   .popular-item a{
     border-bottom: 1px solid #C6C6C6;
   }
-  /* End search css */
 
-  /* start of heder css */
   .navbar-brand{
     font-size: 32px;
     font-weight: 700;
@@ -901,13 +971,11 @@
     position: absolute;
     width: 100%;
   }
-  /* End of header css */
 
   .bottom-section{
     text-align: center;
   }
 
-  /* Filter Section */
   .main-filter-section{
     background: #B3365B;
     border-radius: 8px;
@@ -927,7 +995,6 @@
     color: #C6C6C6 !important;
   }
 
-  /* Vue slider START */
   .vue-slider-process {
     background-color: #B3365B !important;
   }
@@ -963,9 +1030,7 @@
     left: 50.4%;
     border-width: 10px;
   }
-  /* Vue slider END */
 
-  /* multiselect dropdown */
   .multiselect__element:hover{
     background-color: #EBCACA !important;
     color: #B3365B  !important;
@@ -997,24 +1062,17 @@
     height: 5px;
     border-radius: 8px;
   }
-  /* Track  */
+
   ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
   } 
 
-  /* Handle  */
   ::-webkit-scrollbar-thumb {
     background: #ff3377;
     width: 5px;
     height: 45px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
   }
-
-  /* ::-webkit-scrollbar-thumb:window-inactive {
-    background: #ff3377;
-    width: 5px;
-    height: 40px;
-  } */
 
   input[type=checkbox] {
     border: 1px solid #B3365B;
@@ -1048,7 +1106,6 @@
   .multiselect__input, .multiselect__single{
     border-radius: 8px !important;
     line-height: 24px;
-    /* padding: 0 0 0 32px; */
   }
   .country .multiselect__input,.country .multiselect__single{
     border-radius: 8px !important;
@@ -1116,10 +1173,6 @@
     content: "\F07D9";
     z-index: 1;
   }
-   /* .search-card .multiselect::before{
-    content: "\F07D9";
-    z-index: 1;
-  } */
   .multiselect::before,
   .multiselect--active::after{
     display: inline-block;
@@ -1143,22 +1196,29 @@
     background: #fff;
   }
 
-  /* dropdown-menu  */
 .show-city{
-height: 110px;
-box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08), 0px 20px 32px rgba(96, 97, 112, 0.24);    
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+}
+
+.close-city {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .close-city a{
-border-radius: 50% !important;
-    padding: 2px 7px !important;
+    border-radius: 50%;
+    padding: 2px 7px;
+    margin-bottom: 3px;
 }
 
 .city-list{
-height: 110px;
-padding: 10px 10px !important;
-overflow-y : scroll !important;
-overflow-x : hidden !important;
+    height: 110px;
+    padding: 10px 10px;
+    overflow-y : scroll;
+    overflow-x : hidden;
+    box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08), 0px 20px 32px rgba(96, 97, 112, 0.24);
 }
 .city-list a{
 padding: 1px 6px !important;
@@ -1174,15 +1234,6 @@ padding: 1px 6px !important;
     font-size: 7px;
 }
 
-.close-city {
-    /* padding: 0px 5px !important; */
-    padding: 0px 5px !important;
-    float:right !important;
-    float: right !important;
-    position: absolute;
-    right: 38px;
-    bottom: 396px;
-}
 
 /* header text */
 .header-text-fix{
