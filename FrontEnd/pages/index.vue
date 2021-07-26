@@ -1112,7 +1112,6 @@
     margin-bottom: 8px !important;
   }
   .multiselect__placeholder {
-    /* padding: 0 0 0 32px !important; */
     font-size: 16px !important;
     color: #495057 !important;
     margin-bottom: 8px !important;
@@ -1124,11 +1123,10 @@
     height: 46px;
     border-radius: 8px;
   }
-  .multiselect--active .multiselect__tags{
+  .multiselect--active .multiselect__tags {
     border-color: #B3365B !important;
   }
-  .main-filter-section .multiselect__single{
-    /* display: none !important; */
+  .main-filter-section .multiselect__single {
     background: #EBCACA !important;
   }
 
@@ -1207,8 +1205,6 @@ padding: 1px 6px !important;
     font-size: 7px;
 }
 
-
-/* header text */
 .header-text-fix{
   margin-top:70px
 }
