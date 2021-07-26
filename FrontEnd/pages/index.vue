@@ -272,7 +272,7 @@
              :country="country"
              :city="city"
              :employee="employee"
-             v-on:remove="remove" />
+             v-on:remove="remove"/>
       </div>
 
       <div v-if="isSearchDone" class="keep-walking-section mb-4">
@@ -283,7 +283,7 @@
       </div>
 
       <div v-if="isSearchDone" class="filter-cards-section" >
-        <Filtercards  :companies="companies"/>
+        <Filtercards :companies="companies"/>
       </div>
 
       <button v-if="isSearchDone && companies && companies.length > 0 "  @click="fetchMore" class="btn-show-more text-white">Show more</button>
@@ -296,7 +296,7 @@
           </p>
         </div>
         <div  v-if="isSearchDone" class="filter-cards-section">
-          <Filtercards  :companies="popular"/>
+          <Filtercards :companies="popular"/>
         </div>
       </div>
     </div>
@@ -419,7 +419,7 @@
     },
     methods: {
       exportToFile() {
-         const csvContent = "data:text/csv;charset=utf-8," + this.companies.map(company => company.join(constants.COMMA)).join(constants.NEW_LINE);
+         const csvContent = "data:text/csv;charset=utf-8," + this.companies.map(company => JSON.stringify(company)).join(constants.NEW_LINE);
          window.open(encodeURI(csvContent));
       },
       remove(item) {
