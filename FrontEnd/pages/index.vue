@@ -155,114 +155,19 @@
 
     <div v-if="isSearchDone" class="bottom-section">
       <div class="filter-section mb-4">
-        <div class="container">
-          <div class="main-filter-section">
-            <div class="form-row">
-              <div class="form-group col-md-2 text-left">
-                <label class="typo__label">State</label>
-                <multiselect
-                  v-model="state"
-                  :options="states"
-                  :multiple="false"
-                  :preselect-first="true"
-                  placeholder="Any"
-                  :close-on-select="true"
-                  @input="searchByState"
-
-                  :clear-on-select="false"
-                  :preserve-search="true" >
-
-                  <template slot="selection"
-                            slot-scope="{ values, search, isOpen }">
-                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
-                  </template>
-                  <template slot="option" slot-scope="props">
-                    <div class="option__desc">
-                      <span class="option__small" v-html="props.option"></span>
-                    </div>
-                  </template>
-                </multiselect>
-              </div>
-              <div class="form-group col-md-3 text-left">
-                <label class="typo__label">City</label>
-                <multiselect
-                  v-model="city"
-                  :options="cities"
-                  :multiple="false"
-                  :preselect-first="true"
-                  placeholder="Any"
-                  :close-on-select="true"
-                  @input="searchByCity"
-                  :clear-on-select="false"
-                  :preserve-search="true" >
-
-                  <template slot="selection"
-                            slot-scope="{ values, search, isOpen }">
-                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
-                  </template>
-                  <template slot="option" slot-scope="props">
-                    <div class="option__desc">
-                      <span class="option__small" v-html="props.option"></span>
-                    </div>
-                  </template>
-                </multiselect>
-              </div>
-
-              <div class="form-group col-md-3 text-left">
-                <label class="typo__label">Company Size</label>
-                <multiselect
-                  v-model="employee"
-                  :options="companySizes"
-                  :multiple="true"
-                  :preselect-first="true"
-                  placeholder="Any"
-                  :close-on-select="false"
-                  @input="searchBySize"
-                  :clear-on-select="false"
-                  :preserve-search="true" >
-
-                  <template slot="selection"
-                            slot-scope="{ values, search, isOpen }">
-                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
-                  </template>
-                  <template slot="option" slot-scope="props">
-                    <div class="option__desc">
-                      <span v-if="companyValues.includes(props.option)">
-                        <input type="checkbox" value="" checked>
-                      </span>
-                      <span v-else>
-                        <input type="checkbox" value="">
-                      </span>
-                      <span class="option__small" v-html="props.option"></span>
-                    </div>
-                  </template>
-                </multiselect>
-              </div>
-              <div class="form-group col-md-2 text-left">
-                <label for="inputPages">Records</label>
-                <multiselect
-                  v-model="rpp"
-                  :options="recordOptions"
-                  :multiple="false"
-                  :preselect-first="true"
-                  placeholder="Any"
-                  :close-on-select="true"
-                  @input="search"
-                  :clear-on-select="false"
-                  :preserve-search="true" >
-                  <template slot="selection" slot-scope="{ values, search, isOpen }">
-                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
-                  </template>
-                  <template slot="option" slot-scope="props">
-                  </template>
-                </multiselect>
-              </div>
-              <div class="file-export form-groupp col-md-2 text-left">
-                  <button class="btn btn-primary" v-on:click="exportToFile"> <font-awesome-icon :icon="fas.faFileExport" /></button>
-              </div> 
-            </div> 
-          </div>
-        </div>
+        <FilterSection
+                :cities="cities"
+                :states="states"
+                :companySizes="companySizes"
+                :companyValues="companyValues"
+                :icon="fas.faFileExport"
+                :recordOptions="recordOptions"
+                v-on:searchByCity="searchByCity"
+                v-on:searchByState="searchByState"
+                v-on:searchBySize="searchBySize"
+                v-on:search="searchOnFilter"
+                v-on:exportToFile="exportToFile"
+            />
       </div>
 
       <div class="container">
@@ -305,13 +210,13 @@
 
 <script>
   import Homeslider from '../components/homeSlider'
-  import Filtersection from '../components/Filtersection'
   import Filtercards from '../components/Filtercards'
   import { mapGetters } from "vuex";
   import constants from "../api/constants"
   import Multiselect from 'vue-multiselect'
-  import { fas } from '@fortawesome/free-solid-svg-icons'
   import KeywordCards from '../../FrontEnd/components/keyword-cards.vue';
+  import FilterSection from '../components/Filtersection.vue';
+  import { fas } from '@fortawesome/free-solid-svg-icons'
 
   var VueScrollTo = require("vue-scrollto");
 
@@ -335,10 +240,10 @@
     },
     components: {
       Homeslider,
-      Filtersection,
+      FilterSection,
       Filtercards,
       Multiselect,
-      KeywordCards
+      KeywordCards,
     },
     data() {
       return {
@@ -386,7 +291,7 @@
         state: constants.ALL,
         city: constants.ALL,
         keyword: constants.EMPTY_STRING,
-        employee: constants.ANY,
+        employee: [constants.ANY],
         countryValues:[],
         companyValues:[],
         companySizes: [
@@ -441,7 +346,7 @@
                this.city = constants.EMPTY_STRING;
                break;
              }
-             default: this.employee = constants.EMPTY_STRING
+             default: this.employee = []
            }
            this.search();
       },
@@ -450,6 +355,10 @@
       },
       notEmptyAndNull(item) {
          return item!=null && item!= constants.EMPTY_STRING;
+      },
+      async searchOnFilter(rpp) {
+        this.rpp = rpp;
+        this.search();
       },
       async asyncFindCategories(query) {
         if(query!=constants.EMPTY_STRING) {
@@ -639,7 +548,8 @@
           });
       },
 
-      async searchBySize() {
+      async searchBySize(employee) {
+        this.employee = employee;
         this.removeFromSearch();
         this.page = 1;
         const params = {
@@ -656,7 +566,8 @@
         this.performSearch(params);
       },
 
-      async searchByState() {
+      async searchByState(state) {
+        this.state = state;
         this.removeFromSearch();
         this.page = 1;
         this.performSearch();
@@ -665,7 +576,8 @@
         this.city = constants.ALL;
       },
 
-      async searchByCity() {
+      async searchByCity(city) {
+        this.city = city;
         this.removeFromSearch();
         this.page = 1;
         this.performSearch();
@@ -701,11 +613,6 @@
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
-  .file-export {
-     display:flex;
-     align-items: center;
-     justify-content: flex-end;
-  }
   .main-header nav.navbar{
     position: absolute;
     width: 100%;
@@ -949,25 +856,6 @@
     text-align: center;
   }
 
-  .main-filter-section{
-    background: #B3365B;
-    border-radius: 8px;
-    padding: 32px;
-  }
-  .main-filter-section select{
-    background: #EBCACA;
-    border-radius: 8px;
-    padding: 5px;
-    height: 45px;
-  }
-
-  .main-filter-section .form-group label{
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 20px;
-    color: #C6C6C6 !important;
-  }
-
   .vue-slider-process {
     background-color: #B3365B !important;
   }
@@ -1126,9 +1014,6 @@
   .multiselect--active .multiselect__tags {
     border-color: #B3365B !important;
   }
-  .main-filter-section .multiselect__single {
-    background: #EBCACA !important;
-  }
 
   .form-control:disabled{
      background: #EBCACA !important;
@@ -1155,16 +1040,6 @@
     top: 5px;
     left: 12px;
     font-size: 26px;
-  }
-  .main-filter-section .multiselect{
-    background: #EBCACA;
-    border-radius: 8px;
-  }
-  .main-filter-section .multiselect__tags {
-    background: #EBCACA;
-  }
-  .main-filter-section .multiselect--active .multiselect__tags {
-    background: #fff;
   }
 
 .show-city{

@@ -8,15 +8,10 @@
                 <p class="company-name mb-0">
                   {{ company.industry }}
                 </p>
-                <p    class="company-details mb-0">
+                <p class="mb-0">
                   {{ company.company_name }}
                 </p>
               </div>
-              <!-- <div class="float-right" :class="company.score < 31 ? 'score-red': company.score > 30 && company.score < 51 ? 'score-yellow' : 'score'" >
-                <div class="" :class="company.score < 31 ? 'score-red': company.score > 30 && company.score < 51 ? 'score-yellow' : 'score'" >
-                  {{ company.score }}
-                </div>
-              </div> -->
             </div>
             <div class="custom-card-content text-left">
                 <div class="mb-3 employee-title-section">
@@ -104,8 +99,6 @@ export default {
 
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .company-name{
   font-size: 14px;
