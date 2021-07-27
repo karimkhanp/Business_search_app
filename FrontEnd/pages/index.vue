@@ -1082,4 +1082,8 @@ padding: 1px 6px !important;
   margin-top:70px
 }
 
+input[type="checkbox"] {
+  pointer-events: none;
+}
+
 </style>
