@@ -100,7 +100,7 @@
                 </multiselect>
               </div>
               <div class="file-export form-group col-md-2 text-left">
-                  <button class="btn btn-primary" v-on:click="$emit('exportToFile')"> <font-awesome-icon :icon="icon" /></button>
+                  <button class="export btn btn-primary" v-on:click="$emit('exportToFile')"> <font-awesome-icon :icon="icon" /></button>
               </div>
             </div>
         </div>
@@ -137,6 +137,11 @@ export default {
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
+
+  button.export {
+    background-color: #031C32;
+    border: none!important;
+  }
   .main-filter-section{
     background: #B3365B;
     border-radius: 8px;

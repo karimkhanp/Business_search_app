@@ -36,7 +36,8 @@ export default {
   }
 
   .keyword-card div {
-      background-color: #01579B;
+      background-color: #031C32;
+      opacity: 0.5;
       border-radius: 10px;
       display: inline-block;
       color: white;
