@@ -160,7 +160,7 @@
                 :states="states"
                 :companySizes="companySizes"
                 :companyValues="companyValues"
-                :icon="fas.faFileExport"
+                :icon="fas.faDownload"
                 :recordOptions="recordOptions"
                 v-on:searchByCity="searchByCity"
                 v-on:searchByState="searchByState"
@@ -473,23 +473,22 @@
           this.$store.dispatch("index-module/add-popularity", {id});
       },
 
-      search() {
+      async search() {
         this.state = constants.ALL;
         if(this.country.length > 0) {
           this.newCountryL = [...this.country];
         }
         if(this.selectedCountryGroup.length > 0) {
-                   this.$store.dispatch("index-module/load-country-group", this.selectedCountryGroup[0]).then(()=> {
-                   this.newCountryL = [...this.newCountryL, ...this.getCountryList];
-                   this.page = 1;
-                   this.performSearch();
-                   this.populatePopular();
-                   const parameters = this.country[0] !== constants.ANY_SMALLA?  { country: this.country }: {};
-                   this.postStates(parameters);
-                   this.postCities(parameters);
-                   this.hasEqualSize = this.newCountryL.length == this.rpp ? true : false;
-        });
-        }
+            await this.$store.dispatch("index-module/load-country-group", this.selectedCountryGroup[0]);
+           }
+            this.newCountryL = [...this.newCountryL, ...this.getCountryList];
+            this.page = 1;
+            this.performSearch();
+            this.populatePopular();
+            const parameters = this.country[0] !== constants.ANY_SMALLA?  { country: this.country }: {};
+            this.postStates(parameters);
+            this.postCities(parameters);
+            this.hasEqualSize = this.newCountryL.length == this.rpp ? true : false;
       },
       performSearch(params=undefined) {
         if(!params) {
