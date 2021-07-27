@@ -33,7 +33,7 @@
                     </template>
                     <template slot="option" slot-scope="props">
                       <div class="option__desc">
-                        <span v-if="countryValues.includes(props.option)">
+                        <span v-if="product.includes(props.option)">
                           <input type="checkbox" value="" checked>
                         </span>
                         <span v-else> <input type="checkbox" value=""></span>
@@ -75,7 +75,6 @@
                 <div class="input-group custom-input-group mb-3 mag-icon-search">
                 <multiselect
                     v-model="jobTitle"
-                    
                     @search-change="asyncFindJobTitles" 
                     :options="jobTitles"
                     :multiple="false"
@@ -110,13 +109,13 @@
                     :preserve-search="true"
                     @search-change="asyncFindCountries">
                     <template slot="selection" slot-scope="{ values }">
-                      <span class="multiselect__single" v-if="values.length">{{values[0]}}</span>
+                      <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
                     </template>
                     <template
                       slot="option"
                       slot-scope="props">
                       <div class="option__desc">
-                        <span v-if="countryValues.includes(props.option)">
+                        <span v-if="country.includes(props.option)">
                           <input type="checkbox" value="" checked>
                         </span>
                         <span v-else>
