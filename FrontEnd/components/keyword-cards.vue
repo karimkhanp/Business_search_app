@@ -36,29 +36,29 @@ export default {
   }
 
   .keyword-card div {
-      background-color: #031C32;
-      border: 1px solid #E0E0E0;
-      opacity: 0.6;
+      background-color: #16263a;
+      color: #4a5461;
       border-radius: 10px;
       display: inline-block;
-      color: white;
       margin: 5px 5px;
       padding: 2px 10px;
       max-width: 100%;
       height: auto;
       word-wrap: break-word;
+      font-size: 14px;
   }
 
   .keyword-card span {
-    font-weight: bold;
+    color: white;
+    opacity: 0.8;
   }
 
   .keyword-card  a {
     text-decoration: none;
     font-size: 20px;
-    color: white;
-    font-weight: bold;
     margin-left: 10px;
     cursor: pointer;
+    color: white;
+    opacity: 0.8;
   }
 </style>
