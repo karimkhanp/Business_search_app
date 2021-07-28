@@ -15,137 +15,11 @@
               </p>
             </div>
             <div class="col-md-5 my-2">
-              <div class="search-card">
-                <h3 class="card-title mb-4">Search Organisations</h3>
-                <div class="input-group custom-input-group mb-3">
-                 <multiselect v-model="product" :options="products"
-                    :multiple="false"
-                    :close-on-select="true"
-                    :clear-on-select="false"
-                    :hideSelected="false"
-                    :taggable="false"
-                    placeholder="Product being promoted"
-                    :preserve-search="true"
-                    :internal-search="false"
-                    @search-change="asyncFindProducts" >
-                    <template slot="selection" slot-scope="{ values }">
-                      <span class="multiselect__single" v-if="values.length">{{values[0]}}</span>
-                    </template>
-                    <template slot="option" slot-scope="props">
-                      <div class="option__desc">
-                        <span v-if="product.includes(props.option)">
-                          <input type="checkbox" value="" checked>
-                        </span>
-                        <span v-else> <input type="checkbox" value=""></span>
-                        <span class="option__small">{{ props.option }}</span>
-                      </div>
-                    </template>
-                    <template slot="selection">
-                      <span class="mdi mdi-magnify"></span>
-                    </template>
-                  </multiselect>
-                </div>
-                <div class="input-group custom-input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text-custom" id="basic-addon1">
-                      <span class="mdi mdi-magnify"></span>
-                    </span>
-                  </div>
-                  <input type="text" class="form-control" placeholder="e.g Ux Designer" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
-                </div>
-                <div class="input-group custom-input-group mb-3 mag-icon-search">
-                  <multiselect
-                    v-model="category"
-                    :options="categories"
-                    :multiple="false"
-                    :close-on-select="true"
-                    :clear-on-select="false"
-                    :hideSelected="false"
-                    :taggable="false"
-                    placeholder="Category"
-                    :preserve-search="true"
-                    :internal-search="false"
-                    @search-change="asyncFindCategories" >
-                    <template slot="selection" slot-scope="{ values, search, isOpen }">
-                      <span class="multiselect__single" style="padding-left: 0px;" v-if="values.length">{{values[0]}}</span>
-                    </template>
-                    <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
-                  </multiselect>
-                </div>
-                <div class="input-group custom-input-group mb-3 mag-icon-search">
-                <multiselect
-                    v-model="jobTitle"
-                    @search-change="asyncFindJobTitles" 
-                    :options="jobTitles"
-                    :multiple="false"
-                    :close-on-select="true"
-                    :clear-on-select="true"
-                    :hideSelected="false"
-                    :taggable="false"
-                    placeholder="Job Title"
-                    :internal-search="false"
-                    :preserve-search="true"
-                     >
-                    <template slot="selection" slot-scope="{ values, search, isOpen }">
-                      <span class="multiselect__single" style="padding-left: 0px;" v-if="values.length">{{values[0]}}</span>
-                    </template>
-                    <template slot="noOptions">{{jobSearchSlotText}}</template>
-                    <template slot="noResult">{{jobSearchSlotText}}</template>
-                    <template slot="spinner">Searching Please Wait...</template>
-                    <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
-                  </multiselect>
-                </div>
-                <div class="country">
-                 <multiselect
-                    v-model="country"
-                    :options="countries"
-                    :multiple="true"
-                    :internal-search="false"
-                    :close-on-select="false"
-                    :clear-on-select="false"
-                    :hideSelected="false"
-                    :taggable="false"
-                    placeholder="Any Country"
-                    :preserve-search="true"
-                    @search-change="asyncFindCountries">
-                    <template slot="selection" slot-scope="{ values }">
-                      <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
-                    </template>
-                    <template
-                      slot="option"
-                      slot-scope="props">
-                      <div class="option__desc">
-                        <span v-if="country.includes(props.option)">
-                          <input type="checkbox" value="" checked>
-                        </span>
-                        <span v-else>
-                          <input type="checkbox" value="">
-                        </span>
-                        <span class="option__small">{{ props.option }}</span>
-                      </div>
-                    </template>
-                    <template slot="selection">
-                      <span class="mdi mdi-magnify"></span>
-                    </template>
-                  </multiselect>
-                </div>
-
-                <div class="country-buttons text-left my-4" >
-                  <a class="card-tab-btn" v-on:click="showCountry(selectedCountry)" :class="selectedCountryGroup == selectedCountry ? 'active' : ''" :key="index" v-for="selectedCountry, index in countryGroups">{{selectedCountry}}</a>
-                 <div class="show-city mt-3" v-if="isHidden == true">
-                      <div class="close-city">
-                          <a class="btn-dark " v-on:click="isHidden = false">x</a>
-                      </div>
-                      <div class="city-list">
-                          <a class="card-tab-btn " @click="removeCountry(city)" :key="index" v-for="city, index in countryList">
-                            {{city}} 
-                            <span v-if="!countrySelected.includes(city)" class="mdi mdi-check-bold ml-2"></span>
-                          </a>
-                      </div>
-                </div>
-                </div>
-                <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="search"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
-              </div>
+                <AppSearchCard
+                    :countryGroups="countryGroups"
+                    @removeCountry="RemoveCountry"
+                    @search="SearchSubmitted"
+                />
             </div>
           </div>
         </div>
@@ -216,6 +90,7 @@
   import KeywordCards from '../../FrontEnd/components/keyword-cards.vue';
   import FilterSection from '../components/Filtersection.vue';
   import { fas } from '@fortawesome/free-solid-svg-icons'
+  import AppSearchCard from "../components/AppSearchCard.vue";
 
   var VueScrollTo = require("vue-scrollto");
 
@@ -226,10 +101,8 @@
          return fas
         },
       ...mapGetters({
-        getCategories: 'index-module/categories',
         getCountryGroups: 'index-module/country-groups',
         getCountryList: 'index-module/country-list',
-        getJobTitlesFromStore: 'index-module/job-titles',
         getCompanies: 'index-module/companies',
         getPopular : 'index-module/popular',
         getStates: 'index-module/states',
@@ -243,6 +116,7 @@
       Filtercards,
       Multiselect,
       KeywordCards,
+      AppSearchCard
     },
     data() {
       return {
@@ -250,16 +124,13 @@
         categories : [],
         constCategories:[],
         jobTitle: constants.EMPTY_STRING,
-        jobTitles: [],
         constJobTitles:[],
-        jobSearchSlotText: constants.LOADING,
         showModal: false,
         isSearching: false,
         countryList: [],
         countryGroups:[],
         countrySelected: [],
         selectedCountryGroup: [],
-        isHidden: false,
         page:1,
         scrollPosition: 0,
         view: constants.LIST,
@@ -271,12 +142,10 @@
         hasEqualSize: false,
         isSubscribed: false,
         isStateSelected: false,
-        countries: constants.COUNTRIES,
         states: [],
         cities: [],
         emps: [constants.ANY_SMALLA],
         companies: [],
-        products:constants.PRODUCTS,
         popular: [],
         keywords: [],
         flips: [],
@@ -304,8 +173,6 @@
       this.getKeywords();
       this.updateValues();
       this.loadCountryGroups();
-      this.loadCategories();
-      this.getJobTitles();
     },
     watch: {
       sliderVal(newVal) {
@@ -322,6 +189,17 @@
       window.addEventListener("scroll", this.updateScroll);
     },
     methods: {
+      SearchSubmitted(params) {
+        this.product = params.product;
+        this.category = params.category;
+        this.country = params.country;
+        this.jobTitle = params.jobTitle;
+        this.keyword = params.keyword;
+        this.search();
+      },
+      RemoveCountry(countrySelected) {
+         this.countrySelected = countrySelected;
+      },
       exportToFile() {
          const csvContent = "data:text/csv;charset=utf-8," + this.companies.map(company => JSON.stringify(company)).join(constants.NEW_LINE);
          window.open(encodeURI(csvContent));
@@ -351,72 +229,18 @@
       updateScroll() {
         this.scrollPosition = window.scrollY;
       },
-      notEmptyAndNull(item) {
-         return item!=null && item!= constants.EMPTY_STRING;
-      },
       async searchOnFilter(rpp) {
         this.rpp = rpp;
         this.search();
       },
-      async asyncFindCategories(query) {
-        if(query!=constants.EMPTY_STRING) {
-          this.categories = this.constCategories.filter(industry=> this.notEmptyAndNull(industry) && industry.toLowerCase().startsWith(query.toLowerCase()));
-        }
-      },
-      async asyncFindJobTitles(query) {
-        this.jobTitles = this.constJobTitles.filter(job => job.toLowerCase().startsWith(query.toLowerCase()));
-      },
-      async asyncFindProducts(query) {
-        this.products = constants.PRODUCTS.filter((product) =>product.toLowerCase().startsWith(query.toLowerCase()));
-      },
-      async asyncFindCountries(query) {
-        this.countries = constants.COUNTRIES.filter((country)=> country.toLowerCase().startsWith(query.toLowerCase()));
-      },
-      showCountry(selectedCountry) {
-        if(this.selectedCountryGroup.includes(selectedCountry)) {
-          var index = this.selectedCountryGroup.indexOf(selectedCountry);
-          this.selectedCountryGroup.splice(index, 1);
-          this.isHidden = false;
-        }  else  {
-          this.selectedCountryGroup.push(selectedCountry);
-          this.isHidden = true;
-          this.$store.dispatch('index-module/load-country-group', selectedCountry).then(()=> {
-              this.countryList = this.getCountryList;
-          });
-        }
-      },
-      getJobTitles() {
-        this.$store.dispatch('index-module/load-job-titles').then(()=> {
-              this.jobTitles= this.getJobTitlesFromStore;
-              this.constJobTitles = this.getJobTitlesFromStore;
-        });
-      },
-
       loadCountryGroups() {
         this.$store.dispatch('index-module/load-country-groups').then(()=> {
             this.countryGroups = this.getCountryGroups;
         });
       },
-      loadCategories() {
-        this.$store.dispatch('index-module/load-categories').then(()=> {
-            let categories = this.getCategories;
-            this.categories =  categories.filter((category)=> category!=null && (/[a-zA-Z]/).test(category.charAt(0)));
-            this.constCategories = categories;
-        });
-      },
-      removeCountry(city){
-          const index = this.countrySelected.indexOf(city);
-          if (index > -1) {
-            this.countrySelected.splice(index, 1);
-          } else {
-            this.countrySelected.push(city);
-          }
-      },
-
       removeFromSearch(){
         this.country = this.countryList.filter((item)=> !this.countrySelected.includes(item));
       },
-
       scrollToTop() {
         window.scrollTo(0, 0);
       },
@@ -473,13 +297,16 @@
 
       async search() {
         this.state = constants.ALL;
-        if(this.country.length > 0) {
-          this.newCountryL = [...this.country];
-        }
-        if(this.selectedCountryGroup.length > 0) {
-            await this.$store.dispatch("index-module/load-country-group", this.selectedCountryGroup[0]);
-           }
-            this.newCountryL = [...this.newCountryL, ...this.getCountryList];
+          if(this.country.length > 0) {
+              this.newCountryL = [...this.country];
+          }
+          if(this.selectedCountryGroup.length > 0) {
+              const loadedCountryL = this.selectedCountryGroup.reduce(async (newCountryL, selectedCountryGroup)=> {
+                 await this.$store.dispatch("index-module/load-country-group", selectedCountryGroup);
+                 newCountryL = [...newCountryL, this.getCountryList];
+              }, []);
+              this.newCountryL = [...this.newCountryL, ...loadedCountryL];
+            }
             this.page = 1;
             this.performSearch();
             this.populatePopular();
@@ -704,17 +531,6 @@
     background: #031C32;
   }
 
-  .search-card{
-    background: #FFFFFF;
-    border-radius: 8px;
-    padding: 40px;
-  }
-  .search-card .card-title{
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 25px;
-    text-align: left;
-  }
   .card-tab-btn{
     display: inline-block;
     border: 1px solid #C6C6C6;
@@ -734,34 +550,7 @@
     background: #B3365B;
     color: #fff;
   }
-  .input-group-text-custom{
-    display: flex;
-    align-items: center;
-    padding: 5px 0 0 12px;
-    margin-bottom: 0;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #495057;
-    text-align: center;
-    white-space: nowrap;
-    border-radius: 0.25rem;
-  }
-  .input-group-text-custom .mdi.mdi-magnify{
-    font-size: 26px;
-  }
-  .custom-input-group{
-    border-radius: 8px;
-  }
-  .custom-input-group .form-control{
-    border-radius: 8px !important;
-    padding: 1.5rem 0.75rem;
-    padding-left: 45px;
-    color: #374958 !important;
-  }
-  .custom-input-group .form-control:focus {
-    box-shadow: none;
-  }
+
   .country-buttons a{
     border-radius: 10px;
     margin-right: 4px;
@@ -771,6 +560,7 @@
     line-height: 15px;
     display: inline-block;
   }
+
   .country-buttons a.active{
     background: rgba(179, 54, 91, 0.1);
     border: 1px solid rgba(179, 54, 91, 0.5);
@@ -947,13 +737,6 @@
     background: #B3365B;
   }
 
-  .search-card .input-group.custom-input-group .input-group-prepend{
-    position: absolute;
-    z-index: 5;
-  }
-  .search-card .input-group.custom-input-group .form-control:focus{
-    border-color: #B3365B !important;
-  }
   .multiselect__tags {
     padding: 10px 40px 3px 12px !important;
     min-height: 48px;
@@ -1037,44 +820,6 @@
     left: 12px;
     font-size: 26px;
   }
-
-.show-city{
-    height: 110px;
-    display: flex;
-    flex-direction: column;
-}
-
-.close-city {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.close-city a{
-    border-radius: 50%;
-    padding: 2px 7px;
-    margin-bottom: 3px;
-}
-
-.city-list{
-    height: 110px;
-    padding: 10px 10px;
-    overflow-y : scroll;
-    overflow-x : hidden;
-    box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08), 0px 20px 32px rgba(96, 97, 112, 0.24);
-}
-.city-list a{
-padding: 1px 6px !important;
-}
-
-.mdi-check-bold{
-    color: rgb(255, 255, 255);
-    background: #B3365B;
-    border-radius: 100%;
-    height: 36px;
-    width: 36px;
-    padding: 3px 4px;
-    font-size: 7px;
-}
 
 .header-text-fix{
   margin-top:70px
