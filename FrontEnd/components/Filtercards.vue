@@ -54,7 +54,6 @@
                     <p  v-if="isSubscribed && flippedCards.includes(index)" class="mb-0 emp-list-item">
                       <span class="mdi mdi-label-variant mr-2"></span> {{ company.tag_line }} 
                     </p>
-
                     <p  v-if="!isSubscribed && flippedCards.includes(index)" class="mb-0 emp-list-item">
                       <span class="mdi mdi-name"></span>  This part is only available for members 
                     </p>
@@ -150,6 +149,10 @@ export default {
   background: #EBCACA;
   border-radius: 8px;
   margin-bottom: 30px;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .custom-card-header{
   background: #D9B9BA;
