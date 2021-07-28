@@ -291,7 +291,6 @@
         city: constants.ALL,
         keyword: constants.EMPTY_STRING,
         employee: [constants.ANY],
-        countryValues:[],
         companyValues:[],
         companySizes: [
           'Any', '1-99', '100-249', '250-499', '500-999', '1000-4999', '5000-9999', '10000+'
@@ -585,7 +584,6 @@
         this.removeFromSearch();
         this.page = this.page + 1;
         const params = {
-            lId: this.lastId,
             score: this.sliderVal,
             keyword: this.keyword,
             search_type: this.type,
