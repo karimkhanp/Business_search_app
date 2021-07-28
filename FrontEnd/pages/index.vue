@@ -17,6 +17,8 @@
             <div class="col-md-5 my-2">
                 <AppSearchCard
                     :countryGroups="countryGroups"
+                    :categories="categories"
+                    :jobTitles="jobTitles"
                     @removeCountry="RemoveCountry"
                     @search="SearchSubmitted"
                 />
@@ -102,12 +104,16 @@
         },
       ...mapGetters({
         getCountryGroups: 'index-module/country-groups',
-        getCountryList: 'index-module/country-list',
         getCompanies: 'index-module/companies',
         getPopular : 'index-module/popular',
         getStates: 'index-module/states',
         getCities: 'index-module/cities',
-        getKeywordsFromStore: 'index-module/keywords'
+        getKeywordsFromStore: 'index-module/keywords',
+        getCountryList: 'index-module/country-list',
+        getCategories: 'index-module/categories',
+        getJobTitlesFromStore: 'index-module/job-titles',
+        getCategories: 'index-module/categories',
+        getJobTitles: 'index-module/job-titles',
       })
     },
     components: {
@@ -120,8 +126,9 @@
     },
     data() {
       return {
+        categories: [],
+        jobTitles: [],
         category : constants.EMPTY_STRING,
-        categories : [],
         jobTitle: constants.EMPTY_STRING,
         showModal: false,
         isSearching: false,
@@ -171,6 +178,8 @@
       this.getKeywords();
       this.updateValues();
       this.loadCountryGroups();
+      this.loadCategories();
+      this.loadJobTitles();
     },
     watch: {
       sliderVal(newVal) {
@@ -244,7 +253,6 @@
       scrollToTop() {
         window.scrollTo(0, 0);
       },
-
       toogleMenu() {
         var menu = document.getElementById("main-navbar");
         menu.classList.toggle("is-active");
@@ -364,14 +372,23 @@
             this.states = this.getStates;
           });
       },
-
       postCities(params, all=constants.EMPTY_STRING) {
           this.$store.dispatch("index-module/post-cities", params ).then(()=> {
             this.cities = [...this.getCities];
             if(all) this.cities.push(all);
           });
       },
-
+      loadCategories() {
+        this.$store.dispatch('index-module/load-categories').then(()=> {
+           this.categories = this.getCategories;
+           this.categories =  this.categories.filter((category)=> category!=null && (/[a-zA-Z]/).test(category.charAt(0)));
+        });
+      },
+      loadJobTitles() {
+        this.$store.dispatch('index-module/load-job-titles').then(()=> {
+           this.jobTitles = this.getJobTitlesFromStore;
+        });
+      },
       async searchBySize(employee) {
         this.employee = employee;
         this.removeFromSearch();

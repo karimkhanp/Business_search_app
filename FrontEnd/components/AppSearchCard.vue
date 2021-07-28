@@ -37,10 +37,10 @@
             </div>
             <input type="text" class="form-control" placeholder="e.g Ux Designer" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
           </div>
-          <div class="input-group custom-input-group mb-3 mag-icon-search">
+          <div class="input-group custom-input-group mb-3 mag-icon-search" v-if="categories.length>0">
             <multiselect
               v-model="category"
-              :options="categories"
+              :options="categoryOptions"
               :multiple="false"
               :close-on-select="true"
               :clear-on-select="false"
@@ -56,11 +56,11 @@
               <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
             </multiselect>
           </div>
-          <div class="input-group custom-input-group mb-3 mag-icon-search">
+          <div class="input-group custom-input-group mb-3 mag-icon-search" v-if="jobTitles.length > 0">
           <multiselect
               v-model="jobTitle"
               @search-change="asyncFindJobTitles"
-              :options="jobTitles"
+              :options="jobTitleOptions"
               :multiple="false"
               :close-on-select="true"
               :clear-on-select="true"
@@ -133,55 +133,62 @@
 
 <script>
 import constants from "../api/constants"
-import { mapGetters } from "vuex";
 import Multiselect from 'vue-multiselect'
+import {mapGetters} from 'vuex'
 
 export default {
   name: "SearchCard",
     props: {
-      countryGroups: Array
+      countryGroups: Array,
+      categories: Array,
+      jobTitles: Array
   },
   data () {
     return {
       product:[],
-      products: constants.PRODUCTS,
       category : constants.EMPTY_STRING,
       jobTitle: constants.EMPTY_STRING,
       country: [],
       countryList: [],
-      countries: constants.COUNTRIES,
       isHidden: true,
       jobSearchSlotText: constants.LOADING,
       selectedCountryGroup: [],
       keyword: constants.EMPTY_STRING,
       countrySelected: [],
-      categories: [],
-      jobTitles: [],
-      constJobTitles: []
+      countries: constants.COUNTRIES,
+      products: constants.PRODUCTS,
+      constJobTitles: [],
+      constCategories: [],
+      categoryOptions: [],
+      jobTitleOptions: []
     }
   },
-  created() {
-      this.loadCategories();
-      this.loadJobTitles();
-  },
   computed: {
-      ...mapGetters({
-        getCountryList: 'index-module/country-list',
-        getCategories: 'index-module/categories',
-        getJobTitlesFromStore: 'index-module/job-titles',
-      })
+    ...mapGetters({
+        getCountryList: 'index-module/country-list'
+    })
+  },
+  watch: {
+     categories(val, oldVal) {
+        this.categoryOptions = val;
+        this.constCategories = val;
+     },
+     jobTitles(val, oldVal) {
+       this.jobTitleOptions = val;
+       this.constJobTitles = val;
+     }
   },
   components: {
     Multiselect
   },
-  methods: {
+  methods: { 
       async asyncFindCategories(query) {
         if(query!=constants.EMPTY_STRING) {
-          this.categories= this.constCategories.filter(industry=> this.notEmptyAndNull(industry) && industry.toLowerCase().startsWith(query.toLowerCase()));
+          this.categoryOptions= this.constCategories.filter(industry=> this.notEmptyAndNull(industry) && industry.toLowerCase().startsWith(query.toLowerCase()));
         }
       },
       async asyncFindJobTitles(query) {
-        this.jobTitles = this.constJobTitles.filter(job => job.toLowerCase().startsWith(query.toLowerCase()));
+        this.jobTitleOptions = this.constJobTitles.filter(job => job.toLowerCase().startsWith(query.toLowerCase()));
       },
       async asyncFindProducts(query) {
         this.products = constants.PRODUCTS.filter((product) =>product.toLowerCase().startsWith(query.toLowerCase()));
@@ -218,19 +225,6 @@ export default {
             this.countrySelected.push(country);
           }
           this.$emit('removeCountry', this.countrySelected);
-      },
-      loadCategories() {
-        this.$store.dispatch('index-module/load-categories').then(()=> {
-            let categories = this.getCategories;
-            this.categories =  categories.filter((category)=> category!=null && (/[a-zA-Z]/).test(category.charAt(0)));
-            this.constCategories = categories;
-        });
-      },
-      loadJobTitles() {
-        this.$store.dispatch('index-module/load-job-titles').then(()=> {
-              this.jobTitles= this.getJobTitlesFromStore;
-              this.constJobTitles = this.getJobTitlesFromStore;
-        });
       },
   }
 }
