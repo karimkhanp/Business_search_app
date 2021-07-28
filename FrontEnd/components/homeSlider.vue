@@ -3,11 +3,9 @@
 </template>
 
 <script>
-import Searchcard from '../components/searchCard'
 
 export default {
   components: {
-    Searchcard
   }
 }
 </script>

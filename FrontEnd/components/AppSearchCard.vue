@@ -8,7 +8,7 @@
               :clear-on-select="false"
               :hideSelected="false"
               :taggable="false"
-              placeholder="Product being promoted"
+               placeholder="Product being promoted"
               :preserve-search="true"
               :internal-search="false"
               @search-change="asyncFindProducts" >
@@ -17,7 +17,7 @@
               </template>
               <template slot="option" slot-scope="props">
                 <div class="option__desc">
-                  <span v-if="product.includes(props.option)">
+                  <span v-if="product && product.includes(props.option)">
                     <input type="checkbox" value="" checked>
                   </span>
                   <span v-else> <input type="checkbox" value=""></span>
@@ -115,9 +115,9 @@
           </div>
           <div class="country-buttons text-left my-4" >
             <a class="card-tab-btn" v-on:click="showCountry(selectedCountry)" :class="selectedCountryGroup.includes(selectedCountry) ? 'active' : ''" :key="index" v-for="selectedCountry, index in countryGroups">{{selectedCountry}}</a>
-            <div class="show-city mt-3" v-if="isHidden == true">
+            <div class="show-city mt-3" v-if="!isHidden">
                 <div class="close-city">
-                    <a class="btn-dark " v-on:click="isHidden = false">x</a>
+                    <a class="btn-dark " v-on:click="isHidden = true">x</a>
                 </div>
                 <div class="city-list">
                     <a class="card-tab-btn " @click="removeCountry(city)" :key="index" v-for="city, index in countryList">
@@ -127,7 +127,7 @@
                 </div>
           </div>
           </div>
-          <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', {product, category, country, jobTitle, keyword})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
+          <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', {product, category, country, jobTitle, keyword, countryList})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
         </div>
 </template>
 
@@ -150,13 +150,14 @@ export default {
       country: [],
       countryList: [],
       countries: constants.COUNTRIES,
-      isHidden: false,
+      isHidden: true,
       jobSearchSlotText: constants.LOADING,
       selectedCountryGroup: [],
       keyword: constants.EMPTY_STRING,
       countrySelected: [],
       categories: [],
-      jobTitles: []
+      jobTitles: [],
+      constJobTitles: []
     }
   },
   created() {
@@ -195,10 +196,15 @@ export default {
         if(this.selectedCountryGroup.includes(selectedCountry)) {
           var index = this.selectedCountryGroup.indexOf(selectedCountry);
           this.selectedCountryGroup.splice(index, 1);
-          this.isHidden = false;
+          this.$store.dispatch('index-module/load-country-group', selectedCountry).then(()=> {
+              this.countryList = this.countryList.filter((country)=> !this.getCountryList.includes(country));
+          });
+          if(this.selectedCountryGroup.length==0) {
+            this.isHidden = true;
+          }
         }  else  {
           this.selectedCountryGroup.push(selectedCountry);
-          this.isHidden = true;
+          this.isHidden = false;
           this.$store.dispatch('index-module/load-country-group', selectedCountry).then(()=> {
               this.countryList = [...this.countryList, ...this.getCountryList];
           });
@@ -223,6 +229,7 @@ export default {
       loadJobTitles() {
         this.$store.dispatch('index-module/load-job-titles').then(()=> {
               this.jobTitles= this.getJobTitlesFromStore;
+              this.constJobTitles = this.getJobTitlesFromStore;
         });
       },
   }

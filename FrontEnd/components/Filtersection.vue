@@ -69,7 +69,7 @@
                   </template>
                   <template slot="option" slot-scope="props">
                     <div class="option__desc">
-                      <span v-if="companyValues.includes(props.option)">
+                      <span v-if="employee.includes(props.option)">
                         <input type="checkbox" value="" checked>
                       </span>
                       <span v-else>

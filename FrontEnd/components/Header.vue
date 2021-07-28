@@ -5,9 +5,9 @@
     <b-collapse id="nav-collapse" is-nav>
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto py-2">
-        <b-nav-item href="#"><NuxtLink to='howitworks'>How it works</NuxtLink></b-nav-item>
-        <b-nav-item href="#"><NuxtLink to='solutions'>Solutions</NuxtLink></b-nav-item>
-        <b-nav-item href="#"><NuxtLink to='contactss'>Contacts</NuxtLink></b-nav-item>
+        <b-nav-item href="#">How it works</b-nav-item>
+        <b-nav-item href="#">Solutions</b-nav-item>
+        <b-nav-item href="#">Contacts</b-nav-item>
       </b-navbar-nav >
     </b-collapse>
   </b-navbar>

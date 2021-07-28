@@ -38,7 +38,7 @@
                 v-on:searchByCity="searchByCity"
                 v-on:searchByState="searchByState"
                 v-on:searchBySize="searchBySize"
-                v-on:search="searchOnFilter"
+                v-on:searchOnFilter="searchOnFilter"
                 v-on:exportToFile="exportToFile"
             />
       </div>
@@ -122,9 +122,7 @@
       return {
         category : constants.EMPTY_STRING,
         categories : [],
-        constCategories:[],
         jobTitle: constants.EMPTY_STRING,
-        constJobTitles:[],
         showModal: false,
         isSearching: false,
         countryList: [],
@@ -190,11 +188,13 @@
     },
     methods: {
       SearchSubmitted(params) {
-        this.product = params.product;
-        this.category = params.category;
-        this.country = params.country;
-        this.jobTitle = params.jobTitle;
-        this.keyword = params.keyword;
+        const {product, category, country, jobTitle, keyword, countryList} = params;
+        this.product = product;
+        this.category = category;
+        this.country = [ ...country, ...countryList];
+        this.jobTitle = jobTitle;
+        this.keyword = keyword;
+        this.countryList = countryList;
         this.search();
       },
       RemoveCountry(countrySelected) {
@@ -229,7 +229,7 @@
       updateScroll() {
         this.scrollPosition = window.scrollY;
       },
-      async searchOnFilter(rpp) {
+      searchOnFilter(rpp) {
         this.rpp = rpp;
         this.search();
       },
@@ -303,7 +303,7 @@
           if(this.selectedCountryGroup.length > 0) {
               const loadedCountryL = this.selectedCountryGroup.reduce(async (newCountryL, selectedCountryGroup)=> {
                  await this.$store.dispatch("index-module/load-country-group", selectedCountryGroup);
-                 newCountryL = [...newCountryL, this.getCountryList];
+                 newCountryL = [...newCountryL, ...this.getCountryList];
               }, []);
               this.newCountryL = [...this.newCountryL, ...loadedCountryL];
             }
