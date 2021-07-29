@@ -48,9 +48,9 @@
            <KeywordCards
              :items="[{key: 'Category', value: category},
                       {key: 'Job Title', value: jobTitle},
-                      {key: 'Country', value: country? country.join(constants.COMMA_WITH_SPACE): constants.EMPTY_STRING},
+                      {key: 'Country', value: country.join(', ')},
                       {key: 'City', value: city},
-                      {key: 'Employee', value: employee.join(constants.COMMA_WITH_SPACE)}]"
+                      {key: 'Employee', value: employee.join(', ')}]"
              @remove="remove"/>
       </div>
 

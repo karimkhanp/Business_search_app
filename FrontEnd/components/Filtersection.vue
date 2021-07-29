@@ -15,7 +15,7 @@
                   :clear-on-select="false"
                   :preserve-search="true" >
                   <template slot="selection"
-                            slot-scope="{ values, search, isOpen }">
+                            slot-scope="{ values }">
                     <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
                   </template>
                   <template slot="option" slot-scope="props">
@@ -39,7 +39,7 @@
                   :preserve-search="true" >
 
                   <template slot="selection"
-                            slot-scope="{ values, search, isOpen }">
+                            slot-scope="{ values }">
                     <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
                   </template>
                   <template slot="option" slot-scope="props">
@@ -64,7 +64,7 @@
                   :preserve-search="true" >
 
                   <template slot="selection"
-                            slot-scope="{ values, search, isOpen }">
+                            slot-scope="{ values }">
                     <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
                   </template>
                   <template slot="option" slot-scope="props">
@@ -92,7 +92,7 @@
                   @input="$emit('searchOnFilter', rpp)"
                   :clear-on-select="false"
                   :preserve-search="true" >
-                  <template slot="selection" slot-scope="{ values, search, isOpen }">
+                  <template slot="selection" slot-scope="{ values }">
                     <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
                   </template>
                   <template slot="option" slot-scope="props">
