@@ -1,11 +1,9 @@
 <template>
         <div class="container ">
           <div class="keyword-card">
-            <div v-if="category">Category: <span>{{category}}</span><a v-on:click="remove(`category`)">x</a> </div>
-            <div v-if="jobTitle">Job Title: <span>{{jobTitle}}</span><a v-on:click="remove(`jobTitle`)">x</a> </div>
-            <div v-if="country && country.length>0">Country: <span>{{country.join(', ')}}</span><a v-on:click="remove(`country`)">x</a></div>
-            <div v-if="city">City: <span>{{city}}</span><a v-on:click="remove(`city`)">x</a> </div>
-            <div v-if="employee && employee.length > 0">Company Size: <span>{{employee.join(', ')}}</span><a v-on:click="remove(`employee`)">x</a></div>
+            <template v-for="item of items">
+               <div :key="item.key" v-if="item.value">{{item.key}}: <span>{{item.value}}</span><a v-on:click="remove(item.key)">x</a> </div>
+            </template>
           </div>
         </div>
 </template>
@@ -14,11 +12,7 @@
 export default {
     name: 'KeywordCard',
     props: {
-        category: String,
-        jobTitle: String,
-        country: Array,
-        city: String,
-        employee: Array
+      items: Array
     },
     methods: {
         remove(type) {

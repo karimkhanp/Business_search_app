@@ -12,6 +12,7 @@ export default {
     // BASE_URL: "http://127.0.0.1:5000",
     BASE_URL: "http://18.218.36.147/db",
     EMPTY_STRING : '',
+    COMMA_WITH_SPACE: ', ',
     KEYWORD: 'keyword',
     ALL: 'All',
     COMMA: ',',
@@ -19,5 +20,11 @@ export default {
     ANY_SMALLA: 'any',
     LOADING: 'Loading please Wait . . .',
     LIST: 'list',
-    NEW_LINE : '\n'
+    NEW_LINE : '\n',
+    COMPANY_SIZES: [
+        'Any', '1-99', '100-249', '250-499', '500-999', '1000-4999', '5000-9999', '10000+'
+    ],
+    RECORD_OPTIONS: [
+        '15', '50', '80', '100'
+    ]
 }

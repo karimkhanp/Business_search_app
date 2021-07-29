@@ -119,8 +119,7 @@ export default {
        cities: Array,
        companySizes: Array,
        recordOptions: Array,
-       icon: Object,
-       companyValues: Array
+       icon: Object
     },
     components: {
       Multiselect

@@ -134,7 +134,7 @@
 <script>
 import constants from "../api/constants"
 import Multiselect from 'vue-multiselect'
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: "SearchCard",

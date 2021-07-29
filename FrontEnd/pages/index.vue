@@ -34,25 +34,24 @@
                 :cities="cities"
                 :states="states"
                 :companySizes="companySizes"
-                :companyValues="companyValues"
                 :icon="fas.faDownload"
                 :recordOptions="recordOptions"
-                v-on:searchByCity="searchByCity"
-                v-on:searchByState="searchByState"
-                v-on:searchBySize="searchBySize"
-                v-on:searchOnFilter="searchOnFilter"
-                v-on:exportToFile="exportToFile"
+                @searchByCity="searchByCity"
+                @searchByState="searchByState"
+                @searchBySize="searchBySize"
+                @searchOnFilter="searchOnFilter"
+                @exportToFile="exportToFile"
             />
       </div>
 
       <div class="container">
            <KeywordCards
-             :category="category"
-             :jobTitle="jobTitle"
-             :country="country"
-             :city="city"
-             :employee="employee"
-             v-on:remove="remove"/>
+             :items="[{key: 'Category', value: category},
+                      {key: 'Job Title', value: jobTitle},
+                      {key: 'Country', value: country? country.join(constants.COMMA_WITH_SPACE): constants.EMPTY_STRING},
+                      {key: 'City', value: city},
+                      {key: 'Employee', value: employee.join(constants.COMMA_WITH_SPACE)}]"
+             @remove="remove"/>
       </div>
 
       <div v-if="isSearchDone" class="keep-walking-section mb-4">
@@ -166,12 +165,8 @@
         keyword: constants.EMPTY_STRING,
         employee: [constants.ANY],
         companyValues:[],
-        companySizes: [
-          'Any', '1-99', '100-249', '250-499', '500-999', '1000-4999', '5000-9999', '10000+'
-        ],
-        recordOptions: [
-          '15', '50', '80', '100'
-        ]
+        companySizes: constants.COMPANY_SIZES,
+        recordOptions: constants.RECORD_OPTIONS
       };
     },
     created() {
@@ -215,19 +210,19 @@
       },
       remove(item) {
            switch(item) {
-             case 'category': {
+             case 'Category': {
                this.category = constants.EMPTY_STRING;
                break;
              }
-             case 'jobTitle': {
+             case 'Job Title': {
                this.jobTitle = constants.EMPTY_STRING;
                break;
              }
-             case 'country': {
+             case 'Country': {
                this.country = [];
                break;
              }
-             case 'city': {
+             case 'City': {
                this.city = constants.EMPTY_STRING;
                break;
              }
