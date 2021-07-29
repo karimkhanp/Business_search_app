@@ -299,7 +299,6 @@
       },
 
       async search() {
-        this.state = constants.ALL;
           if(this.country.length > 0) {
               this.newCountryL = [...this.country];
           }
