@@ -106,6 +106,9 @@ export default {
   text-align: left;
   color: #031C32;
 }
+.col-md-4 {
+  padding: 10px;
+}
 
 .score-red{
   background: #D22237;
@@ -148,7 +151,6 @@ export default {
 .filter-custom-card{
   background: #EBCACA;
   border-radius: 8px;
-  margin-bottom: 30px;
   height: 300px;
   display: flex;
   flex-direction: column;

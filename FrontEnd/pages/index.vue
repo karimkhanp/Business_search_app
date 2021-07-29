@@ -450,7 +450,7 @@
     background-color: #01152a;
     width: fit-content;
     color: #94999e;
-    margin: 10px 0;
+    margin: 0;
   }
 
   .main-header nav.navbar{
