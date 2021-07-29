@@ -2,7 +2,7 @@
         <div class="container ">
           <div class="keyword-card">
             <template v-for="item of items">
-               <div :key="item.key" v-if="item.value">{{item.key}}: <span>{{item.value}}</span><a v-on:click="remove(item.key)">x</a> </div>
+               <div :key="item.key" v-if="item.value"><span>{{item.key}}:&nbsp;</span>{{item.value}}<a v-on:click="remove(item.key)">x</a></div>
             </template>
           </div>
         </div>
@@ -12,7 +12,7 @@
 export default {
     name: 'KeywordCard',
     props: {
-      items: Array
+      items: Array,
     },
     methods: {
         remove(type) {
@@ -30,29 +30,34 @@ export default {
   }
 
   .keyword-card div {
-      background-color: #16263a;
-      color: #4a5461;
-      border-radius: 10px;
+      background-color: #1c3246;
+      color: #c0c0c0;
+      border-radius: 8px;
       display: inline-block;
-      margin: 5px 5px;
-      padding: 2px 10px;
+      margin: 5px 20px 5px 0px;
+      padding: 4px 10px;
       max-width: 100%;
       height: auto;
+      font-weight: bold;
       word-wrap: break-word;
       font-size: 14px;
+      display: flex;
+      align-items: center;
   }
 
   .keyword-card span {
-    color: white;
-    opacity: 0.8;
+    color: #aeb1b3;
+    display: flex;
+    align-items: center;
   }
 
   .keyword-card  a {
     text-decoration: none;
-    font-size: 20px;
+    font-size: 28px;
     margin-left: 10px;
     cursor: pointer;
-    color: white;
-    opacity: 0.8;
+    color: #c0c0c0;
+    font-weight: 60;
+    margin-bottom: 4px;
   }
 </style>

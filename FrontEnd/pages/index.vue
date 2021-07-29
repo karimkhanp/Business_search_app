@@ -44,7 +44,6 @@
             />
       </div>
 
-      <div class="container">
            <KeywordCards
              :items="[{key: 'Category', value: category},
                       {key: 'Job Title', value: jobTitle},
@@ -52,16 +51,9 @@
                       {key: 'City', value: city},
                       {key: 'Employee', value: employee.join(', ')}]"
              @remove="remove"/>
-      </div>
 
-      <div v-if="isSearchDone" class="keep-walking-section mb-4">
-        <div class="container">
-          <p class="keep-walking mb-0 text-white">Keep Walking</p>
-          <p class="you-are-gem mb-0 text-white">You are the Gem</p>
-        </div>
-      </div>
-
-      <div v-if="isSearchDone" class="filter-cards-section" >
+      <div v-if="isSearchDone" class="filter-cards-section regular" >
+        <div class="container"><div class="found"> About {{companies.length}} results found</div></div>
         <Filtercards :companies="companies"/>
       </div>
 
@@ -447,6 +439,20 @@
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
+
+  .filter-cards-section.regular {
+    margin-top: 50px;
+  }
+
+  .found {
+    text-align: left;
+    padding-left: 0;
+    background-color: #01152a;
+    width: fit-content;
+    color: #94999e;
+    margin: 10px 0;
+  }
+
   .main-header nav.navbar{
     position: absolute;
     width: 100%;
