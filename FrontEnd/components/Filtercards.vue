@@ -149,7 +149,7 @@ export default {
   background: #EBCACA;
   border-radius: 8px;
   margin-bottom: 30px;
-  height: 350px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
