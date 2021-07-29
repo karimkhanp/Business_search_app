@@ -34,7 +34,7 @@ export default {
       color: #c0c0c0;
       border-radius: 8px;
       display: inline-block;
-      margin: 5px 20px 5px 0px;
+      margin: 8px 15px 8px 0px;
       padding: 4px 10px;
       max-width: 100%;
       height: auto;
