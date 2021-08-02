@@ -23,7 +23,6 @@ class Search(Resource):
         if args.get('State/Region') != None and args.get('State/Region') != "":
             filters.append({'text':{'path': 'State/Region', 'query':args.get('State/Region')}})
 
-
         # City filter
         if args.get('City') != None and args.get('City') != "":
             filters.append({'text':{'path': 'City', 'query':args.get('City')}})
@@ -40,13 +39,13 @@ class Search(Resource):
         path = ['JobTitle', 'AssetName', 'CampaignName', 'CompanyName', 'Industry']
         if args.get('search_type') == 'job':
             path = 'JobTitle'
-        
+
         if(args.get('keyword')!=""):
             filters.append({'text':{'path': path, 'query':args.get('keyword')}})
         print ("\nfilters : ",filters,"\n")
         print(match)
         return filters,match
-    
+
     def _scorecalculator(self, filters: list, score: int):
         pipeline = [
             {'$search': filters},
@@ -60,10 +59,10 @@ class Search(Resource):
             addon_score = 75 / max_score
             return scoring, addon_score
         return 75, 75
-    
+
     def _updatekeyword(self, keyword):
         pass
-    
+
     def post(self):
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument(name='category', location='json', type=str)
@@ -76,6 +75,8 @@ class Search(Resource):
 
         parser.add_argument(name='employee', location='json', type=str)
         parser.add_argument(name='score', location='json', type=int)
+        parser.add_argument(name='Max_Num_Of_Employees', location='json', type=int,required=True)
+        parser.add_argument(name='Min_Num_Of_Employees', location='json', type=int,required=True)
 
         #page and limit being retrived from the url post method
         parser.add_argument(name='limit', location='args', type=int, required=True)
@@ -89,31 +90,37 @@ class Search(Resource):
                     'must': filters
                 }
             }
-            print(query)
             scoring, addon_score = self._scorecalculator(filters=query, score=args.get('score', 100))
             rows = args.get('limit')
             page = args.get('page')
+            a=args.get('Max_Num_Of_Employees')
+            b=args.get('Min_Num_Of_Employees')
+            query2= {"Min_Num_Of_Employees": {"$gte": b}}
+            query3={"Max_Num_Of_Employees": {"$lte": a}}
+
             pipeline = [
                 {'$search': query},
                 {'$project': projection},
-                # {'$match': {'employees': match}},    # not worth it takeing more than 2 minutes for backend filtering 
+                {'$match': query2}, {'$match': query3},
+                # {'$match': {'employees': match}},    # not worth it takeing more than 2 minutes for backend filtering
                 {'$skip': rows*(page-1) if page > 0 else 0},
                 {'$limit': args.get('limit', 20)},
-                
+
             ]
             # Update Keyword Collection for every Search
             Mongodb.Update(
                 colls = Config.KEYWORD_COLLS,
                 docs = {'keyword': args.get('keyword').strip().capitalize()},
                 update = {'$inc': {'qty': 1}}
-            ) 
-            
+            )
+
             response = Mongodb.Aggregation(
                 pipeline = pipeline
             )
-            
+            # print(response)
             output = list()
             for i in response:
+                # print("i",i)
                 i['score'] = int(i['score'] * addon_score)
                 output.append(i)
             result = dict()

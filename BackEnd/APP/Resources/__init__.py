@@ -18,8 +18,11 @@ projection = {
     'revenue': '$Revenue',
     'salutation': '$Salutation',
     'score': {'$meta': 'searchScore'},
-    'tag_line': '$AssetName'
+    'tag_line': '$AssetName',
+    'Max_Num_Of_Employees': '$MaxNumOfEmployees',
+    'Min_Num_Of_Employees': '$MinNumOfEmployees'
 }
+
 
 class Version(Resource):
     def get(self):
