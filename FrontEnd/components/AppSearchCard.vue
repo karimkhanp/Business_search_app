@@ -37,7 +37,7 @@
             </div>
             <input type="text" class="form-control" placeholder="e.g Ux Designer" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
           </div>
-          <div class="input-group custom-input-group mb-3 mag-icon-search" v-if="categories.length>0">
+          <div class="input-group custom-input-group mb-3 mag-icon-search">
             <multiselect
               v-model="category"
               :options="categoryOptions"
@@ -56,7 +56,7 @@
               <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
             </multiselect>
           </div>
-          <div class="input-group custom-input-group mb-3 mag-icon-search" v-if="jobTitles.length > 0">
+          <div class="input-group custom-input-group mb-3 mag-icon-search">
           <multiselect
               v-model="jobTitle"
               @search-change="asyncFindJobTitles"
