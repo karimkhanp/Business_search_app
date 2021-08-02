@@ -75,8 +75,8 @@ class Search(Resource):
 
         parser.add_argument(name='employee', location='json', type=str)
         parser.add_argument(name='score', location='json', type=int)
-        parser.add_argument(name='Max_Num_Of_Employees', location='json', type=int,required=True)
-        parser.add_argument(name='Min_Num_Of_Employees', location='json', type=int,required=True)
+        parser.add_argument(name='Max_Num_Of_Employees', location='json', type=int)
+        parser.add_argument(name='Min_Num_Of_Employees', location='json', type=int)
 
         #page and limit being retrived from the url post method
         parser.add_argument(name='limit', location='args', type=int, required=True)
@@ -93,10 +93,24 @@ class Search(Resource):
             scoring, addon_score = self._scorecalculator(filters=query, score=args.get('score', 100))
             rows = args.get('limit')
             page = args.get('page')
-            a=args.get('Max_Num_Of_Employees')
-            b=args.get('Min_Num_Of_Employees')
-            query2= {"Min_Num_Of_Employees": {"$gte": b}}
-            query3={"Max_Num_Of_Employees": {"$lte": a}}
+
+            if args.get('Max_Num_Of_Employees'):
+                a = args.get('Max_Num_Of_Employees')
+                query3={"Max_Num_Of_Employees": {"$lte": a}}
+            else:
+                query3 = {}
+
+            if args.get('Min_Num_Of_Employees'):
+                b = args.get('Min_Num_Of_Employees')
+                query2= {"Min_Num_Of_Employees": {"$gte": b}}
+
+            else:
+                query2 = {}
+
+
+
+
+
 
             pipeline = [
                 {'$search': query},

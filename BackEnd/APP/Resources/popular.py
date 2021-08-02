@@ -23,6 +23,8 @@ class Popular(Resource):
         parser.add_argument(name='Country', location='args', type=str, required=True)
         parser.add_argument(name='Industry', location='args', type=str, required=True)
         parser.add_argument(name='JobTitle', location='args', type=str, required=True)
+        parser.add_argument(name='Max_Num_Of_Employees', location='args', type=int)
+        parser.add_argument(name='Min_Num_Of_Employees', location='args', type=int)
         args = parser.parse_args(strict=True)
         try:
             path = ['JobTitle', 'AssetName', 'CampaignName', 'CompanyName', 'Industry']
@@ -40,13 +42,27 @@ class Popular(Resource):
 
                 "Country": {"$eq": args.get('Country')}
             }
+
+            if args.get('Max_Num_Of_Employees'):
+                a = args.get('Max_Num_Of_Employees')
+                query4 = {"MaxNumOfEmployees": {"$gte": a}}
+            else:
+                query4 = {}
+
+            if args.get('Min_Num_Of_Employees'):
+                b = args.get('Min_Num_Of_Employees')
+                query5 = {"MinNumOfEmployees": {"$lte": b}}
+
+            else:
+                query5 = {}
+
             pattern = r'[^A-Za-z ]'
             regex = re.compile(pattern)
             result1 = regex.sub('', args.get('JobTitle')).split(' ')
             print(result1)
             addon_score = self._scorecalculator(filters=query, score=args.get('score', 100))
             pipeline = [
-                {'$search': query},{'$match': query2},{'$match': query3},
+                {'$search': query},{'$match': query4}, {'$match': query5},{'$match': query2},{'$match': query3},
                 {'$project': projection},
                 {'$skip': 0},
                 {'$limit': args.get('limit', 20)}
