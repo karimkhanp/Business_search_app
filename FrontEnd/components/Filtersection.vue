@@ -25,7 +25,7 @@
                   </template>
                 </multiselect>
               </div>
-              <div class="form-group col-md-2 text-left">
+              <div class="form-group col-md-3 text-left">
                 <label class="typo__label">City</label>
                 <multiselect
                   v-model="city"
@@ -50,7 +50,7 @@
                 </multiselect>
               </div>
 
-              <div class="form-group col-md-2 text-left">
+              <div class="form-group col-md-3 text-left">
                 <label class="typo__label">Company Size</label>
                 <multiselect
                   v-model="employee"
@@ -99,7 +99,7 @@
                   </template>
                 </multiselect>
               </div>
-              <div class="file-export form-group col-md-5 text-left">
+              <div class="file-export form-group col-md-3 text-left">
                   <button class="export btn btn-primary" v-on:click="$emit('exportToFile')"> <img src="@/assets/img/download-icon.PNG" width="20px"/> &nbsp;  Export</button>
               </div>
             </div>
