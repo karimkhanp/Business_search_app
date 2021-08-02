@@ -34,7 +34,6 @@
                 :cities="cities"
                 :states="states"
                 :companySizes="companySizes"
-                :icon="fas.faDownload"
                 :recordOptions="recordOptions"
                 @searchByCity="searchByCity"
                 @searchByState="searchByState"
@@ -158,7 +157,7 @@
         employee: [constants.ANY],
         companyValues:[],
         companySizes: constants.COMPANY_SIZES,
-        recordOptions: constants.RECORD_OPTIONS
+        recordOptions: constants.RECORD_OPTIONS,
       };
     },
     created() {
@@ -763,6 +762,8 @@
   .multiselect__input, .multiselect__single{
     border-radius: 8px !important;
     line-height: 24px;
+    font-size: 14px;
+    font-weight: 600;
   }
   .country .multiselect__input,.country .multiselect__single{
     border-radius: 8px !important;

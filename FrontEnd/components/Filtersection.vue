@@ -80,7 +80,7 @@
                   </template>
                 </multiselect>
               </div>
-              <div class="form-group col-md-2 text-left">
+              <div class="form-group col-md-1 text-left">
                 <label for="inputPages">Records</label>
                 <multiselect
                   v-model="rpp"
@@ -99,8 +99,8 @@
                   </template>
                 </multiselect>
               </div>
-              <div class="file-export form-group col-md-2 text-left">
-                  <button class="export btn btn-primary" v-on:click="$emit('exportToFile')"> <font-awesome-icon :icon="icon" /> &nbsp;  Export</button>
+              <div class="file-export form-group col-md-3 text-left">
+                  <button class="export btn btn-primary" v-on:click="$emit('exportToFile')"> <img src="@/assets/img/download-icon.PNG" width="20px"/> &nbsp;  Export</button>
               </div>
             </div>
         </div>
@@ -118,8 +118,7 @@ export default {
        states: Array,
        cities: Array,
        companySizes: Array,
-       recordOptions: Array,
-       icon: Object
+       recordOptions: Array
     },
     components: {
       Multiselect
@@ -136,12 +135,15 @@ export default {
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
-
   button.export, button.export:hover {
     background-color: #EBCACA;
+    border-radius: 8px;
     border: none!important;
-    color: black;
+    color: #374958;
+    padding: 12px 30px;
+    float: right;
   }
+
   .main-filter-section{
     background: #B3365B;
     border-radius: 8px;
