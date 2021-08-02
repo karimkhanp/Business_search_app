@@ -713,7 +713,7 @@
   .multiselect__option--selected{
     content: none;
     background: #EBCACA;
-    
+    color: #B3365B;
   }
 
   .multiselect__input::before{
@@ -734,7 +734,7 @@
     background: #ff3377;
     width: 5px;
     height: 45px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.5);
   }
 
   input[type=checkbox] {
@@ -781,8 +781,14 @@
     position: relative;
   }
   .multiselect__content-wrapper .multiselect__element .option__desc span.option__small{
-    margin-left: 10px;
+    margin-left: 12px;
+    font-weight: 600;
   }
+
+  .multiselect__content-wrapper .multiselect__element .option__desc span.option__small:nth-of-type(2) {
+    margin-left: 36px;
+  }
+
   .multiselect__select{
     height: 48px;
   }
@@ -842,9 +848,4 @@
 .header-text-fix{
   margin-top:70px
 }
-
-input[type="checkbox"] {
-  pointer-events: none;
-}
-
 </style>
