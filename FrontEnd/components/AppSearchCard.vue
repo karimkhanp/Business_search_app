@@ -17,10 +17,6 @@
               </template>
               <template slot="option" slot-scope="props">
                 <div class="option__desc">
-                  <span v-if="product && product.includes(props.option)">
-                    <input type="checkbox" value="" checked>
-                  </span>
-                  <span v-else> <input type="checkbox" value=""></span>
                   <span class="option__small">{{ props.option }}</span>
                 </div>
               </template>
@@ -99,12 +95,7 @@
                 slot="option"
                 slot-scope="props">
                 <div class="option__desc">
-                  <span v-if="country.includes(props.option)">
-                    <input type="checkbox" value="" checked>
-                  </span>
-                  <span v-else>
-                    <input type="checkbox" value="">
-                  </span>
+                  <app-checkbox :item="country" :option="props.option" />
                   <span class="option__small">{{ props.option }}</span>
                 </div>
               </template>
@@ -133,6 +124,7 @@
 
 <script>
 import constants from "../api/constants"
+import AppCheckbox from './AppCheckbox.vue'
 import Multiselect from 'vue-multiselect'
 import { mapGetters } from 'vuex'
 
@@ -179,7 +171,8 @@ export default {
      }
   },
   components: {
-    Multiselect
+    Multiselect,
+    AppCheckbox
   },
   methods: { 
       async asyncFindCategories(query) {
