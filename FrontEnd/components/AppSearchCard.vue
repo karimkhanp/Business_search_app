@@ -31,18 +31,18 @@
                 <span class="mdi mdi-magnify"></span>
               </span>
             </div>
-            <input type="text" class="form-control" placeholder="e.g Ux Designer" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
+            <input type="text" class="form-control" placeholder="Intent Keyword …" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
           </div>
           <div class="input-group custom-input-group mb-3 mag-icon-search">
             <multiselect
-              v-model="category"
-              :options="categoryOptions"
+              v-model="industry"
+              :options="industryOptions"
               :multiple="false"
               :close-on-select="true"
               :clear-on-select="false"
               :hideSelected="false"
               :taggable="false"
-              placeholder="Category"
+              placeholder="Industry"
               :preserve-search="true"
               :internal-search="false"
               @search-change="asyncFindCategories" >
@@ -53,7 +53,7 @@
             </multiselect>
           </div>
           <div class="input-group custom-input-group mb-3 mag-icon-search">
-          <multiselect
+          <!-- <multiselect
               v-model="jobTitle"
               @search-change="asyncFindJobTitles"
               :options="jobTitleOptions"
@@ -73,7 +73,13 @@
               <template slot="noResult">{{jobSearchSlotText}}</template>
               <template slot="spinner">Searching Please Wait...</template>
               <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
-            </multiselect>
+            </multiselect> -->
+  <vue-simple-suggest
+    v-model="jobTitle"
+     placeholder="Job Title"
+    :list="jobTitleOptions"
+    :filter-by-query="true">
+  </vue-simple-suggest>
           </div>
           <div class="country">
             <multiselect
@@ -118,7 +124,7 @@
                 </div>
           </div>
           </div>
-          <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', {product, category, country, jobTitle, keyword, countryList})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
+          <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', {product, industry, country, jobTitle, keyword, countryList})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
         </div>
 </template>
 
@@ -127,6 +133,8 @@ import constants from "../api/constants"
 import AppCheckbox from './AppCheckbox.vue'
 import Multiselect from 'vue-multiselect'
 import { mapGetters } from 'vuex'
+import VueSimpleSuggest from 'vue-simple-suggest'
+import 'vue-simple-suggest/dist/styles.css' 
 
 export default {
   name: "SearchCard",
@@ -138,7 +146,7 @@ export default {
   data () {
     return {
       product:[],
-      category : constants.EMPTY_STRING,
+      industry : constants.EMPTY_STRING,
       jobTitle: constants.EMPTY_STRING,
       country: [],
       countryList: [],
@@ -150,8 +158,8 @@ export default {
       countries: constants.COUNTRIES,
       products: constants.PRODUCTS,
       constJobTitles: [],
-      constCategories: [],
-      categoryOptions: [],
+      constIndustries: [],
+      industryOptions: [],
       jobTitleOptions: []
     }
   },
@@ -162,8 +170,8 @@ export default {
   },
   watch: {
      categories(val, oldVal) {
-        this.categoryOptions = val;
-        this.constCategories = val;
+        this.industryOptions = val;
+        this.constIndustries = val;
      },
      jobTitles(val, oldVal) {
        this.jobTitleOptions = val;
@@ -172,12 +180,13 @@ export default {
   },
   components: {
     Multiselect,
+    VueSimpleSuggest,
     AppCheckbox
   },
   methods: { 
       async asyncFindCategories(query) {
         if(query!=constants.EMPTY_STRING) {
-          this.categoryOptions= this.constCategories.filter(industry=> this.notEmptyAndNull(industry) && industry.toLowerCase().startsWith(query.toLowerCase()));
+          this.industryOptions= this.constIndustries.filter(industry=> this.notEmptyAndNull(industry) && industry.toLowerCase().startsWith(query.toLowerCase()));
         }
       },
       async asyncFindJobTitles(query) {
@@ -353,6 +362,27 @@ export default {
     width: 36px;
     padding: 3px 4px;
     font-size: 7px;
+}
+
+.vue-simple-suggest.designed {
+  width: 100%;
+}
+
+.vue-simple-suggest.designed .input-wrapper input{
+  border-radius: 8px;
+}
+
+.suggestions .suggest-item {
+  text-align: left;
+}
+
+.vue-simple-suggest.designed .suggestions .suggest-item {
+  color: black;
+}
+
+.vue-simple-suggest.designed .suggestions .suggest-item.selected {
+  background-color: #EBCACA;
+  color: #B3365B;
 }
 
 
