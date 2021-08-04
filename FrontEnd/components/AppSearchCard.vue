@@ -356,6 +356,7 @@ export default {
   border-radius: 8px !important;
   border: 2px solid #dadfe3 !important;
   width: 100%!important;
+  min-height: 60px;
 }
 
 .suggestions .suggest-item {
