@@ -377,7 +377,7 @@
       async searchBySize(employee) {
         const employees = Object.values(employee).map((item)=> item);
         if(employees.includes(constants.ANY) && employees.length > 1) {
-            const index = employees.findIndex((value)=> value===constants.ANY);
+            const index = employees.indexOf(constants.ANY);
             employees.splice(index, 1);
             this.employee = employees;
         }
