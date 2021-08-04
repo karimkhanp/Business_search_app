@@ -348,7 +348,7 @@ export default {
 }
 
 .vue-simple-suggest.designed .suggestions {
-  height: 300px !important;
+  height: 250px !important;
   overflow-y: auto!important;
 }
 
@@ -366,6 +366,11 @@ export default {
 
 .vue-simple-suggest.designed .suggestions .suggest-item {
   color: black !important;
+}
+
+.vue-simple-suggest.designed .suggestions .suggest-item:hover {
+  background-color: #EBCACA !important;
+  color: #B3365B !important;
 }
 
 .vue-simple-suggest.designed .suggestions .suggest-item.selected {
