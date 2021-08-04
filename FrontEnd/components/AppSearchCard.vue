@@ -344,27 +344,32 @@ export default {
 }
 
 .vue-simple-suggest.designed {
-  width: 100%;
+  width: 100% !important;
+}
+
+.vue-simple-suggest.designed .suggestions {
+  height: 300px !important;
+  overflow-y: auto!important;
 }
 
 .vue-simple-suggest.designed .input-wrapper input{
   border-radius: 8px !important;
-  border: 1px solid #dadfe3 !important;
+  border: 2px solid #dadfe3 !important;
+  width: 100%!important;
 }
 
 .suggestions .suggest-item {
-  text-align: left;
+  text-align: left !important;
 }
 
 .vue-simple-suggest.designed .suggestions .suggest-item {
-  color: black;
+  color: black !important;
 }
 
 .vue-simple-suggest.designed .suggestions .suggest-item.selected {
-  background-color: #EBCACA;
-  color: #B3365B;
+  background-color: #EBCACA !important;
+  color: #B3365B !important;
 }
-
 
 .vue-slider.vue-slider-ltr{
   margin-top: 35px;
