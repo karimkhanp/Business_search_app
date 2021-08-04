@@ -79,6 +79,9 @@ export default {
         vendor: [
             'vue-slider-component'
     ],
+    babel: {
+        compact: true
+      }
     },
     server: {
         port: 3030 // default: 3000
