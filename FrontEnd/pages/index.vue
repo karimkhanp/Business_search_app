@@ -376,10 +376,13 @@
       },
       async searchBySize(employee) {
         this.employee = employee;
+        const minMax = this.findMinMax(employee);
         this.removeFromSearch();
         this.page = 1;
         const params = {
              score: this.sliderVal,
+             min: minMax.min,
+             max: minMax.max,
              keyword: this.keyword,
              search_type: this.type,
              country: this.country !== constants.ANY_SMALLA ? this.country : constants.EMPTY_STRING,
@@ -390,6 +393,12 @@
              jobtitle: this.jobTitle,
          }
         this.performSearch(params);
+      },
+
+      findMinMax(employee) {
+          const min =  Math.min(employee.reduce((values, size)=> { values = [...values, size.split("-")[0]]; return values;}, []));
+          const max =  Math.min(employee.reduce((values, size)=> { values = [...values, size.split("-")[1]]; return values;}, []));
+          return {min, max};
       },
 
       async searchByState(state) {
