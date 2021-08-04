@@ -461,7 +461,6 @@
   .found {
     text-align: left;
     padding-left: 0;
-    background-color: #01152a;
     width: fit-content;
     color: #94999e;
     margin: 0;
