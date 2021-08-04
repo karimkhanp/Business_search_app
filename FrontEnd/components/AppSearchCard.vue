@@ -349,6 +349,7 @@ export default {
 
 .vue-simple-suggest.designed .input-wrapper input{
   border-radius: 8px;
+  border: 1px solid #dadfe3;
 }
 
 .suggestions .suggest-item {
