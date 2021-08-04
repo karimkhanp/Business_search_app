@@ -368,7 +368,7 @@ export default {
   color: black !important;
 }
 
-.vue-simple-suggest.designed .suggestions .suggest-item:hover {
+.vue-simple-suggest.designed .suggestions .suggest-item.hover {
   background-color: #EBCACA !important;
   color: #B3365B !important;
 }
