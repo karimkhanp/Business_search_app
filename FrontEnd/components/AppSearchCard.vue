@@ -53,33 +53,12 @@
             </multiselect>
           </div>
           <div class="input-group custom-input-group mb-3 mag-icon-search">
-          <!-- <multiselect
-              v-model="jobTitle"
-              @search-change="asyncFindJobTitles"
-              :options="jobTitleOptions"
-              :multiple="false"
-              :close-on-select="true"
-              :clear-on-select="true"
-              :hideSelected="false"
-              :taggable="false"
-              placeholder="Job Title"
-              :internal-search="false"
-              :preserve-search="true"
-              >
-              <template slot="selection" slot-scope="{ values, search, isOpen }">
-                <span class="multiselect__single" style="padding-left: 0px;" v-if="values.length">{{values[0]}}</span>
-              </template>
-              <template slot="noOptions">{{jobSearchSlotText}}</template>
-              <template slot="noResult">{{jobSearchSlotText}}</template>
-              <template slot="spinner">Searching Please Wait...</template>
-              <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
-            </multiselect> -->
-  <vue-simple-suggest
-    v-model="jobTitle"
-     placeholder="Job Title"
-    :list="jobTitleOptions"
-    :filter-by-query="true">
-  </vue-simple-suggest>
+          <vue-simple-suggest
+            v-model="jobTitle"
+            placeholder="Job Title"
+            :list="jobTitleOptions"
+            :filter-by-query="true">
+          </vue-simple-suggest>
           </div>
           <div class="country">
             <multiselect
