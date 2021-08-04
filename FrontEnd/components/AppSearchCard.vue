@@ -354,7 +354,7 @@ export default {
 
 .vue-simple-suggest.designed .input-wrapper input{
   border-radius: 8px !important;
-  border: 2px solid #dadfe3 !important;
+  border: 1px solid #ced4da !important;
   width: 100%!important;
   min-height: 48px;
   padding: 10px !important;
