@@ -375,20 +375,26 @@
         });
       },
       async searchBySize(employee) {
-        this.employee = employee;
-        const minMax = this.findMinMax(employee);
+        const employees = Object.values(employee).map((item)=> item);
+        if(employees.includes(constants.ANY) && employees.length > 1) {
+            const index = employees.findIndex((value)=> value===constants.ANY);
+            employees.splice(index, 1);
+            this.employee = employees;
+        }
+        this.employee = employees;
+        const minMax = this.findMinMax(this.employee);
         this.removeFromSearch();
         this.page = 1;
         const params = {
              score: this.sliderVal,
-             min: minMax.min,
-             max: minMax.max,
+             Min_Num_Of_Employees: minMax.min,
+             Max_Num_Of_Employees: minMax.max,
              keyword: this.keyword,
              search_type: this.type,
              country: this.country !== constants.ANY_SMALLA ? this.country : constants.EMPTY_STRING,
              state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
              city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
-             employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
+             employee: this.employee,
              category: this.category,
              jobtitle: this.jobTitle,
          }
@@ -396,9 +402,9 @@
       },
 
       findMinMax(employee) {
-          const min =  Math.min(employee.reduce((values, size)=> { values = [...values, size.split("-")[0]]; return values;}, []));
-          const max =  Math.min(employee.reduce((values, size)=> { values = [...values, size.split("-")[1]]; return values;}, []));
-          return {min, max};
+          const min =  Math.min(...employee.reduce((values, size)=> { values = [...values, parseInt(size.split("-")[0])]; return values;}, []));
+          const max =  Math.max(...employee.reduce((values, size)=> { values = [...values, parseInt(size.split("-")[1])]; return values;}, []));
+          return { min, max};
       },
 
       async searchByState(state) {
