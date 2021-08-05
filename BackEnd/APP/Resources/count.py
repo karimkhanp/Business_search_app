@@ -6,7 +6,8 @@ from APP import Mongodb
 from APP.config import Config
 from APP.Resources import projection
 
-class Search(Resource):
+
+class Count(Resource):
 
     # Argument Parser
     def _arguments(self, args: dict):
@@ -17,36 +18,35 @@ class Search(Resource):
         # Country filter
         if args.get('Country') != None and args.get('Country') != "":
             if len(args.get('Country')) != 0:
-                filters.append({'text':{'path': 'Country', 'query':args.get('Country'), 'score': {'boost': {'value': 5}}}})
+                filters.append(
+                    {'text': {'path': 'Country', 'query': args.get('Country'), 'score': {'boost': {'value': 5}}}})
 
-        
         # State/Region filter
         if args.get('State/Region') != None and args.get('State/Region') != "":
-            filters.append({'text':{'path': 'State/Region', 'query':args.get('State/Region')}})
+            filters.append({'text': {'path': 'State/Region', 'query': args.get('State/Region')}})
 
         # City filter
         if args.get('City') != None and args.get('City') != "":
-            filters.append({'text':{'path': 'City', 'query':args.get('City')}})
+            filters.append({'text': {'path': 'City', 'query': args.get('City')}})
 
-        #Category filter
+        # Category filter
         if args.get('category') != None and args.get('category') != "":
-            filters.append({'text':{'path': 'Industry', 'query':args.get('category')}})
+            filters.append({'text': {'path': 'Industry', 'query': args.get('category')}})
         if args.get('category') != None and args.get('category') != "":
-            filters.append({'text':{'path': 'Industry', 'query':args.get('category')}})
+            filters.append({'text': {'path': 'Industry', 'query': args.get('category')}})
 
-        #jobtitle filter
-
+        # jobtitle filter
 
         # Text Search Parameter
         path = ['JobTitle', 'AssetName', 'CampaignName', 'CompanyName', 'Industry']
         if args.get('search_type') == 'job':
             path = 'JobTitle'
 
-        if(args.get('keyword')!=""):
-            filters.append({'text':{'path': path, 'query':args.get('keyword')}})
+        if (args.get('keyword') != ""):
+            filters.append({'text': {'path': path, 'query': args.get('keyword')}})
         # print ("\nfilters : ",filters,"\n")
         # print(match)
-        return filters,match
+        return filters, match
 
     def _scorecalculator(self, filters: list, score: int):
         pipeline = [
@@ -80,30 +80,23 @@ class Search(Resource):
         parser.add_argument(name='Max_Num_Of_Employees', location='json', type=int)
         parser.add_argument(name='Min_Num_Of_Employees', location='json', type=int)
 
-        #page and limit being retrived from the url post method
-        parser.add_argument(name='limit', location='args', type=int, required=True)
-        parser.add_argument(name='page', location='args', type=int, required=True)
+        # page and limit being retrived from the url post method
+
         args = parser.parse_args(strict=True)
         try:
-            filters,match = self._arguments(args=args)
+            filters, match = self._arguments(args=args)
             query = {
                 'index': 'Text_Search_Index',
                 'compound': {
                     'must': filters
                 }
             }
-            # print(query)
-
-
-
-
+            print(query)
 
             if args.get('score'):
                 scoring, addon_score = self._scorecalculator(filters=query, score=args.get('score', 100))
             else:
                 addon_score = 0
-            rows = args.get('limit')
-            page = args.get('page')
 
             if args.get('Max_Num_Of_Employees'):
                 a = args.get('Max_Num_Of_Employees')
@@ -119,45 +112,34 @@ class Search(Resource):
                 query2 = {}
 
 
-
-
-
-
             pipeline = [
-                {'$search': query},{'$match': query2}, {'$match': query3},
-                {'$project': projection},
-
-                # {'$match': {'employees': match}},    # not worth it takeing more than 2 minutes for backend filtering
-                {'$skip': rows*(page-1) if page > 0 else 0},
-                {'$limit': args.get('limit', 20)},
+                {'$search': query}, {'$match': query2}, {'$match': query3},
+                { "$group": {"_id": None, "count": { "$sum": 1}}},
+            { "$project": {"_id": 0}}
 
             ]
-            # Update Keyword Collection for every Search
-            Mongodb.Update(
-                colls = Config.KEYWORD_COLLS,
-                docs = {'keyword': args.get('keyword').strip().capitalize()},
-                update = {'$inc': {'qty': 1}}
-            )
 
-            response = Mongodb.Aggregation(
-                pipeline = pipeline
-            )
+            response2 = Mongodb.Aggregation(
+                pipeline=pipeline)
+
+
+            for i in response2:
+                print(i)
+
+                count=i['count']
 
 
 
             output = list()
-            for i in response:
-                # print("i",i)
-                i['score'] = int(i['score'] * addon_score)
-                output.append(i)
+
             result = dict()
             result['status'] = 'sucess'
-            result['data'] = output
-            result['count'] = len(output)
+
+            result['count'] = count
             return result, 200
         except Exception as e:
             result = dict()
-            print ("\nError!!!\n",e)
+            print("\nError!!!\n", e)
             result['status'] = 'failure'
             result['message'] = 'InternalError'
             result['description'] = str(e)

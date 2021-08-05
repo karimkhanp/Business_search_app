@@ -22,6 +22,7 @@ Mongodb = MongoDB(
 # Resources Path
 from APP.Resources import Version
 from APP.Resources.search import Search
+from APP.Resources.count import Count
 from APP.Resources.popular import Popular
 from APP.Resources.autocomplete import AutoComplete
 from APP.Resources.others import State, Cities, CountryGroups, Keywords, ListGroups, Country ,Category,JobTitle
@@ -31,6 +32,7 @@ api.add_resource(Version, '/')
 api.add_resource(State, '/states')
 api.add_resource(Cities, '/cities')
 api.add_resource(Search, '/search')
+api.add_resource(Count, '/count')
 api.add_resource(Country, '/country')
 api.add_resource(Popular, '/popular')
 api.add_resource(Keywords, '/keywords')
