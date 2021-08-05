@@ -1,6 +1,6 @@
 <template>
   <div class="search-card">
-          <h3 class="card-title mb-4">Search Organisations</h3>
+          <h3 class="card-title mb-4">Search</h3>
           <div class="input-group custom-input-group mb-3">
             <multiselect v-model="product" :options="products"
               :multiple="false"
@@ -23,6 +23,7 @@
               <template slot="selection">
                 <span class="mdi mdi-magnify"></span>
               </template>
+              <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
             </multiselect>
           </div>
           <div class="input-group custom-input-group mb-3">
@@ -103,6 +104,7 @@
                 </div>
           </div>
           </div>
+          <div class="line-seperator"></div>
           <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', {product, industry, country, jobTitle, keyword, countryList})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
         </div>
 </template>
@@ -224,6 +226,9 @@ export default {
     line-height: 25px;
     text-align: left;
   }
+  .line {
+    border: 1px solid grey;
+  }
 .card-tab-btn{
   border: 1px solid #C6C6C6;
   box-sizing: border-box;
@@ -281,6 +286,13 @@ export default {
   margin-bottom: 15px;
 }
 
+.line-seperator {
+  margin-top: 6px;
+  margin-bottom: 14px;
+  height:1px;
+  background-color: #C6C6C6;
+}
+
 .score-number{
   color: #B3365B;
 }
@@ -302,6 +314,8 @@ export default {
   font-style: normal;
   font-weight: 600;
   color: #E7E7E7;
+  height: 48px !important;
+  margin: 4px 0!important;
 }
 
 .show-city {
@@ -326,7 +340,12 @@ export default {
     padding: 10px 10px;
     overflow-y : scroll;
     overflow-x : hidden;
+    border-radius: 6px;
     box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08), 0px 20px 32px rgba(96, 97, 112, 0.24);
+}
+
+.form-group {
+  padding: 0 6px!important;
 }
 
 .city-list a{

@@ -3,11 +3,10 @@
     <b-navbar-brand class="text-white" href="#">Logipsum</b-navbar-brand>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav>
-      <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto py-2">
         <b-nav-item href="#">How it works</b-nav-item>
         <b-nav-item href="#">Solutions</b-nav-item>
-        <b-nav-item href="#">Contacts</b-nav-item>
+        <b-nav-item href="#">Contact</b-nav-item>
       </b-navbar-nav >
     </b-collapse>
   </b-navbar>
@@ -21,6 +20,10 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .navbar-expand-lg .navbar-nav {
+     padding-right: 182px!important;
+  }
+
   .navbar-brand{
     font-size: 32px;
     font-weight: 700;
