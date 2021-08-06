@@ -21,7 +21,7 @@ export default {
                   "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js",
                 type: "text/javascript"
               },
-        
+
             {
                 href: "https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Poppins:wght@500&family=Roboto:wght@400;500;700&display=swap",
                 rel: "stylesheet",
@@ -31,7 +31,7 @@ export default {
                 rel: "stylesheet",
             },
         ],
-        
+
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
@@ -66,12 +66,12 @@ export default {
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
         //baseURL: "http://127.0.0.1:5000",
-        
+
         // baseURL: "http://18.218.36.147/db",
 
         // http://18.218.36.147:5008/
-        //baseURL: "http://18.218.36.147/testingBE1",
-        baseURL: "http://18.218.36.147:5008"
+        baseURL: "http://18.218.36.147/testingBE1",
+//        baseURL: "http://18.218.36.147:5008"
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
