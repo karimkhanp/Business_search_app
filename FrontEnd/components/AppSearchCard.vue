@@ -46,7 +46,7 @@
               placeholder="Industry"
               :preserve-search="true"
               :internal-search="false"
-              @search-change="asyncFindCategories" >
+              @search-change="asyncFindIndustries" >
               <template slot="selection" slot-scope="{ values, search, isOpen }">
                 <span class="multiselect__single" style="padding-left: 0px;" v-if="values.length">{{values[0]}}</span>
               </template>
@@ -121,7 +121,6 @@ export default {
   name: "SearchCard",
     props: {
       countryGroups: Array,
-      categories: Array,
       jobTitles: Array
   },
   data () {
@@ -139,8 +138,8 @@ export default {
       countries: constants.COUNTRIES,
       products: constants.PRODUCTS,
       constJobTitles: [],
-      constIndustries: [],
-      industryOptions: [],
+      constIndustries: constants.INDUSTRIES,
+      industryOptions: constants.INDUSTRIES,
       jobTitleOptions: []
     }
   },
@@ -150,10 +149,6 @@ export default {
     })
   },
   watch: {
-     categories(val, oldVal) {
-        this.industryOptions = val;
-        this.constIndustries = val;
-     },
      jobTitles(val, oldVal) {
        this.jobTitleOptions = val;
        this.constJobTitles = val;
@@ -165,9 +160,9 @@ export default {
     AppCheckbox
   },
   methods: { 
-      async asyncFindCategories(query) {
+      async asyncFindIndustries(query) {
         if(query!=constants.EMPTY_STRING) {
-          this.industryOptions= this.constIndustries.filter(industry=> this.notEmptyAndNull(industry) && industry.toLowerCase().startsWith(query.toLowerCase()));
+          this.industryOptions= this.constIndustries.filter(industry=> industry.toLowerCase().startsWith(query.toLowerCase()));
         }
       },
       async asyncFindJobTitles(query) {

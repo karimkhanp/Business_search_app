@@ -17,7 +17,6 @@
             <div class="col-md-5 my-2">
                 <AppSearchCard
                     :countryGroups="countryGroups"
-                    :categories="categories"
                     :jobTitles="jobTitles"
                     @removeCountry="RemoveCountry"
                     @search="SearchSubmitted"
@@ -52,7 +51,7 @@
              @remove="remove"/>
 
       <div v-if="isSearchDone" class="filter-cards-section regular" >
-        <div class="container"><div class="found"> About {{companies.length}} results found</div></div>
+        <div class="container"><div class="result-found"> About {{companies.length}} results found</div></div>
         <Filtercards :companies="companies"/>
       </div>
 
@@ -164,7 +163,6 @@
       this.getKeywords();
       this.updateValues();
       this.loadCountryGroups();
-      this.loadCategories();
       this.loadJobTitles();
     },
     watch: {
@@ -183,9 +181,9 @@
     },
     methods: {
       SearchSubmitted(params) {
-        const {product, category, country, jobTitle, keyword, countryList} = params;
+        const {product, industry, country, jobTitle, keyword, countryList} = params;
         this.product = product;
-        this.category = category;
+        this.category = industry;
         this.country = [ ...country, ...countryList];
         this.jobTitle = jobTitle;
         this.keyword = keyword;
@@ -363,12 +361,6 @@
             if(all) this.cities.push(all);
           });
       },
-      loadCategories() {
-        this.$store.dispatch('index-module/load-categories').then(()=> {
-           this.categories = this.getCategories;
-           this.categories =  this.categories.filter((category)=> category!=null && (/[a-zA-Z]/).test(category.charAt(0)));
-        });
-      },
       loadJobTitles() {
         this.$store.dispatch('index-module/load-job-titles').then(()=> {
            this.jobTitles = this.getJobTitlesFromStore;
@@ -458,7 +450,7 @@
     margin-top: 50px;
   }
 
-  .found {
+  .result-found {
     text-align: left;
     padding-left: 0;
     width: fit-content;
