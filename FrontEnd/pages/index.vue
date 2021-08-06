@@ -542,6 +542,7 @@
   }
   .header-title{
     font-size: 48px;
+    font-family: 'Mulish';
     font-style: normal;
     font-weight: 800;
     line-height: 58px;
