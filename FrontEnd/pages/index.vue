@@ -215,9 +215,22 @@
                this.city = constants.EMPTY_STRING;
                break;
              }
-             default: this.employee = []
+             case 'Employee': {
+               this.employee = [];
+               break;
+             }
+             default: {
+                this.resetAll();
+             }
            }
            this.search();
+      },
+      resetAll() {
+        this.category = constants.EMPTY_STRING;
+        this.jobTitle = constants.EMPTY_STRING;
+        this.country = [];
+        this.city = constants.EMPTY_STRING;
+        this.employee = [];
       },
       updateScroll() {
         this.scrollPosition = window.scrollY;

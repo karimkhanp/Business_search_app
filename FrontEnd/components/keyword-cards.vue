@@ -1,10 +1,13 @@
 <template>
-        <div class="container ">
-          <div class="keyword-card">
-            <template v-for="item of items">
-               <div :key="item.key" v-if="item.value"><span>{{item.key}}:&nbsp;</span>{{item.value}}<a v-on:click="remove(item.key)">x</a></div>
-            </template>
+        <div class="container">
+          <div class="keyword-container">
+            <div class="keyword-card">
+              <template v-for="item of items">
+                <div :key="item.key" v-if="item.value"><span>{{item.key}}:&nbsp;</span>{{item.value}}<a v-on:click="remove(item.key)">x</a></div>
+              </template>
+            </div>
           </div>
+           <div class="clear"><a v-on:click="remove('all')">Clear All</a></div>
         </div>
 </template>
 <script>
@@ -59,5 +62,40 @@ export default {
     color: #c0c0c0;
     font-weight: 60;
     margin-bottom: 4px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    padding-right: 0;
+  }
+
+  .keyword-container {
+    flex-grow: 19;
+  }
+
+  .clear {
+      flex-grow: 1;
+      background-color: #1c3246;
+      color: #c0c0c0;
+      border-radius: 8px;
+      display: inline-block;
+      margin: 8px 15px 8px 0px;
+      padding: 4px 10px;
+      max-width: 100%;
+      height: auto;
+      font-weight: bold;
+      word-wrap: break-word;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+  }
+
+  .clear a{
+    font-size: 16px;
+    cursor: pointer;
+    margin: 0;
   }
 </style>
