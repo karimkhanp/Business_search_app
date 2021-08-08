@@ -4,6 +4,7 @@ import re
 from APP import Mongodb
 from APP.Resources import projection
 
+
 class Popular(Resource):
 
     def _arguments(self, args: dict):
@@ -21,8 +22,6 @@ class Popular(Resource):
         if args.get('Industry') != None and args.get('Industry') != "":
             filters.append({'text': {'path': 'Industry', 'query': args.get('Industry')}})
 
-
-
         # Text Search Parameter
         path = ['JobTitle', 'AssetName', 'CampaignName', 'CompanyName', 'Industry']
         if args.get('search_type') == 'job':
@@ -35,22 +34,29 @@ class Popular(Resource):
         return filters, match
 
     def _scorecalculator(self, filters: list, score: int):
+        print(score)
         pipeline = [
             {'$search': filters},
             {'$limit': 1},
             {'$project': {'score': {'$meta': 'searchScore'}}}
         ]
-        max_score = list(Mongodb.Aggregation(pipeline))[0].get('score')
-        addon_score = 75 - max_score
-        return addon_score
+        if list(Mongodb.Aggregation(pipeline)):
+            max_score = list(Mongodb.Aggregation(pipeline))[0].get('score')
+            addon_score = 75 - max_score
+            return addon_score
+        else:
+            addon_score = 75 - 0
+
+            return addon_score
 
     def get(self):
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument(name='search_type', location='args', type=str, required=True)
         parser.add_argument(name='keyword', location='args', type=str, required=True)
-        parser.add_argument(name='Country', location='args', type=str )
+        parser.add_argument(name='Country', location='args', type=str)
         parser.add_argument(name='Industry', location='args', type=str)
         parser.add_argument(name='JobTitle', location='args', type=str)
+        parser.add_argument(name='score', location='args', type=str)
         parser.add_argument(name='Max_Num_Of_Employees', location='args', type=int)
         parser.add_argument(name='Min_Num_Of_Employees', location='args', type=int)
         args = parser.parse_args(strict=True)
@@ -71,8 +77,6 @@ class Popular(Resource):
                 }
             }
 
-
-
             # if args.get('Industry'):
             #     query2 = {
             #
@@ -80,7 +84,6 @@ class Popular(Resource):
             #     }
             # else:
             #     query2={}
-
 
             # if args.get('Country'):
             #     query3 = {
@@ -90,13 +93,11 @@ class Popular(Resource):
             # else:
             #     query3={}
 
-
             if args.get('Max_Num_Of_Employees'):
                 a = args.get('Max_Num_Of_Employees')
                 query4 = {"MaxNumOfEmployees": {"$lte": a}}
             else:
                 query4 = {}
-
 
             if args.get('Min_Num_Of_Employees'):
                 b = args.get('Min_Num_Of_Employees')
@@ -105,11 +106,9 @@ class Popular(Resource):
             else:
                 query5 = {}
 
-
-
             pattern = r'[^A-Za-z ]'
             regex = re.compile(pattern)
-            result1=[]
+            result1 = []
             if args.get('JobTitle'):
                 result1 = regex.sub('', args.get('JobTitle')).split(' ')
                 # print(result1)
@@ -117,22 +116,27 @@ class Popular(Resource):
                 pass
 
             if args.get('score'):
+                a = args.get('score')
+                print(a)
+
                 addon_score = self._scorecalculator(filters=query, score=args.get('score', 100))
             else:
                 addon_score = self._scorecalculator(filters=query, score=100)
 
-
+            print(addon_score)
             pipeline = [
-                {'$search': query},{'$match': query4}, {'$match': query5}, #{'$match': query2},{'$match': query3},
+                {'$search': query}, {'$match': query4}, {'$match': query5},  # {'$match': query2},{'$match': query3},
                 {'$project': projection},
                 {'$skip': 0},
                 {'$limit': args.get('limit', 20)}
             ]
             response = Mongodb.Aggregation(
-                pipeline = pipeline
+                pipeline=pipeline
             )
+            print(response)
             output = list()
             for i in response:
+                print(i)
                 i['score'] = int(i['score'] + addon_score)
 
                 if result1:
