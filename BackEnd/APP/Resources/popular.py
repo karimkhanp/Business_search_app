@@ -116,8 +116,10 @@ class Popular(Resource):
             else:
                 pass
 
-
-            addon_score = self._scorecalculator(filters=query, score=args.get('score', 100))
+            if args.get('score'):
+                addon_score = self._scorecalculator(filters=query, score=args.get('score', 100))
+            else:
+                addon_score = self._scorecalculator(filters=query, score=100)
 
 
             pipeline = [
