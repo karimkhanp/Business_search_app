@@ -245,7 +245,8 @@
         });
       },
       removeFromSearch(){
-        this.country = this.countryList.filter((item)=> !this.countrySelected.includes(item));
+        const filteredCountry = this.countryList.length > 0 ? this.countryList.filter((item)=> !this.countrySelected.includes(item)): [];
+        this.country = [...this.country, ...filteredCountry];
       },
       scrollToTop() {
         window.scrollTo(0, 0);
