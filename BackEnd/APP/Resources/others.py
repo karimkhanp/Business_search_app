@@ -133,7 +133,15 @@ class Category(Resource):
             result['description'] = str(e)
             return result, 500
 
-jobs = Mongodb.db.get_collection(Config.COMPANY_COLLS_NAME).distinct( key = 'JobTitle',)
+# jobs = Mongodb.db.get_collection(Config.COMPANY_COLLS_NAME).distinct( key = 'JobTitle',)
+x= Mongodb.db.get_collection(Config.COMPANY_COLLS_NAME).find({}, {'JobTitle': 1})
+set_of_ids = []
+for i in x:
+    if 'JobTitle' in i:
+        set_of_ids.append(i['JobTitle'])
+
+set_of_ids=set(set_of_ids)
+jobs=list(set_of_ids)
 filter_list = []
 for job in jobs:
     if(job):
