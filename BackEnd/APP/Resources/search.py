@@ -15,9 +15,9 @@ class Search(Resource):
         filters = list()
         match = list()
         # Country filter
-        if args.get('Country') != None and args.get('Country') != "":
-            if len(args.get('Country')) != 0:
-                filters.append({'text':{'path': 'Country', 'query':args.get('Country'), 'score': {'boost': {'value': 5}}}})
+        # if args.get('Country') != None and args.get('Country') != "":
+        #     if len(args.get('Country')) != 0:
+        #         filters.append({'text':{'path': 'Country', 'query':args.get('Country'), 'score': {'boost': {'value': 5}}}})
 
         
         # State/Region filter
@@ -71,7 +71,7 @@ class Search(Resource):
         parser.add_argument(name='jobtitle', location='json', type=str)
         parser.add_argument(name='search_type', location='json', type=str, required=True)
         parser.add_argument(name='keyword', location='json', type=str, required=True)
-        parser.add_argument(name='country', location='json', type=list, dest='Country')
+        parser.add_argument(name='country', location='json', type=list)
         parser.add_argument(name='state', location='json', type=str, dest='State/Region')
         parser.add_argument(name='city', location='json', type=str, dest='City')
 
@@ -118,13 +118,21 @@ class Search(Resource):
             else:
                 query2 = {}
 
+            if args.get('country'):
+                b = args.get('country')
+                print(b)
+                query4 = {"Country": {"$in": b}}
+
+            else:
+                query4 = {}
 
 
+            print(query4)
 
 
 
             pipeline = [
-                {'$search': query},{'$match': query2}, {'$match': query3},
+                {'$search': query},{'$match': query4}, {'$match': query3},{'$match': query2},
                 {'$project': projection},
 
                 # {'$match': {'employees': match}},    # not worth it takeing more than 2 minutes for backend filtering
