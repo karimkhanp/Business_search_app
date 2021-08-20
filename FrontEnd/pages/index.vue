@@ -57,17 +57,6 @@
 
       <button v-if="isSearchDone && companies && companies.length > 0 "  @click="fetchMore" class="btn-show-more text-white">Show more</button>
       <div class="text-center text-white" v-else>No Records found</div>
-      <div v-if="isSearchDone" class="most-viewed-organisation">
-        <div class="container mt-5 mb-4">
-          <p class="most-viewed-heading mb-0 text-white">Most viewed organisation for </p>
-          <p class="most-viewed-term mb-0 text-white">
-            {{ keyword }}
-          </p>
-        </div>
-        <div  v-if="isSearchDone" class="filter-cards-section">
-          <Filtercards :companies="popular"/>
-        </div>
-      </div>
     </div>
   </div>
 </template>
