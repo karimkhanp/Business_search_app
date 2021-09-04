@@ -38,7 +38,7 @@ class Search(Resource):
 
 
         # Text Search Parameter
-        path = ['JobTitle', 'AssetName', 'CampaignName', 'CompanyName', 'Industry']
+        path = ['AssetName','JobTitle', 'CompanyName','Industry','CampaignName']
         if args.get('search_type') == 'job':
             path = 'JobTitle'
 
