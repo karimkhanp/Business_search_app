@@ -2,31 +2,6 @@
   <div class="search-card">
           <h3 class="card-title mb-4">Search</h3>
           <div class="input-group custom-input-group mb-3">
-            <multiselect v-model="product" :options="products"
-              :multiple="false"
-              :close-on-select="true"
-              :clear-on-select="false"
-              :hideSelected="false"
-              :taggable="false"
-               placeholder="Product being promoted"
-              :preserve-search="true"
-              :internal-search="false"
-              @search-change="asyncFindProducts" >
-              <template slot="selection" slot-scope="{ values }">
-                <span class="multiselect__single" v-if="values.length">{{values[0]}}</span>
-              </template>
-              <template slot="option" slot-scope="props">
-                <div class="option__desc">
-                  <span class="option__small">{{ props.option }}</span>
-                </div>
-              </template>
-              <template slot="selection">
-                <span class="mdi mdi-magnify"></span>
-              </template>
-              <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
-            </multiselect>
-          </div>
-          <div class="input-group custom-input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text-custom" id="basic-addon1">
                 <span class="mdi mdi-magnify"></span>
@@ -105,7 +80,7 @@
           </div>
           </div>
           <div class="line-seperator"></div>
-          <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', {product, industry, country, jobTitle, keyword, countryList})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
+          <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', { industry, country, jobTitle, keyword, countryList})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
         </div>
 </template>
 
@@ -125,7 +100,6 @@ export default {
   },
   data () {
     return {
-      product:[],
       industry : constants.EMPTY_STRING,
       jobTitle: constants.EMPTY_STRING,
       country: [],
@@ -136,7 +110,6 @@ export default {
       keyword: constants.EMPTY_STRING,
       countrySelected: [],
       countries: constants.COUNTRIES,
-      products: constants.PRODUCTS,
       constJobTitles: [],
       constIndustries: constants.INDUSTRIES,
       industryOptions: constants.INDUSTRIES,
@@ -167,9 +140,6 @@ export default {
       },
       async asyncFindJobTitles(query) {
         this.jobTitleOptions = this.constJobTitles.filter(job => job.toLowerCase().startsWith(query.toLowerCase()));
-      },
-      async asyncFindProducts(query) {
-        this.products = constants.PRODUCTS.filter((product) =>product.toLowerCase().startsWith(query.toLowerCase()));
       },
       async asyncFindCountries(query) {
         this.countries = constants.COUNTRIES.filter((country)=> country.toLowerCase().startsWith(query.toLowerCase()));

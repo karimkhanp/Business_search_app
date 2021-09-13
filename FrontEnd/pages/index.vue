@@ -148,7 +148,6 @@
         type: constants.KEYWORD,
         rpp:15,
         country: [],
-        product:[],
         newCountryL:[],
         state: constants.ALL,
         city: constants.ALL,
@@ -181,8 +180,7 @@
     },
     methods: {
       SearchSubmitted(params) {
-        const {product, industry, country, jobTitle, keyword, countryList} = params;
-        this.product = product;
+        const { industry, country, jobTitle, keyword, countryList} = params;
         this.category = industry;
         this.country = [ ...country, ...countryList];
         this.jobTitle = jobTitle;
