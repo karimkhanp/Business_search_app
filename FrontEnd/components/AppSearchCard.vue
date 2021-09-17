@@ -65,6 +65,15 @@
               </template>
             </multiselect>
           </div>
+          <div class="input-group custom-input-group mb-3 upload">
+            <div class="input-group-prepend">
+              <label for="file-upload">
+                <input type="file" id="file-upload" ref="input" @change="processFile"/>
+                <font-awesome-icon icon="upload" class="icon-upload"/>
+              </label>
+            </div>
+            <input type="text" class="form-control" placeholder="Companies" aria-label="Companies" v-model="companies" aria-describedby="basic-addon1" required>
+          </div>
           <div class="country-buttons text-left my-4" >
             <a class="card-tab-btn" v-on:click="showCountry(selectedCountry)" :class="selectedCountryGroup.includes(selectedCountry) ? 'active' : ''" :key="index" v-for="selectedCountry, index in countryGroups">{{selectedCountry}}</a>
             <div class="show-city mt-3" v-if="!isHidden">
@@ -77,16 +86,17 @@
                       <span v-if="!countrySelected.includes(city)" class="mdi mdi-check-bold ml-2"></span>
                     </a>
                 </div>
-          </div>
+            </div>
           </div>
           <div class="line-seperator"></div>
-          <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', { industry, country, jobTitle, keyword, countryList})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
+          <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', { industry, country, jobTitle, keyword, companies, countryList})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
         </div>
 </template>
 
 <script>
 import constants from "../api/constants"
 import AppCheckbox from './AppCheckbox.vue'
+import readXlsxFile from 'read-excel-file'
 import Multiselect from 'vue-multiselect'
 import { mapGetters } from 'vuex'
 import VueSimpleSuggest from 'vue-simple-suggest'
@@ -102,6 +112,7 @@ export default {
     return {
       industry : constants.EMPTY_STRING,
       jobTitle: constants.EMPTY_STRING,
+      companies: constants.EMPTY_STRING,
       country: [],
       countryList: [],
       isHidden: true,
@@ -143,6 +154,18 @@ export default {
       },
       async asyncFindCountries(query) {
         this.countries = constants.COUNTRIES.filter((country)=> country.toLowerCase().startsWith(query.toLowerCase()));
+      },
+      processFile(event) {
+           let file = event.target.files[0];
+            readXlsxFile(file).then((allRows) => {
+              const combinedRows = allRows.reduce((combinedRows, row)=> {
+                   combinedRows = [...combinedRows, ...row];
+                   return combinedRows;
+              }, []);
+              this.companies = combinedRows.join(", ");
+              this.companies = this.companies.substring(0, this.companies.length - 1);
+              this.$refs.input.value='';
+          });
       },
       notEmptyAndNull(item) {
          return item!=null && item!= constants.EMPTY_STRING;
@@ -191,6 +214,24 @@ export default {
     line-height: 25px;
     text-align: left;
   }
+  .upload {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .country {
+    margin-bottom: 1rem;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  .icon-upload {
+    font-size: 22px;
+  }
+
   .line {
     border: 1px solid grey;
   }
@@ -241,6 +282,16 @@ export default {
   position: absolute;
   z-index: 5;
 }
+
+.upload .input-group-prepend {
+   padding-left: 12px;
+   cursor: pointer;
+}
+
+.upload .input-group-prepend label {
+   margin-bottom: 0;
+}
+
 .search-card .input-group.custom-input-group .form-control:focus{
   border-color: #B3365B !important;
 }

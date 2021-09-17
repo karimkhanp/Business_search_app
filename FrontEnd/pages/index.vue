@@ -117,6 +117,7 @@
       return {
         categories: [],
         jobTitles: [],
+        companies: constants.EMPTY_STRING,
         category : constants.EMPTY_STRING,
         jobTitle: constants.EMPTY_STRING,
         showModal: false,
@@ -180,11 +181,12 @@
     },
     methods: {
       SearchSubmitted(params) {
-        const { industry, country, jobTitle, keyword, countryList} = params;
+        const { industry, country, jobTitle, keyword, companies, countryList} = params;
         this.category = industry;
         this.country = [ ...country, ...countryList];
         this.jobTitle = jobTitle;
         this.keyword = keyword;
+        this.companies = companies;
         this.countryList = countryList;
         this.search();
       },
@@ -323,6 +325,7 @@
             params = {
                   score: this.sliderVal,
                   keyword: this.keyword,
+                  companies: this.companies,
                   search_type: this.type,
                   country: this.newCountryL.length > 0 ? this.newCountryL:constants.EMPTY_STRING,
                   state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,

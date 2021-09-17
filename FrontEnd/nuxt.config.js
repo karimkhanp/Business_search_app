@@ -52,8 +52,14 @@ export default {
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
-        ['@nuxtjs/fontawesome']
+        '@nuxtjs/fontawesome', '@nuxtjs/style-resources'
     ],
+
+    fontawesome : {
+        icons: {
+            solid: true
+        }
+    },
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
@@ -84,9 +90,9 @@ export default {
       }
     },
     server: {
-        port: 3030 // default: 3000
+        port: 9000 // default: 3000
     },
     router : {
-        base: '/testingFE1/'
+        base: '/testingFE4/'
     }
 };
