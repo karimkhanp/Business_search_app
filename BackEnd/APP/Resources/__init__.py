@@ -20,7 +20,9 @@ projection = {
     'score': {'$meta': 'searchScore'},
     'tag_line': '$AssetName',
     'Max_Num_Of_Employees': '$MaxNumOfEmployees',
-    'Min_Num_Of_Employees': '$MinNumOfEmployees'
+    'Min_Num_Of_Employees': '$MinNumOfEmployees',
+    'Max_Revenue': '$maxrevenue',
+    'Min_Revenue' : '$minrevenue'
 }
 
 
