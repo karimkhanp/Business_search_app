@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       exec_mode: 'cluster',
-      name: 'testingFE10',
+      name: 'testingFE4',
       cwd: '/home/ubuntu/Test-dir/Business_search_app/FrontEnd',
       script: './FrontEnd/node_modules/nuxt/bin/nuxt.js',
       ref  : "origin/business_search_app10",
