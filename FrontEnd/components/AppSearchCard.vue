@@ -9,7 +9,7 @@
             </div>
             <input type="text" class="form-control" placeholder="Intent Keyword …" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
           </div>
-          <div class="input-group custom-input-group mb-3 mag-icon-search">
+          <div class="input-group custom-input-group mb-2 mag-icon-search">
             <multiselect
               v-model="industry"
               :options="industryOptions"
@@ -36,7 +36,7 @@
             :filter-by-query="true">
           </vue-simple-suggest>
           </div>
-          <div class="country">
+          <div class="input-group custom-input-group mb-2">
             <multiselect
               v-model="country"
               :options="countries"
@@ -74,7 +74,7 @@
             </div>
             <input type="text" class="form-control" placeholder="Companies" aria-label="Companies" v-model="companies" aria-describedby="basic-addon1" required>
           </div>
-          <div class="input-group custom-input-group mb-3">
+          <div class="input-group custom-input-group mb-2">
                 <multiselect
                   v-model="employee"
                   :options="companySizes"
