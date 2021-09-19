@@ -224,7 +224,6 @@ export default {
               }, []);
               this.companies = combinedRows.join(", ");
               this.companies = this.companies.substring(0, this.companies.length - 1);
-              this.$refs.input.value='';
           });
         }
         if(!file.type || file.type.match(/text\/plain/)) {
@@ -234,6 +233,7 @@ export default {
             this.companies = reader.result;
            }
         }
+        this.$refs.input.value='';
       },
       notEmptyAndNull(item) {
          return item!=null && item!= constants.EMPTY_STRING;
