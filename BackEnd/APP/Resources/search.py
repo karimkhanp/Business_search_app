@@ -79,6 +79,8 @@ class Search(Resource):
         parser.add_argument(name='score', location='json', type=int)
         parser.add_argument(name='Max_Num_Of_Employees', location='json', type=int)
         parser.add_argument(name='Min_Num_Of_Employees', location='json', type=int)
+        parser.add_argument(name='Max_Revenue', location='json', type=int)
+        parser.add_argument(name='Min_Revenue', location='json', type=int)
 
         #page and limit being retrived from the url post method
         parser.add_argument(name='limit', location='args', type=int, required=True)
@@ -126,13 +128,24 @@ class Search(Resource):
             else:
                 query4 = {}
 
+            if args.get('Max_Revenue'):
+                a = args.get('Max_Revenue')
+                query5 = {"Max_Revenue": {"$lte": a}}
+            else:
+                query5 = {}
 
+            if args.get('Min_Revenue'):
+                b = args.get('Min_Revenue')
+                query6 = {"Min_Revenue": {"$gte": b}}
+
+            else:
+                query6 = {}
             print(query4)
 
 
 
             pipeline = [
-                {'$search': query},{'$match': query4}, {'$match': query3},{'$match': query2},
+                {'$search': query},{'$match': query4}, {'$match': query3},{'$match': query2},{'$match': query5},{'$match': query6},
                 {'$project': projection},
 
                 # {'$match': {'employees': match}},    # not worth it takeing more than 2 minutes for backend filtering
