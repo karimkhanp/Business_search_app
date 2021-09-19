@@ -1,7 +1,7 @@
 <template>
   <div class="search-card">
           <h3 class="card-title mb-4">Search</h3>
-          <div class="input-group custom-input-group mb-3">
+          <div class="input-group custom-input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text-custom" id="basic-addon1">
                 <span class="mdi mdi-magnify"></span>
@@ -9,7 +9,7 @@
             </div>
             <input type="text" class="form-control" placeholder="Intent Keyword …" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
           </div>
-          <div class="input-group custom-input-group mb-3 mag-icon-search">
+          <div class="input-group custom-input-group mb-2 mag-icon-search">
             <multiselect
               v-model="industry"
               :options="industryOptions"
@@ -28,7 +28,7 @@
               <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
             </multiselect>
           </div>
-          <div class="input-group custom-input-group mb-3 mag-icon-search">
+          <div class="input-group custom-input-group mb-2 mag-icon-search">
           <vue-simple-suggest
             v-model="jobTitle"
             placeholder="Job Title"
@@ -36,7 +36,7 @@
             :filter-by-query="true">
           </vue-simple-suggest>
           </div>
-          <div class="country">
+          <div class="input-group custom-input-group mb-2">
             <multiselect
               v-model="country"
               :options="countries"
@@ -65,7 +65,7 @@
               </template>
             </multiselect>
           </div>
-          <div class="input-group custom-input-group mb-3 upload">
+          <div class="input-group custom-input-group mb-2 upload">
             <div class="input-group-prepend">
               <label for="file-upload">
                 <input type="file" id="file-upload" ref="input" @change="processFile"/>
@@ -74,6 +74,61 @@
             </div>
             <input type="text" class="form-control" placeholder="Companies" aria-label="Companies" v-model="companies" aria-describedby="basic-addon1" required>
           </div>
+          <div class="input-group custom-input-group mb-2">
+                <multiselect
+                  v-model="employee"
+                  :options="companySizes"
+                  :multiple="true"
+                  :preselect-first="false"
+                  placeholder="Company Size"
+                  :close-on-select="false"
+                  :clear-on-select="false"
+                  :preserve-search="true" >
+                  <template slot="selection"
+                            slot-scope="{ values }">
+                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
+                  </template>
+                  <template slot="option" slot-scope="props">
+                    <div class="option__desc">
+                      <span v-if="employee.includes(props.option)">
+                        <input type="checkbox" value="" checked>
+                      </span>
+                      <span v-else>
+                        <input type="checkbox" value="">
+                      </span>
+                      <span class="option__small" v-html="props.option"></span>
+                    </div>
+                  </template>
+                </multiselect>
+          </div>
+           <div class="input-group custom-input-group mb-2">
+                <multiselect
+                  v-model="revenue"
+                  :options="revenueOptions"
+                  :multiple="true"
+                  :preselect-first="false"
+                  placeholder="Revenue"
+                  :close-on-select="false"
+                  :clear-on-select="false"
+                  :preserve-search="true" >
+                  <template slot="selection"
+                            slot-scope="{ values }">
+                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
+                  </template>
+                  <template slot="option" slot-scope="props">
+                    <div class="option__desc">
+                      <span v-if="revenue.includes(props.option)">
+                        <input type="checkbox" value="" checked>
+                      </span>
+                      <span v-else>
+                        <input type="checkbox" value="">
+                      </span>
+                      <span class="option__small" v-html="props.option"></span>
+                    </div>
+                  </template>
+                </multiselect>
+          </div>
+
           <div class="country-buttons text-left my-4" >
             <a class="card-tab-btn" v-on:click="showCountry(selectedCountry)" :class="selectedCountryGroup.includes(selectedCountry) ? 'active' : ''" :key="index" v-for="selectedCountry, index in countryGroups">{{selectedCountry}}</a>
             <div class="show-city mt-3" v-if="!isHidden">
@@ -89,7 +144,7 @@
             </div>
           </div>
           <div class="line-seperator"></div>
-          <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', { industry, country, jobTitle, keyword, companies, countryList})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
+          <button class="btn-search-lg text-white my-4" type="button" data-toggle="button" @click="$emit('search', { industry, country, jobTitle, keyword, companies, countryList, employee, revenue})"  :disabled="keyword.trim() == ''" title="Search" >Search</button>
         </div>
 </template>
 
@@ -113,7 +168,10 @@ export default {
       industry : constants.EMPTY_STRING,
       jobTitle: constants.EMPTY_STRING,
       companies: constants.EMPTY_STRING,
+      revenue:[] ,
+      revenueOptions: constants.REVENUES,
       country: [],
+      employee: [],
       countryList: [],
       isHidden: true,
       jobSearchSlotText: constants.LOADING,
@@ -124,6 +182,7 @@ export default {
       constJobTitles: [],
       constIndustries: constants.INDUSTRIES,
       industryOptions: constants.INDUSTRIES,
+      companySizes: constants.COMPANY_SIZES,
       jobTitleOptions: []
     }
   },

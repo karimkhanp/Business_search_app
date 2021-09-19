@@ -49,37 +49,6 @@
                   </template>
                 </multiselect>
               </div>
-
-              <div class="form-group col-md-3 text-left">
-                <label class="typo__label">Company Size</label>
-                <multiselect
-                  v-model="employee"
-                  :options="companySizes"
-                  :multiple="true"
-                  :preselect-first="true"
-                  placeholder="Any"
-                  :close-on-select="false"
-                  @input="$emit('searchBySize', employee)"
-                  :clear-on-select="false"
-                  :preserve-search="true" >
-
-                  <template slot="selection"
-                            slot-scope="{ values }">
-                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
-                  </template>
-                  <template slot="option" slot-scope="props">
-                    <div class="option__desc">
-                      <span v-if="employee.includes(props.option)">
-                        <input type="checkbox" value="" checked>
-                      </span>
-                      <span v-else>
-                        <input type="checkbox" value="">
-                      </span>
-                      <span class="option__small" v-html="props.option"></span>
-                    </div>
-                  </template>
-                </multiselect>
-              </div>
               <div class="form-group col-md-1 text-left">
                 <label for="inputPages">Records</label>
                 <multiselect
@@ -117,7 +86,6 @@ export default {
     props: {
        states: Array,
        cities: Array,
-       companySizes: Array,
        recordOptions: Array
     },
     components: {
