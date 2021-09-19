@@ -1,7 +1,7 @@
 <template>
   <div class="search-card">
           <h3 class="card-title mb-4">Search</h3>
-          <div class="input-group custom-input-group mb-3">
+          <div class="input-group custom-input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text-custom" id="basic-addon1">
                 <span class="mdi mdi-magnify"></span>
@@ -28,7 +28,7 @@
               <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
             </multiselect>
           </div>
-          <div class="input-group custom-input-group mb-3 mag-icon-search">
+          <div class="input-group custom-input-group mb-2 mag-icon-search">
           <vue-simple-suggest
             v-model="jobTitle"
             placeholder="Job Title"
@@ -65,7 +65,7 @@
               </template>
             </multiselect>
           </div>
-          <div class="input-group custom-input-group mb-3 upload">
+          <div class="input-group custom-input-group mb-2 upload">
             <div class="input-group-prepend">
               <label for="file-upload">
                 <input type="file" id="file-upload" ref="input" @change="processFile"/>
@@ -101,7 +101,7 @@
                   </template>
                 </multiselect>
           </div>
-           <div class="input-group custom-input-group mb-3">
+           <div class="input-group custom-input-group mb-2">
                 <multiselect
                   v-model="revenue"
                   :options="revenueOptions"
