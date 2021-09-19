@@ -216,6 +216,7 @@ export default {
       },
       processFile(event) {
            let file = event.target.files[0];
+           if(file.type.match(/.sheet$/)) {
             readXlsxFile(file).then((allRows) => {
               const combinedRows = allRows.reduce((combinedRows, row)=> {
                    combinedRows = [...combinedRows, ...row];
@@ -225,6 +226,14 @@ export default {
               this.companies = this.companies.substring(0, this.companies.length - 1);
               this.$refs.input.value='';
           });
+        }
+        if(!file.type || file.type.match(/text\/plain/)) {
+          const reader = new FileReader();
+          reader.readAsText(file);
+          reader.onload = (_event) => {
+            this.companies = reader.result;
+           }
+        }
       },
       notEmptyAndNull(item) {
          return item!=null && item!= constants.EMPTY_STRING;
