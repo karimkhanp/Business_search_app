@@ -120,6 +120,7 @@
         companies: constants.EMPTY_STRING,
         category : constants.EMPTY_STRING,
         jobTitle: constants.EMPTY_STRING,
+        revenue: [],
         showModal: false,
         isSearching: false,
         countryList: [],
@@ -153,9 +154,8 @@
         state: constants.ALL,
         city: constants.ALL,
         keyword: constants.EMPTY_STRING,
-        employee: [constants.ANY],
+        employee: [],
         companyValues:[],
-        companySizes: constants.COMPANY_SIZES,
         recordOptions: constants.RECORD_OPTIONS,
       };
     },
@@ -181,12 +181,14 @@
     },
     methods: {
       SearchSubmitted(params) {
-        const { industry, country, jobTitle, keyword, companies, countryList} = params;
+        const { industry, country, jobTitle, keyword, companies, countryList, employee, revenue} = params;
         this.category = industry;
         this.country = [ ...country, ...countryList];
         this.jobTitle = jobTitle;
         this.keyword = keyword;
+        this.revenue = revenue;
         this.companies = companies;
+        this.employee = employee;
         this.countryList = countryList;
         this.search();
       },
@@ -302,6 +304,12 @@
       },
 
       async search() {
+        const employees = Object.values(employee).map((item)=> item);
+        if(employees.includes(constants.ANY) && employees.length > 1) {
+            const index = employees.indexOf(constants.ANY);
+            employees.splice(index, 1);
+        }
+        this.employee = employees;
           if(this.country.length > 0) {
               this.newCountryL = [...this.country];
           }
@@ -321,11 +329,16 @@
             this.hasEqualSize = this.newCountryL.length == this.rpp ? true : false;
       },
       performSearch(params=undefined) {
+        const minMax = this.findMinMax(this.employee);
         if(!params) {
             params = {
                   score: this.sliderVal,
                   keyword: this.keyword,
                   companies: this.companies,
+                  revenue: this.revenue,
+                  employee: this.employee,
+                  Min_Num_Of_Employees: minMax.min,
+                  Max_Num_Of_Employees: minMax.max,
                   search_type: this.type,
                   country: this.newCountryL.length > 0 ? this.newCountryL:constants.EMPTY_STRING,
                   state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
@@ -394,8 +407,7 @@
         this.page = 1;
         const params = {
              score: this.sliderVal,
-             Min_Num_Of_Employees: minMax.min,
-             Max_Num_Of_Employees: minMax.max,
+
              keyword: this.keyword,
              search_type: this.type,
              country: this.country !== constants.ANY_SMALLA ? this.country : constants.EMPTY_STRING,

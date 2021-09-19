@@ -90,7 +90,7 @@ export default {
       }
     },
     server: {
-        port: 3029 // default: 3000
+        port: 9000 // default: 3000
     },
     router : {
         base: '/testingFE4/'
