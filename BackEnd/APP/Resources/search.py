@@ -1,10 +1,22 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, request
 from bson.objectid import ObjectId
-
+from werkzeug.utils import secure_filename
+import random
+import os
+import string
+import time
+import openpyxl
+from pathlib import Path
 # User-Defined Modules
 from APP import Mongodb
 from APP.config import Config
 from APP.Resources import projection
+
+
+ALLOWED_EXTENSIONS = set(['xlsx'])
+
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 class Search(Resource):
 
@@ -74,6 +86,7 @@ class Search(Resource):
         parser.add_argument(name='country', location='json', type=list)
         parser.add_argument(name='state', location='json', type=str, dest='State/Region')
         parser.add_argument(name='city', location='json', type=str, dest='City')
+        parser.add_argument(name='company_name', location='json', type=list)
 
         parser.add_argument(name='employee', location='json', type=str)
         parser.add_argument(name='score', location='json', type=int)
@@ -142,10 +155,61 @@ class Search(Resource):
                 query6 = {}
             print(query4)
 
+            if args.get('company_name'):
+                b = args.get('company_name')
+                print(b)
+                query7 = {"CompanyName": {"$in": b}}
+            elif 'file' in request.files:
+                file = request.files['file']
+                print(file)
+
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    print(filename)
+                    print(os.getcwd())
+
+                    def get_random_string(length):
+                        letters = string.ascii_lowercase
+                        result_str = ''.join(random.choice(letters) for i in range(length))
+                        print("Random string of length", length, "is:", result_str)
+                        return result_str
+
+                    dir = get_random_string(4)
+                    path = os.getcwd()
+                    full_path = path + '/' + dir
+                    os.mkdir(full_path)
+                    path1 = full_path
+                    file.save(os.path.join(path1, filename))
+
+                    # data_file1 = open(path1 + '/'+filename, "rb")
+                    # your_matrix = pe.get_array(file_name=path1 + '/'+filename)
+                    # print(your_matrix)
+
+                    list1 = []
+                    xlsx_file = Path('SimData', path1 + '/' + filename)
+                    wb_obj = openpyxl.load_workbook(xlsx_file)
+                    sheet = wb_obj.active
+                    for row in sheet.iter_rows():
+                        for cell in row:
+                            a = cell.value
+                            list1.append(a)
+                    print(list1)
+                    # data_file1.close()
+
+                    if os.path.exists(path1):
+                        time.sleep(30)
+                        os.remove(path1 + "/" + filename)
+
+                        os.rmdir(path1)
+                    query7 = {"CompanyName": {"$in": list1}}
+            else:
+                query7 = {}
+
+
 
 
             pipeline = [
-                {'$search': query},{'$match': query4}, {'$match': query3},{'$match': query2},{'$match': query5},{'$match': query6},
+                {'$search': query},{'$match': query4}, {'$match': query3},{'$match': query2},{'$match': query5},{'$match': query6},{'$match': query7},
                 {'$project': projection},
 
                 # {'$match': {'employees': match}},    # not worth it takeing more than 2 minutes for backend filtering
