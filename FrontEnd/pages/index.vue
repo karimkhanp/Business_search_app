@@ -32,11 +32,9 @@
         <FilterSection
                 :cities="cities"
                 :states="states"
-                :companySizes="companySizes"
                 :recordOptions="recordOptions"
                 @searchByCity="searchByCity"
                 @searchByState="searchByState"
-                @searchBySize="searchBySize"
                 @searchOnFilter="searchOnFilter"
                 @exportToFile="exportToFile"
             />
@@ -187,7 +185,7 @@
         this.jobTitle = jobTitle;
         this.keyword = keyword;
         this.revenue = revenue;
-        this.companies = companies;
+        this.companies = companies.split(',');
         this.employee = employee;
         this.countryList = countryList;
         this.search();
@@ -304,7 +302,7 @@
       },
 
       async search() {
-        const employees = Object.values(employee).map((item)=> item);
+        const employees = Object.values(this.employee).map((item)=> item);
         if(employees.includes(constants.ANY) && employees.length > 1) {
             const index = employees.indexOf(constants.ANY);
             employees.splice(index, 1);
@@ -407,7 +405,6 @@
         this.page = 1;
         const params = {
              score: this.sliderVal,
-
              keyword: this.keyword,
              search_type: this.type,
              country: this.country !== constants.ANY_SMALLA ? this.country : constants.EMPTY_STRING,

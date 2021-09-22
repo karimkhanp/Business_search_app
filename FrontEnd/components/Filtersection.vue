@@ -2,7 +2,7 @@
        <div class="container">
           <div class="main-filter-section">
             <div class="form-row">
-              <div class="form-group col-md-2 text-left">
+              <div class="form-group col-md-3 text-left">
                 <label class="typo__label">State</label>
                 <multiselect
                   v-model="state"
@@ -37,7 +37,6 @@
                   @input="$emit('searchByCity', city)"
                   :clear-on-select="false"
                   :preserve-search="true" >
-
                   <template slot="selection"
                             slot-scope="{ values }">
                     <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
@@ -49,7 +48,7 @@
                   </template>
                 </multiselect>
               </div>
-              <div class="form-group col-md-1 text-left">
+              <div class="form-group col-md-3 text-left">
                 <label for="inputPages">Records</label>
                 <multiselect
                   v-model="rpp"

@@ -171,7 +171,7 @@ export default {
       revenue:[] ,
       revenueOptions: constants.REVENUES,
       country: [],
-      employee: [],
+      employee: [constants.ANY],
       countryList: [],
       isHidden: true,
       jobSearchSlotText: constants.LOADING,
