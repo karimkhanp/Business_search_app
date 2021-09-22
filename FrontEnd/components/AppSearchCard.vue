@@ -37,6 +37,11 @@
           </vue-simple-suggest>
           </div>
           <div class="input-group custom-input-group mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text-custom" id="basic-addon1">
+                <span class="mdi mdi-guitar-pick-outline"></span>
+              </span>
+            </div>
             <multiselect
               v-model="country"
               :options="countries"
@@ -330,7 +335,7 @@ export default {
     white-space: nowrap;
     border-radius: 0.25rem;
   }
-  .input-group-text-custom .mdi.mdi-magnify{
+  .input-group-text-custom .mdi{
     font-size: 26px;
   }
   .custom-input-group{

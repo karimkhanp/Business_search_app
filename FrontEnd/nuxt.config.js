@@ -76,7 +76,7 @@ export default {
         // baseURL: "http://18.218.36.147/db",
 
         // http://18.218.36.147:5008/
-        baseURL: "http://18.218.36.147/testingBE1",
+        baseURL: "http://3.142.148.97/testingBE1",
 //        baseURL: "http://18.218.36.147:5008"
     },
 
