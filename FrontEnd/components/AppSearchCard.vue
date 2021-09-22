@@ -7,7 +7,7 @@
                 <span class="mdi mdi-magnify"></span>
               </span>
             </div>
-            <input type="text" class="form-control" placeholder="Intent Keywords" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
+            <input type="text" class="form-control uplood-control" placeholder="Intent Keywords" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
           </div>
           <div class="input-group custom-input-group mb-2 mag-icon-search">
             <multiselect
@@ -36,13 +36,67 @@
             :filter-by-query="true">
           </vue-simple-suggest>
           </div>
+           <div class="input-group custom-input-group mb-2">
+                <multiselect
+                  v-model="revenue"
+                  :options="revenueOptions"
+                  :multiple="true"
+                  :preselect-first="false"
+                  placeholder="Revenue"
+                  :close-on-select="false"
+                  :clear-on-select="false"
+                  :preserve-search="true" >
+                  <template slot="selection"
+                            slot-scope="{ values }">
+                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
+                  </template>
+                  <template slot="option" slot-scope="props">
+                    <div class="option__desc">
+                      <span v-if="revenue.includes(props.option)">
+                        <input type="checkbox" value="" checked>
+                      </span>
+                      <span v-else>
+                        <input type="checkbox" value="">
+                      </span>
+                      <span class="option__small" v-html="props.option"></span>
+                    </div>
+                  </template>
+                </multiselect>
+            </div>
+            <div class="input-group custom-input-group mb-2">
+                <multiselect
+                  v-model="employee"
+                  :options="companySizes"
+                  :multiple="true"
+                  :preselect-first="false"
+                  placeholder="Company size"
+                  :close-on-select="false"
+                  :clear-on-select="false"
+                  :preserve-search="true" >
+                  <template slot="selection"
+                            slot-scope="{ values }">
+                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
+                  </template>
+                  <template slot="option" slot-scope="props">
+                    <div class="option__desc">
+                      <span v-if="employee.includes(props.option)">
+                        <input type="checkbox" value="" checked>
+                      </span>
+                      <span v-else>
+                        <input type="checkbox" value="">
+                      </span>
+                      <span class="option__small" v-html="props.option"></span>
+                    </div>
+                  </template>
+                </multiselect>
+          </div>
           <div class="input-group custom-input-group mb-2">
             <div class="input-group-prepend">
               <span class="input-group-text-custom" id="basic-addon1">
-                <span class="mdi mdi-guitar-pick-outline"></span>
+                <span class="mdi mdi-map-marker-outline"></span>
               </span>
             </div>
-            <multiselect
+            <multiselect class="country-select"
               v-model="country"
               :options="countries"
               :multiple="true"
@@ -71,69 +125,16 @@
             </multiselect>
           </div>
           <div class="input-group custom-input-group mb-2 upload">
-            <div class="input-group-prepend">
-              <label for="file-upload">
+            <input type="text" class="form-control upload-control" placeholder="ABM/TAL" aria-label="Companies" v-model="companies" aria-describedby="basic-addon1" required>
+            <label for="file-upload">
                 <input type="file" id="file-upload" ref="input" @change="processFile"/>
-                <font-awesome-icon icon="upload" class="icon-upload"/>
-              </label>
+                <span class="mdi mdi-upload"></span>
+                 Upload
+            </label>
+            <div class="info-circle">
+               <span class="mdi mdi-information-outline"></span><span class="tooltiptext">Only .txt,.csv and .xsl file</span>
             </div>
-            <input type="text" class="form-control" placeholder="ABM/TAL" aria-label="Companies" v-model="companies" aria-describedby="basic-addon1" required>
           </div>
-          <div class="input-group custom-input-group mb-2">
-                <multiselect
-                  v-model="employee"
-                  :options="companySizes"
-                  :multiple="true"
-                  :preselect-first="false"
-                  placeholder="Company size"
-                  :close-on-select="false"
-                  :clear-on-select="false"
-                  :preserve-search="true" >
-                  <template slot="selection"
-                            slot-scope="{ values }">
-                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
-                  </template>
-                  <template slot="option" slot-scope="props">
-                    <div class="option__desc">
-                      <span v-if="employee.includes(props.option)">
-                        <input type="checkbox" value="" checked>
-                      </span>
-                      <span v-else>
-                        <input type="checkbox" value="">
-                      </span>
-                      <span class="option__small" v-html="props.option"></span>
-                    </div>
-                  </template>
-                </multiselect>
-          </div>
-           <div class="input-group custom-input-group mb-2">
-                <multiselect
-                  v-model="revenue"
-                  :options="revenueOptions"
-                  :multiple="true"
-                  :preselect-first="false"
-                  placeholder="Revenue"
-                  :close-on-select="false"
-                  :clear-on-select="false"
-                  :preserve-search="true" >
-                  <template slot="selection"
-                            slot-scope="{ values }">
-                    <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
-                  </template>
-                  <template slot="option" slot-scope="props">
-                    <div class="option__desc">
-                      <span v-if="revenue.includes(props.option)">
-                        <input type="checkbox" value="" checked>
-                      </span>
-                      <span v-else>
-                        <input type="checkbox" value="">
-                      </span>
-                      <span class="option__small" v-html="props.option"></span>
-                    </div>
-                  </template>
-                </multiselect>
-          </div>
-
           <div class="country-buttons text-left my-4" >
             <a class="card-tab-btn" v-on:click="showCountry(selectedCountry)" :class="selectedCountryGroup.includes(selectedCountry) ? 'active' : ''" :key="index" v-for="selectedCountry, index in countryGroups">{{selectedCountry}}</a>
             <div class="show-city mt-3" v-if="!isHidden">
@@ -287,18 +288,28 @@ export default {
     line-height: 25px;
     text-align: left;
   }
-  .upload {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-  }
+
 
   .country {
     margin-bottom: 1rem;
   }
 
+  .country-select .multiselect__tags {
+    padding-left: 40px !important;
+  }
+
   input[type="file"] {
     display: none;
+  }
+
+  input[type="text"]::placeholder {
+      color: #757575;
+      font-size: 16px;
+  }
+
+  ::-ms-input-placeholder {
+      color: #757575;
+      font-size: 16px;
   }
 
   .icon-upload {
@@ -330,7 +341,7 @@ export default {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #495057;
+    color: #757575;
     text-align: center;
     white-space: nowrap;
     border-radius: 0.25rem;
@@ -341,12 +352,79 @@ export default {
   .custom-input-group{
     border-radius: 8px;
   }
+
+  .upload label {
+    width: 38%;
+    margin-left: 5%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    height: 50px;
+    padding: 4px;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #B3365B;
+    color: white;
+  }
+
+  .upload .info-circle {
+    margin-left: 1%;
+    width: 8%;
+    font-size: 26px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+  }
+
+  .info-circle .tooltiptext{
+      visibility: hidden;
+      width: 120px;
+      background-color: white;
+      color: #757575;
+      text-align: center;
+      border-radius: 6px;
+      font-size: 14px;
+      padding: 8px;
+      position: absolute;
+      right: -122px;
+      top: 5px;
+      border: 1px solid #E0E0E0;
+      z-index: 1;
+  }
+
+  .info-circle .tooltiptext::after {
+      content: " ";
+      position: absolute;
+      top: 13%; /* At the bottom of the tooltip */
+      left: 0%;
+      margin-left: -15px;
+      border-width: 7px;
+      border-style: solid;
+      border-color: transparent #E0E0E0 transparent transparent;
+      z-index: 1;
+}
+
+  .info-circle:hover .tooltiptext {
+       visibility: visible;
+  }
+
+  .custom-input-group label span {
+    display: inline-block;
+    width: 30%;
+  }
+
   .custom-input-group .form-control{
     border-radius: 8px !important;
     padding: 1.5rem 0.75rem;
     padding-left: 45px;
     color: #374958 !important;
   }
+
+  .upload .upload-control {
+    padding-left: 12px !important;
+    max-width: 48%;
+  }
+
 .custom-input-group .form-control:focus {
   box-shadow: none;
 }
@@ -356,14 +434,6 @@ export default {
   z-index: 5;
 }
 
-.upload .input-group-prepend {
-   padding-left: 12px;
-   cursor: pointer;
-}
-
-.upload .input-group-prepend label {
-   margin-bottom: 0;
-}
 
 .search-card .input-group.custom-input-group .form-control:focus{
   border-color: #B3365B !important;
