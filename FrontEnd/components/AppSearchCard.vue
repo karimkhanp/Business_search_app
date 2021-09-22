@@ -7,7 +7,7 @@
                 <span class="mdi mdi-magnify"></span>
               </span>
             </div>
-            <input type="text" class="form-control" placeholder="Intent Keyword …" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
+            <input type="text" class="form-control" placeholder="Intent Keywords" aria-label="Username" v-model="keyword" aria-describedby="basic-addon1" required>
           </div>
           <div class="input-group custom-input-group mb-2 mag-icon-search">
             <multiselect
@@ -18,7 +18,7 @@
               :clear-on-select="false"
               :hideSelected="false"
               :taggable="false"
-              placeholder="Industry"
+              placeholder="Industries"
               :preserve-search="true"
               :internal-search="false"
               @search-change="asyncFindIndustries" >
@@ -31,7 +31,7 @@
           <div class="input-group custom-input-group mb-2 mag-icon-search">
           <vue-simple-suggest
             v-model="jobTitle"
-            placeholder="Job Title"
+            placeholder="Job Titles"
             :list="jobTitleOptions"
             :filter-by-query="true">
           </vue-simple-suggest>
@@ -46,7 +46,7 @@
               :clear-on-select="false"
               :hideSelected="false"
               :taggable="false"
-              placeholder="Any Country"
+              placeholder="Countries"
               :preserve-search="true"
               @search-change="asyncFindCountries">
               <template slot="selection" slot-scope="{ values }">
@@ -72,7 +72,7 @@
                 <font-awesome-icon icon="upload" class="icon-upload"/>
               </label>
             </div>
-            <input type="text" class="form-control" placeholder="Companies" aria-label="Companies" v-model="companies" aria-describedby="basic-addon1" required>
+            <input type="text" class="form-control" placeholder="ABM/TAL" aria-label="Companies" v-model="companies" aria-describedby="basic-addon1" required>
           </div>
           <div class="input-group custom-input-group mb-2">
                 <multiselect
@@ -80,7 +80,7 @@
                   :options="companySizes"
                   :multiple="true"
                   :preselect-first="false"
-                  placeholder="Company Size"
+                  placeholder="Company size"
                   :close-on-select="false"
                   :clear-on-select="false"
                   :preserve-search="true" >
