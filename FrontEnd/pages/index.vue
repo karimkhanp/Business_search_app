@@ -328,12 +328,14 @@
       },
       performSearch(params=undefined) {
         const minMax = this.findMinMax(this.employee);
+        const minMaxRevenue = this.findMinMax(this.revenue);
         if(!params) {
             params = {
                   score: this.sliderVal,
                   keyword: this.keyword,
-                  companies: this.companies,
-                  revenue: this.revenue,
+                  company_name: this.companies,
+                  Max_Revenue: minMaxRevenue.max,
+                  Min_Revenue: minMaxRevenue.min,
                   employee: this.employee,
                   Min_Num_Of_Employees: minMax.min,
                   Max_Num_Of_Employees: minMax.max,
@@ -392,37 +394,11 @@
            this.jobTitles = this.getJobTitlesFromStore;
         });
       },
-      async searchBySize(employee) {
-        const employees = Object.values(employee).map((item)=> item);
-        if(employees.includes(constants.ANY) && employees.length > 1) {
-            const index = employees.indexOf(constants.ANY);
-            employees.splice(index, 1);
-            this.employee = employees;
-        }
-        this.employee = employees;
-        const minMax = this.findMinMax(this.employee);
-        this.removeFromSearch();
-        this.page = 1;
-        const params = {
-             score: this.sliderVal,
-             keyword: this.keyword,
-             search_type: this.type,
-             country: this.country !== constants.ANY_SMALLA ? this.country : constants.EMPTY_STRING,
-             state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
-             city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
-             employee: this.employee,
-             category: this.category,
-             jobtitle: this.jobTitle,
-         }
-        this.performSearch(params);
-      },
-
       findMinMax(employee) {
           const min =  Math.min(...employee.reduce((values, size)=> { values = [...values, parseInt(size.split("-")[0])]; return values;}, []));
           const max =  Math.max(...employee.reduce((values, size)=> { values = [...values, parseInt(size.split("-")[1])]; return values;}, []));
           return { min, max};
       },
-
       async searchByState(state) {
         this.state = state;
         this.removeFromSearch();

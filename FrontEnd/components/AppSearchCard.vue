@@ -172,7 +172,7 @@ export default {
   },
   data () {
     return {
-      industry : constants.EMPTY_STRING,
+      industry : [],
       jobTitle: constants.EMPTY_STRING,
       companies: constants.EMPTY_STRING,
       revenue:[] ,
@@ -229,7 +229,7 @@ export default {
                    combinedRows = [...combinedRows, ...row];
                    return combinedRows;
               }, []);
-              this.companies = combinedRows.join(", ");
+              this.companies = combinedRows.join(",");
               this.companies = this.companies.substring(0, this.companies.length - 1);
           });
         }
