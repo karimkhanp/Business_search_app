@@ -13,8 +13,8 @@
             <multiselect
               v-model="industry"
               :options="industryOptions"
-              :multiple="false"
-              :close-on-select="true"
+              :multiple="true"
+              :close-on-select="false"
               :clear-on-select="false"
               :hideSelected="false"
               :taggable="false"
@@ -23,9 +23,16 @@
               :internal-search="false"
               @search-change="asyncFindIndustries" >
               <template slot="selection" slot-scope="{ values, search, isOpen }">
-                <span class="multiselect__single" style="padding-left: 0px;" v-if="values.length">{{values[0]}}</span>
+                <span class="multiselect__single" style="padding-left: 0px;" v-if="values.length">{{values.join(',')}}</span>
               </template>
-              <span class="arrow" style="position: absolute; right: 0;margin:7px; font-size: 1.4rem;" slot="caret"><i class="mdi mdi-chevron-down"></i></span>
+                  <template
+                    slot="option"
+                    slot-scope="props">
+                    <div class="option__desc">
+                      <app-checkbox :item="industry" :option="props.option" />
+                      <span class="option__small">{{ props.option }}</span>
+                    </div>
+                  </template>
             </multiselect>
           </div>
           <div class="input-group custom-input-group mb-2 mag-icon-search">
@@ -50,15 +57,12 @@
                             slot-scope="{ values }">
                     <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
                   </template>
-                  <template slot="option" slot-scope="props">
+                  <template
+                    slot="option"
+                    slot-scope="props">
                     <div class="option__desc">
-                      <span v-if="revenue.includes(props.option)">
-                        <input type="checkbox" value="" checked>
-                      </span>
-                      <span v-else>
-                        <input type="checkbox" value="">
-                      </span>
-                      <span class="option__small" v-html="props.option"></span>
+                      <app-checkbox :item="revenue" :option="props.option" />
+                      <span class="option__small">{{ props.option }}</span>
                     </div>
                   </template>
                 </multiselect>
@@ -77,15 +81,12 @@
                             slot-scope="{ values }">
                     <span class="multiselect__single" v-if="values.length">{{values.join(', ')}}</span>
                   </template>
-                  <template slot="option" slot-scope="props">
+                  <template
+                    slot="option"
+                    slot-scope="props">
                     <div class="option__desc">
-                      <span v-if="employee.includes(props.option)">
-                        <input type="checkbox" value="" checked>
-                      </span>
-                      <span v-else>
-                        <input type="checkbox" value="">
-                      </span>
-                      <span class="option__small" v-html="props.option"></span>
+                      <app-checkbox :item="employee" :option="props.option" />
+                      <span class="option__small">{{ props.option }}</span>
                     </div>
                   </template>
                 </multiselect>
