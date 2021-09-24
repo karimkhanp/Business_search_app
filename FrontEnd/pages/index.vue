@@ -180,7 +180,7 @@
     methods: {
       SearchSubmitted(params) {
         const { industry, country, jobTitle, keyword, companies, countryList, employee, revenue} = params;
-        this.category = industry;
+        this.category = industry.join(',');
         this.country = [ ...country, ...countryList];
         this.jobTitle = jobTitle;
         this.keyword = keyword;
