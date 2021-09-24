@@ -41,10 +41,10 @@ class Search(Resource):
             filters.append({'text':{'path': 'City', 'query':args.get('City')}})
 
         #Category filter
-        if args.get('category') != None and args.get('category') != "":
-            filters.append({'text':{'path': 'Industry', 'query':args.get('category')}})
-        if args.get('category') != None and args.get('category') != "":
-            filters.append({'text':{'path': 'Industry', 'query':args.get('category')}})
+        # if args.get('category') != None and args.get('category') != "":
+        #     filters.append({'text':{'path': 'Industry', 'query':args.get('category')}})
+        # if args.get('category') != None and args.get('category') != "":
+        #     filters.append({'text':{'path': 'Industry', 'query':args.get('category')}})
 
         #jobtitle filter
 
@@ -155,6 +155,19 @@ class Search(Resource):
                 query6 = {}
             print(query4)
 
+            str1 = args.get('category')
+
+            list1 = str1.split(',')
+            print(list1)
+
+            if list1:
+                b = list1
+                print(b)
+                query8 = {"Industry": {"$in": b}}
+
+            else:
+                query8 = {}
+
             if args.get('company_name'):
                 b = args.get('company_name')
                 print(b)
@@ -209,7 +222,7 @@ class Search(Resource):
 
 
             pipeline = [
-                {'$search': query},{'$match': query4}, {'$match': query3},{'$match': query2},{'$match': query5},{'$match': query6},{'$match': query7},
+                {'$search': query},{'$match': query4}, {'$match': query3},{'$match': query2},{'$match': query5},{'$match': query6},{'$match': query7},{'$match': query8},
                 {'$project': projection},
 
                 # {'$match': {'employees': match}},    # not worth it takeing more than 2 minutes for backend filtering
