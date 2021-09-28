@@ -3,7 +3,7 @@ module.exports = {
     {
       exec_mode: 'cluster',
       name: 'testingFE4',
-      cwd: '/home/ubuntu/Test-dir/Business_search_app',
+      cwd: '/home/ubuntu/TestingFE4/Business_search_app/FrontEnd',
       script: './FrontEnd/node_modules/nuxt/bin/nuxt.js',
       ref  : "origin/development",
       repo: "https://github.com/karimkhanp/Business_search_app.git",
