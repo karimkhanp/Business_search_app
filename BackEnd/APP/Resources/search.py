@@ -154,16 +154,16 @@ class Search(Resource):
             else:
                 query6 = {}
             print(query4)
+            if args.get('category'):
+                str1 = args.get('category')
 
-            str1 = args.get('category')
+                list1 = str1.split(',')
+                print(list1)
 
-            list1 = str1.split(',')
-            print(list1)
-
-            if list1:
-                b = list1
-                print(b)
-                query8 = {"Industry": {"$in": b}}
+                if list1:
+                    b = list1
+                    print(b)
+                    query8 = {"Industry": {"$in": b}}
 
             else:
                 query8 = {}
