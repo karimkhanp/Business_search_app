@@ -282,6 +282,7 @@ export default {
     background: #FFFFFF;
     border-radius: 8px;
     padding: 40px;
+    font-family: 'Mulish'
   }
   .search-card .card-title{
     font-size: 20px;
@@ -289,8 +290,6 @@ export default {
     line-height: 25px;
     text-align: left;
   }
-
-
   .country {
     margin-bottom: 1rem;
   }
@@ -304,17 +303,41 @@ export default {
   }
 
   input[type="text"]::placeholder {
-      color: #757575;
-      font-size: 16px;
+    color: #374958;
+    font-family: 'Mulish';
+    font-weight: 400;
+    font-size: 14px;
+  }
+
+  .vue-simple-suggest.designed .input-wrapper input.default-input::placeholder {
+    color: #374958 !important;
+    font-family: 'Mulish';
+    font-weight: 400;
+    font-size: 14px;
   }
 
   ::-ms-input-placeholder {
-      color: #757575;
-      font-size: 16px;
+      color: #374958;
+      font-family: 'Mulish';
+      font-weight: 400;
+      font-size: 14px;
   }
 
   .icon-upload {
     font-size: 22px;
+  }
+
+  .country .multiselect__placeholder {
+    padding: 0 0 0 32px !important;
+    font-size: 16px !important;
+    color: #374958 !important;
+    margin-bottom: 8px !important;
+  }
+  .multiselect__placeholder {
+    font-family: 'Mulish';
+    font-size: 16px !important;
+    color: #374958 !important;
+    margin-bottom: 8px !important;
   }
 
   .line {
@@ -342,7 +365,7 @@ export default {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #757575;
+    color: #374958;
     text-align: center;
     white-space: nowrap;
     border-radius: 0.25rem;
@@ -381,7 +404,7 @@ export default {
       visibility: hidden;
       width: 120px;
       background-color: white;
-      color: #757575;
+      color: #374958;
       text-align: center;
       border-radius: 6px;
       font-size: 14px;

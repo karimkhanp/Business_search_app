@@ -102,9 +102,10 @@ export default {
 .company-name{
   font-size: 14px;
   font-weight: 400;
+  font-family: 'Mulish';
   line-height: 18px;
   text-align: left;
-  color: #031C32;
+  color: #37495B;
 }
 .col-md-4 {
   padding: 10px;
