@@ -63,7 +63,7 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: "http://127.0.0.1:5000",
+        baseURL: "http://3.12.132.219/testingBE1",
         // baseURL: "http://18.218.36.147/db",
     },
 
@@ -74,6 +74,6 @@ export default {
     ],
     },
     server: {
-        port: 3001 // default: 3000
+        port: 9000 // default: 3000
       }
 };
