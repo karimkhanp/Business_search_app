@@ -319,13 +319,13 @@ export default {
 
   .country .multiselect__placeholder {
     padding: 0 0 0 32px !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
     color: #374958 !important;
     margin-bottom: 8px !important;
   }
   .multiselect__placeholder {
     font-family: 'Mulish';
-    font-size: 16px !important;
+    font-size: 14px !important;
     color: #374958 !important;
     margin-bottom: 8px !important;
   }
