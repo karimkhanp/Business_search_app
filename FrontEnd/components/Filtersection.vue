@@ -110,7 +110,6 @@ export default {
     padding: 12px 30px;
     float: right;
   }
-
   .main-filter-section{
     background: #B3365B;
     border-radius: 8px;
@@ -125,7 +124,6 @@ export default {
     padding: 5px;
     height: 45px;
   }
-
   .main-filter-section .form-group label{
     font-size: 16px;
     font-weight: 600;
@@ -154,6 +152,9 @@ export default {
   .multiselect__input, .multiselect__single{
     border-radius: 8px !important;
     line-height: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Mulish';
   }
   .multiselect__content-wrapper .multiselect__element .option__desc span.option__small{
     margin-left: 10px;
@@ -164,10 +165,8 @@ export default {
   .multiselect__option{
     min-height: 44px;
   }
-  .multiselect__placeholder {
-    font-size: 16px !important;
-    color: #495057 !important;
-    margin-bottom: 8px !important;
+  .main-filter-section .multiselect__placeholder {
+    margin-bottom: 8px;
   }
   .multiselect {
     min-height: 48px;
