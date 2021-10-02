@@ -570,9 +570,9 @@
   }
 
   .country-buttons a{
-    border-radius: 10px;
-    margin-right: 4px;
-    padding: 8px 16px;
+    border-radius: 6px;
+    margin-right: 2px;
+    padding: 8px 12px;
     font-weight: 600;
     font-size: 12px;
     line-height: 15px;

@@ -136,7 +136,7 @@
                <span class="mdi mdi-information-outline"></span><span class="tooltiptext">Only .txt,.csv and .xsl file</span>
             </div>
           </div>
-          <div class="country-buttons text-left my-4" >
+          <div class="country-buttons text-left my-3" >
             <a class="card-tab-btn" v-on:click="showCountry(selectedCountry)" :class="selectedCountryGroup.includes(selectedCountry) ? 'active' : ''" :key="index" v-for="selectedCountry, index in countryGroups">{{selectedCountry}}</a>
             <div class="show-city mt-3" v-if="!isHidden">
                 <div class="close-city">
