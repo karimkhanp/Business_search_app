@@ -90,13 +90,11 @@
          return fas
         },
       ...mapGetters({
-        getCountryGroups: 'index-module/country-groups',
         getCompanies: 'index-module/companies',
         getPopular : 'index-module/popular',
         getStates: 'index-module/states',
         getCities: 'index-module/cities',
         getKeywordsFromStore: 'index-module/keywords',
-        getCountryList: 'index-module/country-list',
         getCategories: 'index-module/categories',
         getJobTitlesFromStore: 'index-module/job-titles',
         getCategories: 'index-module/categories',
@@ -114,6 +112,7 @@
     data() {
       return {
         categories: [],
+        countryGroups:  constants.COUNTRY_GROUPS,
         jobTitles: [],
         companies: constants.EMPTY_STRING,
         category : constants.EMPTY_STRING,
@@ -122,7 +121,6 @@
         showModal: false,
         isSearching: false,
         countryList: [],
-        countryGroups:[],
         countrySelected: [],
         selectedCountryGroup: [],
         page:1,
@@ -160,7 +158,6 @@
     created() {
       this.getKeywords();
       this.updateValues();
-      this.loadCountryGroups();
       this.loadJobTitles();
     },
     watch: {
@@ -238,11 +235,6 @@
       searchOnFilter(rpp) {
         this.rpp = rpp;
         this.search();
-      },
-      loadCountryGroups() {
-        this.$store.dispatch('index-module/load-country-groups').then(()=> {
-            this.countryGroups = this.getCountryGroups;
-        });
       },
       removeFromSearch(){
         const filteredCountry = this.countryList.length > 0 ? this.countryList.filter((item)=> !this.countrySelected.includes(item)): [];

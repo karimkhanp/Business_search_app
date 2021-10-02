@@ -20,5 +20,20 @@ export default {
     ],
     RECORD_OPTIONS: [
         '15', '50', '80', '100'
+    ],
+    COUNTRY_GROUPS: [
+        'APAC','EMEA','North America','South America'
+    ],
+    APAC: [
+        'India','Sri Lanka','Pakistan','Bangladesh','China','Japan','South Korea','Taiwan','Hong Kong','Singapore','Vietnam','Malaysia','Indonesia','Thailand','Philippines','Australia','New Zealand','Myanmar','Maldives' 
+    ],
+    EMEA:[
+        'Austria','Bahrain','Belgium','Bulgaria','Croatia','Cyprus','Czech Republic','Denmark','Egypt','Estonia','Ethiopia','Finland','France','Georgia','Germany','Ghana','Greece','Hungary','Iceland','Iran','Iraq','Ireland','Isle Of Man','Israel','Italy','Jordan','Kenya','Kuwait','Lebanon','Liberia','Libya','Luxembourg','Madagascar','Malta','Mauritius','Morocco','Mozambique','Namibia','Netherlands','Niger','Nigeria','Norway','Oman','Palestine','Poland','Portugal','Qatar','Romania','Saudi Arabia','Serbia','Slovakia','Slovenia','South Africa','Spain','Sudan','Swaziland','Sweden','Switzerland','Turkey','Uganda','Ukraine','United Arab Emirates','United Kingdom','Zimbabwe','Russia'
+    ],
+    'North America': [
+        'Canada','United States of America','Mexico'
+    ],
+    'South America': [
+        'Brazil','Argentina','Chile','Peru','Colombia','Venezuela','Paraguay','Uruguay','Guyana'
     ]
 }

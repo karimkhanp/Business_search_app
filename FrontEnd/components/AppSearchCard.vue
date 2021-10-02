@@ -160,7 +160,6 @@ import constants from "../api/constants"
 import AppCheckbox from './AppCheckbox.vue'
 import readXlsxFile from 'read-excel-file'
 import Multiselect from 'vue-multiselect'
-import { mapGetters } from 'vuex'
 import VueSimpleSuggest from 'vue-simple-suggest'
 import 'vue-simple-suggest/dist/styles.css' 
 
@@ -192,11 +191,6 @@ export default {
       companySizes: constants.COMPANY_SIZES,
       jobTitleOptions: []
     }
-  },
-  computed: {
-    ...mapGetters({
-        getCountryList: 'index-module/country-list'
-    })
   },
   watch: {
      jobTitles(val, oldVal) {
@@ -249,18 +243,14 @@ export default {
         if(this.selectedCountryGroup.includes(selectedCountry)) {
           var index = this.selectedCountryGroup.indexOf(selectedCountry);
           this.selectedCountryGroup.splice(index, 1);
-          this.$store.dispatch('index-module/load-country-group', selectedCountry).then(()=> {
-              this.countryList = this.countryList.filter((country)=> !this.getCountryList.includes(country));
-          });
+          this.countryList = this.countryList.filter((country)=> !constants[selectedCountry].includes(country));
           if(this.selectedCountryGroup.length==0) {
             this.isHidden = true;
           }
         }  else  {
           this.selectedCountryGroup.push(selectedCountry);
           this.isHidden = false;
-          this.$store.dispatch('index-module/load-country-group', selectedCountry).then(()=> {
-              this.countryList = [...this.countryList, ...this.getCountryList];
-          });
+          this.countryList = [...this.countryList, ...constants[selectedCountry]];
         }
       },
       removeCountry(country){
