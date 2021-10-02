@@ -1,5 +1,4 @@
-from flask_restful import Resource, reqparse, inputs
-import re
+from flask_restful import Resource, reqparse
 # User Defined Modules
 from APP import Mongodb
 from APP.config import Config
@@ -134,23 +133,23 @@ class Category(Resource):
             return result, 500
 
 # jobs = Mongodb.db.get_collection(Config.COMPANY_COLLS_NAME).distinct( key = 'JobTitle',)
-x= Mongodb.db.get_collection(Config.COMPANY_COLLS_NAME).find({}, {'JobTitle': 1})
-set_of_ids = []
-for i in x:
-    if 'JobTitle' in i:
-        set_of_ids.append(i['JobTitle'])
-
-set_of_ids=set(set_of_ids)
-jobs=list(set_of_ids)
-filter_list = []
-for job in jobs:
-    if(job):
-        if(job[0].isalpha()):
-            filter_list.append(job)
-jobs = filter_list
 class JobTitle(Resource):
     def get(self):
         try: 
+            x= Mongodb.db.get_collection(Config.COMPANY_COLLS_NAME).find({}, {'JobTitle': 1})
+            set_of_ids = []
+            for i in x:
+                if 'JobTitle' in i:
+                    set_of_ids.append(i['JobTitle'])
+
+            set_of_ids=set(set_of_ids)
+            jobs=list(set_of_ids)
+            filter_list = []
+            for job in jobs:
+                if(job):
+                    if(job[0].isalpha()):
+                        filter_list.append(job)
+            jobs = filter_list
             result = dict()
             result['status'] = 'success'
             result['Titles'] = jobs

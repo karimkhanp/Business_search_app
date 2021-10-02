@@ -13,31 +13,62 @@ database = client.get_database(name=db_name)
 
 container = database.get_collection(name=colls_name)
 
+
+
 pipeline = [
     {
         '$search': {
-            'index': 'JobTitle_Autocomplete',
-            'autocomplete': {
-                'query': 'senior',
-                'path': 'JobTitle',
-                'tokenOrder': 'sequential'
+            'index': 'Text_Search_Index',
+            'compound': {
+                'filter': [
+                    {
+                        'text': {
+                            'query': 'Manager',
+                            'path': 'JobTitle'
+                        }
+                    },
+                    {
+                        'text': {
+                            'query': ['Agriculture', 'Business Services'],
+                            'path': 'Industry'
+                        }
+                    },
+                    {
+                        'range': {
+                            'path': 'MinNumOfEmployees',
+                            'gte': 250
+                        }
+                    },
+                    {
+                        'range': {
+                            'path': 'MaxNumOfEmployees',
+                            'lte': 500
+                        }
+                    },
+                ]
             }
         }
     },
-    {'$limit': 1000},
     {
-        '$group': {
-            '_id': '$JobTitle',
-            'JobTitle': {'$addToSet': '$Jobtitle'}
-        }
-    },
-    {
-        '$project': {
-            '_id': 1
+        '$match': {
+            '$and': [
+                {'minrevenue': {'$gte': '50000000'}},
+                {'maxrevenue': {'$lte': '100000000'}}
+            ]            
         }
     }
 ]
 
-docs = container.aggregate(pipeline=pipeline)
+docs = container.aggregate(pipeline)
+
+
 for doc in docs:
-    print(doc)
+    print('{} - {} - {} - {} - {} - {}'.format(
+            doc.get('JobTitle'),
+            doc.get('MinNumOfEmployees'),
+            doc.get('MaxNumOfEmployees'),
+            doc.get('Industry'),
+            doc.get('minrevenue'),
+            doc.get('maxrevenue')
+        )
+    )

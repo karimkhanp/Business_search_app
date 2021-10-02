@@ -1,6 +1,5 @@
 
 url = open(file='APP/creds.txt', mode='r').read().strip()
-
 class Config:
     SECRET_KEY = 'datainsight_db_api'
     MONGO_URL = url
