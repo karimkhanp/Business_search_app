@@ -8,8 +8,8 @@ from APP.Resources import projection
 class Popular(Resource):
 
     def _arguments(self, args: dict):
-        print(args)
-        print()
+        # print(args)
+        # print()
         filters = list()
         match = list()
         # Country filter
@@ -29,12 +29,12 @@ class Popular(Resource):
 
         if (args.get('keyword') != ""):
             filters.append({'text': {'path': path, 'query': args.get('keyword')}})
-        print("\nfilters : ", filters, "\n")
-        print(match)
+        # print("\nfilters : ", filters, "\n")
+        # print(match)
         return filters, match
 
     def _scorecalculator(self, filters: list, score: int):
-        print(score)
+        # print(score)
         pipeline = [
             {'$search': filters},
             {'$limit': 1},
@@ -117,13 +117,13 @@ class Popular(Resource):
 
             if args.get('score'):
                 a = args.get('score')
-                print(a)
+                # print(a)
 
                 addon_score = self._scorecalculator(filters=query, score=args.get('score', 100))
             else:
                 addon_score = self._scorecalculator(filters=query, score=100)
 
-            print(addon_score)
+            # print(addon_score)
             pipeline = [
                 {'$search': query}, {'$match': query4}, {'$match': query5},  # {'$match': query2},{'$match': query3},
                 {'$project': projection},
@@ -133,10 +133,10 @@ class Popular(Resource):
             response = Mongodb.Aggregation(
                 pipeline=pipeline
             )
-            print(response)
+            # print(response)
             output = list()
             for i in response:
-                print(i)
+                # print(i)
                 i['score'] = int(i['score'] + addon_score)
 
                 if result1:
@@ -144,7 +144,7 @@ class Popular(Resource):
                         # print("inside if 2")
                         print(any(ele in i['job_title'] for ele in result1))
                         output.append(i)
-                    print(output)
+                    # print(output)
                 else:
                     output.append(i)
             result = dict()

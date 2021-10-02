@@ -49,11 +49,14 @@ pipeline = [
             }
         }
     },
+    # { $expr: { $gt: [{ $toDouble: "$price" }, 30]}}
     {
         '$match': {
             '$and': [
-                {'minrevenue': {'$gte': '50000000'}},
-                {'maxrevenue': {'$lte': '100000000'}}
+                { '$expr': { '$gte': [{ '$toDouble': "$minrevenue" }, 50000000]}},
+                { '$expr': { '$lte': [{ '$toDouble': "$maxrevenue" }, 100000000]}},
+                # {'minrevenue': {'$gte': ['50000000']}},
+                # {'maxrevenue': {'$lte': '200000000'}}
             ]            
         }
     }

@@ -77,10 +77,10 @@ class Search(Resource):
 
         # Employess
         if args['Min_Revenue']:
-            match.append({'minrevenue': {'$gte': str(args['Min_Revenue']*1000000)}})
+            match.append({ '$expr': { '$gte': [{ '$toDouble': "$minrevenue" }, args['Min_Revenue']*1000000]}})
         
         if args['Max_Revenue']:
-            match.append({'maxrevenue': {'$lte': str(args['Max_Revenue']*1000000)}})
+            match.append({ '$expr': { '$lte': [{ '$toDouble': "$maxrevenue" }, args['Max_Revenue']*1000000]}})
         
         return filters, match
 
@@ -122,6 +122,7 @@ class Search(Resource):
         parser.add_argument(name='page', location='args', type=int, required=True)
         args = parser.parse_args(strict=True)
         try:
+            print(args)
             filters, match = self._arguments(args=args)
             query = {
                 'index': 'Text_Search_Index',
@@ -141,7 +142,6 @@ class Search(Resource):
                 {'$limit': args.get('limit', 20)},
 
             ]
-
             # Update Keyword Collection for every Search
             Mongodb.Update(
                 colls = Config.KEYWORD_COLLS,
