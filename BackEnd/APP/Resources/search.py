@@ -71,17 +71,17 @@ class Search(Resource):
             filters.append({
                 'text': {
                     'path': 'Industry',
-                    'query': args.get('category').split(',')
+                    'query': args.get('category')
                 }
             })
 
         # Employess
         if args['Min_Revenue']:
-            match.append({ '$expr': { '$gte': [{ '$toDouble': "$minrevenue" }, args['Min_Revenue']*1000000]}})
-        
+            match.append({ '$expr': { '$gte': ["$minrevenue", args['Min_Revenue']*1000000] }})
+
         if args['Max_Revenue']:
-            match.append({ '$expr': { '$lte': [{ '$toDouble': "$maxrevenue" }, args['Max_Revenue']*1000000]}})
-        
+            match.append({ '$expr': { '$lte': ["$maxrevenue", args['Max_Revenue']*1000000] }})
+
         return filters, match
 
 
@@ -101,7 +101,7 @@ class Search(Resource):
 
     def post(self):
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument(name='category', location='json', type=str)
+        parser.add_argument(name='category', location='json', type=list)
         parser.add_argument(name='jobtitle', location='json', type=str)
         parser.add_argument(name='search_type', location='json', type=str, required=True)
         parser.add_argument(name='keyword', location='json', type=str, required=True)
@@ -130,7 +130,7 @@ class Search(Resource):
                     'filter': filters
                 }
             }
-            
+
             rows = args.get('limit')
             page = args.get('page')
 
@@ -149,10 +149,13 @@ class Search(Resource):
                 update = {'$inc': {'qty': 1}}
             )
 
+            print('pipeline: ', pipeline)
+
             response = Mongodb.Aggregation(
                 pipeline = pipeline
             )
             output = list(response)
+
             result = dict()
             result['status'] = 'sucess'
             result['data'] = output
