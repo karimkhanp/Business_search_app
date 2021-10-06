@@ -41,7 +41,7 @@
       </div>
 
            <KeywordCards
-             :items="[{key: 'Category', value: category},
+             :items="[{key: 'Category', value: category.join(', ')},
                       {key: 'Job Title', value: jobTitle},
                       {key: 'Country', value: country.join(', ')},
                       {key: 'City', value: city},
@@ -177,7 +177,7 @@
     methods: {
       SearchSubmitted(params) {
         const { industry, country, jobTitle, keyword, companies, countryList, employee, revenue} = params;
-        this.category = industry.join(',');
+        this.category = [...industry];
         this.country = [ ...country, ...countryList];
         this.jobTitle = jobTitle;
         this.keyword = keyword;
@@ -197,7 +197,7 @@
       remove(item) {
            switch(item) {
              case 'Category': {
-               this.category = constants.EMPTY_STRING;
+               this.category = [];
                break;
              }
              case 'Job Title': {
@@ -223,7 +223,7 @@
            this.search();
       },
       resetAll() {
-        this.category = constants.EMPTY_STRING;
+        this.category = [];
         this.jobTitle = constants.EMPTY_STRING;
         this.country = [];
         this.city = constants.EMPTY_STRING;
@@ -362,7 +362,7 @@
           keyword: this.keyword,
           search_type: this.type,
           Country: this.country.join(constants.COMMA),
-          Industry: this.category,
+          Industry: this.category.join(constants.COMMA),
           JobTitle: this.jobTitle
         };
         this.$store.dispatch('index-module/load-popular', params).then(()=> {
