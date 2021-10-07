@@ -81,6 +81,8 @@ class Search(Resource):
         parser.add_argument(name='limit', location='args', type=int, required=True)
         parser.add_argument(name='page', location='args', type=int, required=True)
         args = parser.parse_args(strict=True)
+        
+        print parser
         try:
             filters,match = self._arguments(args=args)
             query = {
