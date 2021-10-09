@@ -75,6 +75,11 @@ class Search(Resource):
                 }
             })
 
+        if args['company_name']:
+            match.append({
+                "CompanyName": {"$in": args['company_name']}
+            })
+
         # Employess
         if args['Min_Revenue']:
             match.append({ '$expr': { '$gte': ["$minrevenue", args['Min_Revenue']*1000000] }})
@@ -122,8 +127,10 @@ class Search(Resource):
         parser.add_argument(name='page', location='args', type=int, required=True)
         args = parser.parse_args(strict=True)
         try:
-            print(args)
+            # print(args)
             filters, match = self._arguments(args=args)
+            # print(filters)
+
             query = {
                 'index': 'Text_Search_Index',
                 'compound': {
@@ -142,6 +149,9 @@ class Search(Resource):
                 {'$limit': args.get('limit', 20)},
 
             ]
+
+            # print('\n\n\n')
+            # print(pipeline)
             # Update Keyword Collection for every Search
             Mongodb.Update(
                 colls = Config.KEYWORD_COLLS,
@@ -149,7 +159,7 @@ class Search(Resource):
                 update = {'$inc': {'qty': 1}}
             )
 
-            print('pipeline: ', pipeline)
+            # print('pipeline: ', pipeline)
 
             response = Mongodb.Aggregation(
                 pipeline = pipeline
