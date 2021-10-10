@@ -26,7 +26,6 @@
         </div>
       </div>
     </div>
-
     <div v-if="isSearchDone" class="bottom-section">
       <div class="filter-section mb-4">
         <FilterSection
@@ -39,22 +38,23 @@
                 @exportToFile="exportToFile"
             />
       </div>
-
-           <KeywordCards
+          <KeywordCards
              :items="[{key: 'Category', value: category.join(', ')},
                       {key: 'Job Title', value: jobTitle},
                       {key: 'Country', value: country.join(', ')},
                       {key: 'City', value: city},
                       {key: 'Employee', value: employee.join(', ')}]"
              @remove="remove"/>
-
-      <div v-if="isSearchDone" class="filter-cards-section regular" >
+             <div v-if="getLoaderState" class="loader">
+                <img :src="loader" alt="">
+             </div>
+      <div v-if="getLoaderState === false" class="filter-cards-section regular" >
         <div class="container"><div class="result-found"> About {{companies.length}} results found</div></div>
         <Filtercards :companies="companies"/>
       </div>
 
-      <button v-if="isSearchDone && companies && companies.length > 0 "  @click="fetchMore" class="btn-show-more text-white">Show more</button>
-      <div class="text-center text-white" v-else>No Records found</div>
+      <button v-if="isSearchDone && companies && companies.length > 0 && !getLoaderState"  @click="fetchMore" class="btn-show-more text-white">Show more</button>
+      <div class="text-center text-white" v-else-if="!getLoaderState">No Records found</div>
       <div v-if="isSearchDone" class="most-viewed-organisation">
         <div class="container mt-5 mb-4">
           <p class="most-viewed-heading mb-0 text-white">Most viewed organisation for </p>
@@ -80,8 +80,9 @@
   import FilterSection from '../components/Filtersection.vue';
   import { fas } from '@fortawesome/free-solid-svg-icons'
   import AppSearchCard from "../components/AppSearchCard.vue";
+  import loader from  '../../FrontEnd/static/loader.svg'
 
-  var VueScrollTo = require("vue-scrollto");
+  // var VueScrollTo = require("vue-scrollto");
 
   export default {
     layout: 'default',
@@ -99,6 +100,7 @@
         getJobTitlesFromStore: 'index-module/job-titles',
         getCategories: 'index-module/categories',
         getJobTitles: 'index-module/job-titles',
+        getLoaderState: 'index-module/getLoaderState'
       })
     },
     components: {
@@ -111,6 +113,7 @@
     },
     data() {
       return {
+        loader,
         categories: [],
         countryGroups:  constants.COUNTRY_GROUPS,
         jobTitles: [],
@@ -176,6 +179,8 @@
     },
     methods: {
       SearchSubmitted(params) {
+        this.isSearchDone = true;
+        this.$store.commit('index-module/setLoaderState', true)
         const { industry, country, jobTitle, keyword, companies, countryList, employee, revenue} = params;
         this.category = [...industry];
         this.country = [ ...country, ...countryList];
@@ -340,7 +345,6 @@
                   jobtitle: this.jobTitle,
               };
         }
-        this.isSearchDone = true;
         this.isSearching = true; 
         const searchParameters = {
           rpp: this.rpp,
@@ -353,7 +357,7 @@
               this.lastId = this.companies[this.companies.length - 1];
             }
             this.isSearching = false;
-            VueScrollTo.scrollTo("#results", 200, { offset: -50 });
+            this.$store.commit('index-module/setLoaderState', false)
         });
       }, 
 
@@ -838,5 +842,9 @@
 
 .header-text-fix{
   margin-top:70px
+}
+.loader {
+  position: relative;
+  top: 20px;
 }
 </style>
