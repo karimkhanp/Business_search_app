@@ -187,7 +187,7 @@
         this.jobTitle = jobTitle;
         this.keyword = keyword;
         this.revenue = revenue;
-        this.companies = companies.split(',');
+        this.companies = companies ? companies.split(',') : [];
         this.employee = employee;
         this.countryList = countryList;
         this.search();
