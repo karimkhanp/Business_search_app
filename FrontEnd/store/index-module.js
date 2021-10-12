@@ -82,7 +82,11 @@ export const actions = {
         return this.$axios.$post("/add_popularity", {id});
     },
     search({commit}, parameters) {
-        return this.$axios.$post("/search?limit="+parameters.rpp+"&page="+parameters.page, parameters.params).then((response)=> {
+        let formData = new FormData();
+        Object.keys(parameters.params).forEach((key) => {
+            formData.append(key, parameters.params[key]);
+        });
+        return this.$axios.$post("/search?limit="+parameters.rpp+"&page="+parameters.page, formData, {'Content-Type': 'multipart/form-data'}).then((response)=> {
             commit('set-companies', response.data);
         });
     },
