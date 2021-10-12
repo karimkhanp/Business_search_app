@@ -128,7 +128,7 @@
           <div class="input-group custom-input-group mb-2 upload">
             <input type="text" class="form-control upload-control" placeholder="ABM/TAL" aria-label="Companies" v-model="companies" aria-describedby="basic-addon1" required>
             <label for="file-upload">
-                <input type="file" id="file-upload" ref="input" @change="processFile"/>
+                <input type="file" id="file-upload" ref="input" @change="handleFiles" accept="text/plain, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
                 <span class="mdi mdi-upload"></span>
                  Upload
             </label>
@@ -262,6 +262,23 @@ export default {
           }
           this.$emit('removeCountry', this.countrySelected);
       },
+      handleFiles(event) {
+        if (window.FileReader) {
+          this.getAsText(event.target.files[0])
+        }
+      },
+      getAsText(file) {
+        let reader = new FileReader()
+        reader.readAsText(file)
+        reader.onload = this.loadHandler
+      },
+      loadHandler (event) {
+        let csv = event.target.result
+        csv = csv.replace(/['"]+/g, '')
+        csv = csv.replace(/\n/g, '')
+        this.companies =  csv
+        this.$refs.input.value='';
+      }
   }
 }
 </script>

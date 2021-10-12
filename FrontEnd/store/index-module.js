@@ -8,7 +8,8 @@ export const state = () => ({
     popular: [],
     states: [],
     cities: [],
-    keywords: []
+    keywords: [],
+    loader: false
 });
 
 export const getters = {
@@ -32,6 +33,9 @@ export const getters = {
     },
     keywords: (state) => {
         return state.keywords;
+    },
+    getLoaderState: (state) => {
+        return state.loader
     }
 }
 
@@ -57,6 +61,9 @@ export const mutations = {
     },
     'set-keywords'(state, keywords) {
         state.keywords = keywords;
+    },
+    'setLoaderState' (state, value) {
+        state.loader = value
     }
 }
 

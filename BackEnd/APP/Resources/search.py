@@ -1,6 +1,5 @@
 import werkzeug
 from flask_restful import Resource, reqparse
-import pandas as pd
 from io import StringIO
 
 # User-Defined Modules
@@ -84,12 +83,12 @@ class Search(Resource):
                 dcn["CompanyName"]["$in"].extend(cn)
 
             if args['company_names_file']:
-                df = pd.read_csv(args['company_names_file'])
                 try:
-                    cn = df['Company Name'].tolist()
+                    cn = args['company_names_file'].readlines()
+                    cn = [x.decode('utf-8').strip() for x in cn]
                     dcn["CompanyName"]["$in"].extend(cn)
                 except:
-                    raise Exception("Invalid CSV...")
+                    raise Exception("Invalid Text file...")
             dcn["CompanyName"]["$in"] = list(set(dcn["CompanyName"]["$in"]))
             match.append(dcn)
 
