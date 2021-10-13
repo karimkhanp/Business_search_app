@@ -327,8 +327,8 @@
         const minMax = this.findMinMax(this.employee);
         const minMaxRevenue = this.findMinMax(this.revenue);
         if(!params) {
-            params = {
-                  score: this.sliderVal,
+          params = {
+            score: this.sliderVal,
                   keyword: this.keyword,
                   company_name: this.companies,
                   Max_Revenue: minMaxRevenue.max,
@@ -349,7 +349,7 @@
         const searchParameters = {
           rpp: this.rpp,
           page: this.page,
-          params: params
+          params: Object.keys(params).reduce((obj, key) => { if(typeof params[key] === "string" || isFinite(params[key]))  obj[key] = params[key]; return obj; }, {})
         }
         this.$store.dispatch('index-module/search', searchParameters).then(()=> {
             this.companies = this.getCompanies;
