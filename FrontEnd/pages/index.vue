@@ -327,23 +327,23 @@
         const minMax = this.findMinMax(this.employee);
         const minMaxRevenue = this.findMinMax(this.revenue);
         if(!params) {
-            params = {
-                  score: this.sliderVal,
-                  keyword: this.keyword,
-                  company_name: this.companies,
-                  Max_Revenue: minMaxRevenue.max,
-                  Min_Revenue: minMaxRevenue.min,
-                  employee: this.employee,
-                  Min_Num_Of_Employees: minMax.min,
-                  Max_Num_Of_Employees: minMax.max,
-                  search_type: this.type,
-                  country: this.newCountryL.length > 0 ? this.newCountryL:constants.EMPTY_STRING,
-                  state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
-                  city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
-                  employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
-                  category: this.category,
-                  jobtitle: this.jobTitle,
-              };
+          params = {
+            score: this.sliderVal,
+            keyword: this.keyword,
+            company_name: this.companies,
+            Max_Revenue: isFinite(minMaxRevenue.max) ? minMaxRevenue.max : 0,
+            Min_Revenue: isFinite(minMaxRevenue.min) ? minMaxRevenue.min : 0,
+            employee: this.employee,
+            Min_Num_Of_Employees: isNaN(minMax.min) ? 0 : minMax.min,
+            Max_Num_Of_Employees: isNaN(minMax.max) ? 0 : minMax.max,
+            search_type: this.type,
+            country: this.newCountryL.length > 0 ? this.newCountryL:constants.EMPTY_STRING,
+            state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
+            city: this.city !== constants.ALL ? this.city : constants.EMPTY_STRING,
+            employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
+            category: this.category,
+            jobtitle: this.jobTitle,
+          };
         }
         this.isSearching = true; 
         const searchParameters = {
