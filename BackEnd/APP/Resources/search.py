@@ -20,13 +20,34 @@ class Search(Resource):
         filters = list()
         match = list()
 
-        # Keyword Filters
+        # # Keyword Filters
+        # filters.append({
+        #     'text': {
+        #         'path': ['AssetName','JobTitle', 'CompanyName','Industry','CampaignName'],
+        #         'query': args['keyword']
+        #     }
+        # })
+
         filters.append({
             'text': {
-                'path': ['AssetName','JobTitle', 'CompanyName','Industry','CampaignName'],
+                'path': 'AssetName',
                 'query': args['keyword']
             }
         })
+
+        filters.append({
+            'text': {
+                'path': 'JobTitle',
+                'query': args['keyword']
+            }
+        })
+
+        # filters.append({
+        #     'text': {
+        #         'path': 'CompanyName',
+        #         'query': args['keyword']
+        #     }
+        # })
 
         if args.get('Max_Num_Of_Employees'):
             filters.append({
@@ -161,7 +182,7 @@ class Search(Resource):
             {'$project': projection},
             {'$skip': rows*(page-1) if page > 0 else 0},
             {'$limit': args.get('limit', 20)},
-
+            # { '$sort': {'AssetName': -1, 'JobTitle': 1}}
         ]
 
         # print('\n\n\n')
