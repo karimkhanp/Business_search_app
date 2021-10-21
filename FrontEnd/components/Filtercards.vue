@@ -152,7 +152,7 @@ export default {
 .filter-custom-card{
   background: #EBCACA;
   border-radius: 8px;
-  height: 300px;
+  height: 320px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
