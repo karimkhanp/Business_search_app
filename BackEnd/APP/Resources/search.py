@@ -151,56 +151,65 @@ class Search(Resource):
         parser.add_argument(name='page', location='args', type=int, required=True)
         parser.add_argument(name='search_for', location='args', type=str, required=True)
         args = parser.parse_args(strict=True)
-        # try:
-        filters, match = self._arguments(args=args)
-
-        query = {
-            'index': 'Text_Search_Index',
-            'compound': {
-                'filter': filters
-            }
-        }
 
         rows = args.get('limit')
         page = args.get('page')
         search_for = args.get('search_for')
 
-        pipeline = [
-            {'$search': query},
-            {'$match': {} if not match else {'$and': match}},
-            {'$project': projection},
-            {'$skip': rows*(page-1) if page > 0 else 0},
-            {'$limit': args.get('limit', 20)},
-            # { '$sort': {'AssetName': -1, 'JobTitle': 1}}
-        ]
+        def __get_results(search_for):
+            args['search_for'] = search_for
+            # try:
+            filters, match = self._arguments(args=args)
 
-        # Update Keyword Collection for every Search
-        Mongodb.Update(
-            colls = Config.KEYWORD_COLLS,
-            docs = {'keyword': args.get('keyword').strip().capitalize()},
-            update = {'$inc': {'qty': 1}}
-        )
+            query = {
+                'index': 'Text_Search_Index',
+                'compound': {
+                    'filter': filters
+                }
+            }
 
-        response = Mongodb.Aggregation(
-            pipeline = pipeline
-        )
-        output = list(response)
+            pipeline = [
+                {'$search': query},
+                {'$match': {} if not match else {'$and': match}},
+                {'$project': projection},
+                {'$skip': rows*(page-1) if page > 0 else 0},
+                {'$limit': args.get('limit', 20)},
+                # { '$sort': {'AssetName': -1, 'JobTitle': 1}}
+            ]
 
-        result = dict()
-        result['status'] = 'success'
-        result['data'] = output
-        result['count'] = len(output)
-        try:
-            if search_for == SEARCH_PRIORITY[-1] and len(output) == 0:
-                result['next_search_for'] = None
-            else:
-                if len(output) == 0:
-                    result['next_search_for'] = SEARCH_PRIORITY[SEARCH_PRIORITY.index(search_for) + 1]
+            # Update Keyword Collection for every Search
+            Mongodb.Update(
+                colls = Config.KEYWORD_COLLS,
+                docs = {'keyword': args.get('keyword').strip().capitalize()},
+                update = {'$inc': {'qty': 1}}
+            )
+
+            response = Mongodb.Aggregation(
+                pipeline = pipeline
+            )
+            output = list(response)
+
+            result = dict()
+            result['status'] = 'success'
+            result['data'] = output
+            result['count'] = len(output)
+            try:
+                if search_for == SEARCH_PRIORITY[-1] and len(output) == 0:
+                    result['next_search_for'] = None
                 else:
-                    result['next_search_for'] = search_for
-        except IndexError:
-            result['next_search_for'] = SEARCH_PRIORITY[0]
-        return result, 200
+                    if len(output) == 0:
+                        # result['next_search_for'] = SEARCH_PRIORITY[SEARCH_PRIORITY.index(search_for) + 1]
+                        search_for_updated = SEARCH_PRIORITY[SEARCH_PRIORITY.index(search_for) + 1]
+                        return __get_results(search_for_updated)
+                    else:
+                        result['next_search_for'] = search_for
+            except IndexError:
+                result['next_search_for'] = SEARCH_PRIORITY[0]
+
+            return result
+
+        return __get_results(search_for), 200
+
         # except Exception as e:
         #     result = dict()
         #     print ("\nError!!!\n",e)
