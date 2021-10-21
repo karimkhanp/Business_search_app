@@ -100,7 +100,8 @@
         getJobTitlesFromStore: 'index-module/job-titles',
         getCategories: 'index-module/categories',
         getJobTitles: 'index-module/job-titles',
-        getLoaderState: 'index-module/getLoaderState'
+        getLoaderState: 'index-module/getLoaderState',
+        getPriorityName: 'index-module/getPriorityName'
       })
     },
     components: {
@@ -155,7 +156,7 @@
         keyword: constants.EMPTY_STRING,
         employee: [],
         companyValues:[],
-        recordOptions: constants.RECORD_OPTIONS,
+        recordOptions: constants.RECORD_OPTIONS
       };
     },
     created() {
@@ -327,6 +328,7 @@
         const minMax = this.findMinMax(this.employee);
         const minMaxRevenue = this.findMinMax(this.revenue);
         if(!params) {
+          this.$store.commit('index-module/setPriorityName', 'AssetName')
           params = {
             score: this.sliderVal,
             keyword: this.keyword,
@@ -349,10 +351,11 @@
         const searchParameters = {
           rpp: this.rpp,
           page: this.page,
-          params: params
+          params: params,
+          priority: this.getPriorityName
         }
         this.$store.dispatch('index-module/search', searchParameters).then(()=> {
-            this.companies = this.getCompanies;
+            this.getCompanies.forEach(company => this.companies.push(company));
             if(this.companies.length>0) {
               this.lastId = this.companies[this.companies.length - 1];
             }
@@ -413,6 +416,7 @@
       },
 
       async fetchMore() {
+        this.$store.commit('index-module/setLoaderState', true)
         this.removeFromSearch();
         this.page = this.page + 1;
         const params = {
