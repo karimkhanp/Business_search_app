@@ -36,6 +36,9 @@ export const getters = {
     },
     getLoaderState: (state) => {
         return state.loader
+    },
+    getPriorityName: (state) => {
+        return state.priorityName
     }
 }
 
@@ -64,6 +67,9 @@ export const mutations = {
     },
     'setLoaderState' (state, value) {
         state.loader = value
+    },
+    'setPriorityName' (state, value) {
+        state.priorityName = value
     }
 }
 
@@ -86,8 +92,9 @@ export const actions = {
         Object.keys(parameters.params).forEach((key) => {
             formData.append(key, parameters.params[key]);
         });
-        return this.$axios.$post("/search?limit="+parameters.rpp+"&page="+parameters.page, formData, {'Content-Type': 'multipart/form-data'}).then((response)=> {
+        return this.$axios.$post("/search?limit=" + parameters.rpp + "&page=" + parameters.page + "&search_for=" + parameters.priority, formData, {'Content-Type': 'multipart/form-data'}).then((response)=> {
             commit('set-companies', response.data);
+            commit('setPriorityName', response.next_search_for);
         });
     },
     'load-popular'({commit}, params) {
