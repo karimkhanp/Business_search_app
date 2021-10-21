@@ -46,15 +46,19 @@
                       {key: 'Employee', value: employee.join(', ')}]"
              @remove="remove"/>
              <div v-if="getLoaderState" class="loader">
-                <img :src="loader" alt="">
+                <img :src="loader" alt="loader">
              </div>
       <div v-if="getLoaderState === false" class="filter-cards-section regular" >
         <div class="container"><div class="result-found"> About {{companies.length}} results found</div></div>
         <Filtercards :companies="companies"/>
       </div>
-
-      <button v-if="isSearchDone && companies && companies.length > 0 && !getLoaderState"  @click="fetchMore" class="btn-show-more text-white">Show more</button>
-      <div class="text-center text-white" v-else-if="!getLoaderState">No Records found</div>
+      <div v-if="!showMoreLoader">
+        <button v-if="isSearchDone && companies && companies.length > 0 && !getLoaderState"  @click="fetchMore" class="btn-show-more text-white">Show more</button>
+        <div class="text-center text-white" v-else-if="!getLoaderState">No Records found</div>
+      </div>
+      <div v-else-if="showMoreLoader" class="loader"> 
+        <img :src="loader" alt="loader">
+      </div>
       <div v-if="isSearchDone" class="most-viewed-organisation">
         <div class="container mt-5 mb-4">
           <p class="most-viewed-heading mb-0 text-white">Most viewed organisation for </p>
@@ -156,7 +160,8 @@
         keyword: constants.EMPTY_STRING,
         employee: [],
         companyValues:[],
-        recordOptions: constants.RECORD_OPTIONS
+        recordOptions: constants.RECORD_OPTIONS,
+        showMoreLoader: false
       };
     },
     created() {
@@ -361,6 +366,7 @@
             }
             this.isSearching = false;
             this.$store.commit('index-module/setLoaderState', false)
+            this.showMoreLoader = false
         });
       }, 
 
@@ -416,7 +422,7 @@
       },
 
       async fetchMore() {
-        this.$store.commit('index-module/setLoaderState', true)
+        this.showMoreLoader = true
         this.removeFromSearch();
         this.page = this.page + 1;
         const params = {
