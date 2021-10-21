@@ -10,6 +10,8 @@ from APP.Resources import projection
 
 ALLOWED_EXTENSIONS = set(['xlsx'])
 
+SEARCH_PRIORITY = ['AssetName', 'JobTitle', 'CompanyName','Industry', 'CampaignName']
+
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -28,26 +30,14 @@ class Search(Resource):
         #     }
         # })
 
-        filters.append({
-            'text': {
-                'path': 'AssetName',
-                'query': args['keyword']
-            }
-        })
+        print("Search For: ", args['search_for'])
 
         filters.append({
             'text': {
-                'path': 'JobTitle',
+                'path': args['search_for'],
                 'query': args['keyword']
             }
         })
-
-        # filters.append({
-        #     'text': {
-        #         'path': 'CompanyName',
-        #         'query': args['keyword']
-        #     }
-        # })
 
         if args.get('Max_Num_Of_Employees'):
             filters.append({
@@ -159,12 +149,10 @@ class Search(Resource):
         # page and limit being retrived from the url post method
         parser.add_argument(name='limit', location='args', type=int, required=True)
         parser.add_argument(name='page', location='args', type=int, required=True)
+        parser.add_argument(name='search_for', location='args', type=str, required=True)
         args = parser.parse_args(strict=True)
         # try:
-        print(args)
         filters, match = self._arguments(args=args)
-        print(filters)
-        print(match)
 
         query = {
             'index': 'Text_Search_Index',
@@ -175,6 +163,7 @@ class Search(Resource):
 
         rows = args.get('limit')
         page = args.get('page')
+        search_for = args.get('search_for')
 
         pipeline = [
             {'$search': query},
@@ -185,8 +174,6 @@ class Search(Resource):
             # { '$sort': {'AssetName': -1, 'JobTitle': 1}}
         ]
 
-        # print('\n\n\n')
-        # print(pipeline)
         # Update Keyword Collection for every Search
         Mongodb.Update(
             colls = Config.KEYWORD_COLLS,
@@ -194,17 +181,25 @@ class Search(Resource):
             update = {'$inc': {'qty': 1}}
         )
 
-        # print('pipeline: ', pipeline)
-
         response = Mongodb.Aggregation(
             pipeline = pipeline
         )
         output = list(response)
 
         result = dict()
-        result['status'] = 'sucess'
+        result['status'] = 'success'
         result['data'] = output
         result['count'] = len(output)
+        try:
+            if search_for == SEARCH_PRIORITY[-1] and len(output) == 0:
+                result['next_search_for'] = None
+            else:
+                if len(output) == 0:
+                    result['next_search_for'] = SEARCH_PRIORITY[SEARCH_PRIORITY.index(search_for) + 1]
+                else:
+                    result['next_search_for'] = search_for
+        except IndexError:
+            result['next_search_for'] = SEARCH_PRIORITY[0]
         return result, 200
         # except Exception as e:
         #     result = dict()
