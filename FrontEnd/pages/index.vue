@@ -49,11 +49,11 @@
                 <img :src="loader" alt="loader">
              </div>
       <div v-if="getLoaderState === false" class="filter-cards-section regular" >
-        <div class="container"><div class="result-found"> About {{companies.length}} results found</div></div>
-        <Filtercards :companies="companies"/>
+        <div class="container"><div class="result-found"> About {{companyList.length}} results found</div></div>
+        <Filtercards :companies="companyList"/>
       </div>
       <div v-if="!showMoreLoader">
-        <button v-if="isSearchDone && companies && companies.length > 0 && !getLoaderState"  @click="fetchMore" class="btn-show-more text-white">Show more</button>
+        <button v-if="isSearchDone && companyList && companyList.length > 0 && !getLoaderState"  @click="fetchMore" class="btn-show-more text-white">Show more</button>
         <div class="text-center text-white" v-else-if="!getLoaderState">No Records found</div>
       </div>
       <div v-else-if="showMoreLoader" class="loader"> 
@@ -145,7 +145,7 @@
         states: [],
         cities: [],
         emps: [constants.ANY_SMALLA],
-        companies: [],
+        companyList: [],
         popular: [],
         keywords: [],
         flips: [],
@@ -264,7 +264,7 @@
           this.flips.splice(this.flips.indexOf(i), 1);
           } else {
           this.flips.push(i);
-          this.addPopularity(this.companies[i].id);
+          this.addPopularity(this.companyList[i].id);
         }
       },
 
@@ -333,7 +333,9 @@
         const minMax = this.findMinMax(this.employee);
         const minMaxRevenue = this.findMinMax(this.revenue);
         if(!params) {
-          this.$store.commit('index-module/setPriorityName', 'AssetName')
+          if(!this.showMoreLoader) {
+            this.$store.commit('index-module/setPriorityName', 'AssetName')
+          }
           params = {
             score: this.sliderVal,
             keyword: this.keyword,
@@ -360,9 +362,9 @@
           priority: this.getPriorityName
         }
         this.$store.dispatch('index-module/search', searchParameters).then(()=> {
-            this.getCompanies.forEach(company => this.companies.push(company));
-            if(this.companies.length>0) {
-              this.lastId = this.companies[this.companies.length - 1];
+            this.getCompanies.forEach(company => this.companyList.push(company));
+            if(this.companyList.length>0) {
+              this.lastId = this.companyList[this.companyList.length - 1];
             }
             this.isSearching = false;
             this.$store.commit('index-module/setLoaderState', false)
@@ -425,18 +427,7 @@
         this.showMoreLoader = true
         this.removeFromSearch();
         this.page = this.page + 1;
-        const params = {
-            score: this.sliderVal,
-            keyword: this.keyword,
-            search_type: this.type,
-            country: this.country !== constants.ANY_SMALLA ? this.country : constants.EMPTY_STRING,
-            state:  this.state !== constants.ALL ? this.state : constants.EMPTY_STRING,
-            city: this.city !== constants.ALL  ? this.city : constants.EMPTY_STRING,
-            employee: !this.employee.includes(constants.ANY) ? this.employee : "1-10000000",
-            category: this.category,
-            jobtitle: this.jobTitle,
-          }
-        this.performSearch(params);
+        this.performSearch();
       },
       getKeywords() {
         this.$store.dispatch("index-module/load-keywords").then(()=> {
